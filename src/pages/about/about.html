@@ -1,11 +1,29 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>
-      About
-    </ion-title>
-  </ion-navbar>
+<ion-header id="header">
+  <div class="header-center">
+    <ion-title [ngStyle]="{'text-align':'center'}">消息</ion-title>
+  </div>
 </ion-header>
 
-<ion-content padding>
 
+<ion-content padding>
+  <ion-list>
+    <ion-item navPush="Chat"
+                             [navParams]="toUser">
+    <ion-avatar item-left>
+      <img src="./assets/to-user.jpg">
+    </ion-avatar>
+    <h2>Hancock</h2>
+    <p>If at first you don’t succeed, call it version 1.0</p>
+    <ion-note item-end>3:43 pm</ion-note>
+  </ion-item>
+    <ion-item navPush="Chat"
+              [navParams]="toUser">
+      <ion-avatar item-start>
+        <img src="./assets/user.jpg">
+      </ion-avatar>
+      <h2>向辉</h2>
+      <p>Yes,I am the one</p>
+      <ion-note item-end>7:45 pm</ion-note>
+    </ion-item>
+  </ion-list>
 </ion-content>

@@ -1,0 +1,10 @@
+<!-- Generated template for the MySlidesComponent component -->
+<div>
+  <ion-slides  (ionSlideDidChange)="slideChanged()"  #myslides>
+    <ion-slide  *ngFor="let i of Slides_Img;">
+      <img class="slide_img"  [src]="i"/>
+    </ion-slide>
+  </ion-slides>
+</div>
+
+

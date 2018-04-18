@@ -14,7 +14,13 @@
   <!-- add to homescreen for ios -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.2&key=1e9c49988d81451578dec8d821e062ec&plugin=AMap.Autocomplete,AMap.PlaceSearch"></script>
 
+  <script>
+    function parseData(data) {
+      console.log(data);
+    }
+  </script>
   <!-- cordova.js required for cordova apps (remove if not needed) -->
   <script src="cordova.js"></script>
 
@@ -26,7 +32,7 @@
         .catch(err => console.error('Error', err));
     }
   </script>-->
-
+  <link href="assets/css/flex.css" rel="stylesheet">
   <link href="build/main.css" rel="stylesheet">
 
 </head>

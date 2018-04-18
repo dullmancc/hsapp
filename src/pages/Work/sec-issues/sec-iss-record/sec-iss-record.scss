@@ -1,0 +1,15 @@
+page-sec-iss-record {
+  .item_right_div {
+    margin-right: 5%;
+    //display: flex;
+    //display: -webkit-box;
+    //display: -ms-flexbox;
+    //display: -webkit-flex;
+    //flex-direction: column;
+  }
+  .item_right_one_content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,40 @@
+<ion-header  id="header">
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>监理巡视表</span>
+  </div>
+  <div class="header-right">
+    <span></span>
+  </div>
+</ion-header>
+<ion-content padding>
+  <ion-list>
+  <ion-item>
+    <ion-label color="primary" stacked>巡视开始时间</ion-label>
+    <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="巡视开始时间" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="oStartTime"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label color="primary" stacked>巡视结束时间</ion-label>
+    <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="巡视结束时间" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="oEndTime"></ion-datetime>
+  </ion-item>
+  <ion-label  color="primary" style="font-size: 1.0em;margin-left:10px">主要内容</ion-label>
+  <div *ngFor="let key of keys;let i=index">
+  <div  class="xiahuaxian" (click)="showDiv(i)" style="position: relative">
+    <span style="display: inline-block;width: 80%">{{key.content}}</span>
+    <ion-icon [name]="iconName[i]" style="display: inline-block;width: 10%;position: absolute;right:0;top:35%"></ion-icon>
+  </div>
+    <div [hidden]="hideList[i]" >
+      <ion-item>
+        <ion-label color="primary" stacked>巡视意见</ion-label>
+        <ion-input [(ngModel)]="key.advice"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" stacked>发现问题及处理情况</ion-label>
+        <ion-input [(ngModel)]="key.dealCase"></ion-input>
+      </ion-item>
+    </div>
+  </div>
+  </ion-list>
+</ion-content>

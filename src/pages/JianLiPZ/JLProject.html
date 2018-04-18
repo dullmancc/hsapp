@@ -1,0 +1,35 @@
+<ion-header  id="header">
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>旁站项目</span>
+  </div>
+  <div class="header-right">
+    <button ion-button icon-only (click)="newPZBL()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </div>
+</ion-header>
+
+<ion-content>
+   <ion-list>
+     <ion-item>
+       <ion-label>
+         旁站ID
+       </ion-label>
+       <ion-label >
+         旁站描述
+       </ion-label>
+
+     </ion-item>
+     <ion-item  *ngFor="let pro of mypzbl;" (click)="ToMyPZJL(pro)">
+       <ion-label>
+         {{pro.PZBelongId}}
+       </ion-label>
+       <ion-label>
+         {{pro.Descrb}}
+       </ion-label>
+     </ion-item>
+   </ion-list>
+</ion-content>

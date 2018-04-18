@@ -1,0 +1,15 @@
+page-observation {
+  .toolbar-title-md{
+    text-align:center;
+  }
+  .xiahuaxian{
+    margin-left:10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    border-bottom:#dedede 1px solid;
+  }
+  .middle-box{display: table; height: 80px; width:100%; margin:0 auto; position:relative;}
+  .middle-inner{display: table-cell; vertical-align:middle; *position:absolute; *top:50%; width:100%;}
+  .middle-inner span{position:relative; *top:-50%; *left:-50%;}
+
+}

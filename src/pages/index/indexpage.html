@@ -1,0 +1,150 @@
+<!--
+  Generated template for the IndexPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header id="header">
+    <div class="header-left">
+      <ion-buttons start>
+        <button ion-button clear (click)="denglu()" *ngIf="!IsLogin">
+        <span class="mydenglu">
+          <ion-icon name="person"></ion-icon>
+          <p>登录</p>
+        </span>
+        </button>
+      </ion-buttons>
+    </div>
+  <div class="header-center">
+    <ion-title [ngStyle]="{'text-align':'center'}">华胜信息化平台</ion-title>
+  </div>
+</ion-header>
+
+
+<ion-content padding>
+  <div>
+    <ion-item *ngIf="ISready">
+      <p>{{nowtime}}</p>
+      <p>{{localplace}}</p>
+      <ion-avatar item-left>
+        <img [src]='this.imageURI'>
+      </ion-avatar>
+      <p>{{_weather+'|'+_tempture+'℃'}}</p>
+    </ion-item>
+  </div>
+  <my-slides></my-slides>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+      <span>
+        <img src="./assets/imgs/biaoqian40.png" alt="">
+        <p>标签</p>
+      </span>
+      </ion-col>
+      <ion-col>
+        <span>
+          <img src="./assets/imgs/dangan40.png" alt="">
+          <p>档案</p>
+        </span>
+      </ion-col>
+      <ion-col>
+        <span>
+          <img src="./assets/imgs/hezuo40.png" alt="">
+          <p>合作</p>
+        </span>
+      </ion-col>
+      <ion-col>
+        <span>
+          <img src="./assets/imgs/mubiao40.png" alt="">
+          <p>目标</p>
+        </span>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <span>
+          <img src="./assets/imgs/work40.png" alt="" (click)="toMyWork()" >
+          <p>工作</p>
+        </span>
+      </ion-col>
+      <ion-col>
+        <span>
+          <img src="./assets/imgs/shenfen40.png" alt="">
+          <p>身份</p>
+        </span>
+      </ion-col>
+      <ion-col>
+        <span>
+          <img src="./assets/imgs/shouru40.png" alt="">
+          <p>收入</p>
+        </span>
+      </ion-col>
+      <ion-col>
+        <span>
+          <img src="./assets/imgs/gengduo40.png" alt="">
+          <p>更多</p>
+        </span>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div class="bar_div"></div>
+  <ion-list>
+    <div style="height: 15px;"><strong>项目最新进展</strong></div>
+    <hr>
+    <ion-item>
+      <span [ngStyle]="{'font-weight':'bold ','font-size':'15px'}">[旁站监理开始]项目:test</span>
+      <ion-grid>
+        <ion-row>
+          <ion-col class="col-list">
+            监理工程师
+          </ion-col>
+          <ion-col class="col-list">
+            监理部位
+          </ion-col>
+          <ion-col class="col-list">
+           预计结束时间
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="col-list" [ngStyle]="{'font-weight':'bold '}">
+          向辉
+        </ion-col>
+          <ion-col class="col-list"  [ngStyle]="{'font-weight':'bold '}">
+            7层楼剪力墙
+          </ion-col>
+          <ion-col class="col-list">
+            <h3 [ngStyle]="{'color':'red'}" >04/10 11:30:04</h3>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item>
+      <span [ngStyle]="{'font-weight':'bold ','font-size':'15px'}">[材料进场]项目:test</span>
+      <ion-grid>
+        <ion-row>
+          <ion-col class="col-list">
+            总监
+          </ion-col>
+          <ion-col class="col-list">
+            材料部位
+          </ion-col>
+          <ion-col class="col-list">
+            预计结束时间
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="col-list" [ngStyle]="{'font-weight':'bold '}">
+            xxx
+          </ion-col>
+          <ion-col class="col-list"  [ngStyle]="{'font-weight':'bold '}">
+            7层楼
+          </ion-col>
+          <ion-col class="col-list">
+            <h3 [ngStyle]="{'color':'red'}" >04/11 12:30:04</h3>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,50 @@
+<ion-header  id="header">
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>{{pro.ProName}}</span>
+  </div>
+  <div class="header-right">
+    <span></span>
+  </div>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-avatar item-start>
+        <img src="./assets/imgs/Proimg.png">
+      </ion-avatar>
+      <p>{{pro.Name}}</p>
+    </ion-item>
+    <ion-item>
+      <p>
+        工程编号:
+      </p>
+      {{pro.EProjectID}}
+    </ion-item>
+    <ion-item>
+      <p>
+        完成进度:
+      </p>
+      <div id="Pcomplete">
+        <div class="progress">
+          <span [ngStyle]="{'width':ProcessW}" ><span>{{pro.EPState/10*100}}%</span></span>
+        </div>
+      </div>
+    </ion-item>
+    <ion-item>
+      <p>
+        施工单位:
+      </p>
+
+    </ion-item>
+    <ion-item>
+      <p>
+        工程简介:
+      </p>
+
+    </ion-item>
+  </ion-list>
+</ion-content>

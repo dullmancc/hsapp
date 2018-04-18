@@ -1,0 +1,77 @@
+<!--
+  Generated template for the EpMateEntryPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header  id="header">
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>材料进场任务</span>
+  </div>
+  <ion-buttons end>
+    <button ion-button clear color="dark" (click)="newSecIssues()">
+      <ion-icon name="person-add"></ion-icon>
+      提交
+    </button>
+  </ion-buttons>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item>
+      <img item-left src="assets/imgs/workicon/mateinfo.png">
+      <textarea type="text" [ngStyle]="{'height':'100px','width':'250px'}" placeholder="材料基本信息"></textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label color="dark">进场时间</ion-label>
+      <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="planStartTime"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon name="ios-construct-outline" item-start></ion-icon>
+      <ion-label>施工单位:{{gaming}}</ion-label>
+      <ion-select [(ngModel)]="gaming" interface="popover" item-end>
+        <ion-option value="施工单位一">施工单位一</ion-option>
+        <ion-option value="施工单位二">施工单位二</ion-option>
+        <ion-option value="施工单位三">施工单位三</ion-option>
+        <ion-option value="施工单位四">施工单位四</ion-option>
+        <ion-option value="施工单位五">施工单位五</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon name="ios-create-outline" item-start></ion-icon>
+      <textarea type="text" [ngStyle]="{'height':'100px','width':'250px'}" placeholder="请输入进场情况描述"></textarea>
+    </ion-item>
+    <ion-item>
+      <ion-label item-start>进场结果</ion-label>
+      <ion-select [(ngModel)]="result"  interface="popover" item-end>
+        <ion-option value="进场">进场</ion-option>
+        <ion-option value="退场">退场</ion-option>
+        <ion-option value="进场后退场">进场后退场</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="ios-camera-outline" item-start></ion-icon>
+      文件(0)
+      <ion-buttons item-end clear>
+        <ion-icon name='ios-add-outline'></ion-icon>
+        添加文件
+      </ion-buttons>
+      <ul style="list-style: none;margin:0;padding:0">
+        <li *ngFor="let photo of photoes;let i=index" style="display: inline-block;margin-right: 5px;position: relative">
+          <img style="width:120px;height:120px;display: inline-block" [src]="photoes[i].src">
+          <ion-icon name="ios-close-circle-outline" small style="position: absolute;right:0;top:0;" (click)="deletePhoto(i)"></ion-icon>
+        </li>
+        <li *ngFor="let photo of photoes;let i=index" style="display: inline-block;margin-right: 5px;position: relative">
+          文件一.Doc
+        </li>
+      </ul>
+    </ion-item>
+  </ion-list>
+</ion-content>
+

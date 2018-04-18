@@ -1,0 +1,38 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title text-center>
+      旁站记录
+    </ion-title>
+    <ion-buttons right>
+      <button ion-button icon-only (click)="newRecord()">
+        <ion-icon ios="ios-add-circle-outline" md="md-add-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+<!--style="background-color: #d6d6d6;"-->
+
+<ion-content >
+  <div *ngFor="let recordClass of recordClasses;let i=index">
+    <button  ion-button class="myButton" (click)="togglelist(i)">
+      <ion-icon [name]="iconName[i]"></ion-icon>
+      <span margin-left="8px">{{recordClass}}</span>
+    </button>
+    <ion-list style="margin: 0">
+      <ng-container *ngIf="!isLoad">
+        <ion-item class="lineList" *ngFor="let uncompleteItem of getRecord(recordClass);" [hidden]="hiddenItem[i]" (click)="ToRecord(uncompleteItem,i)">
+          <ion-avatar item-start>
+            <img src="./assets/icon/user.jpg">
+          </ion-avatar>
+          <h2 >{{uncompleteItem.PangzhanId}}</h2>
+          <p item-right>{{uncompleteItem.EndTime.substring(0,uncompleteItem.EndTime.indexOf('-'))+'年'+uncompleteItem.EndTime.substring(uncompleteItem.EndTime.indexOf('-')+1,uncompleteItem.EndTime.indexOf('T'))+uncompleteItem.EndTime.substring(uncompleteItem.EndTime.indexOf('T')+1)}}</p>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+  </div>
+
+</ion-content>
+

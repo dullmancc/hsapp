@@ -1,0 +1,38 @@
+page-index {
+ ion-content{
+   font-family: 'Microsoft YaHei';
+ }
+  ion-icon,span{
+    color: #5d5d5d;
+    font-size: 15px;
+  }
+
+  #my-slides{
+  height: 100px;
+  width: auto;
+}
+  .mydenglu{
+   margin-top: 25px;
+  }
+  .bar_div{
+    width: auto;
+    height: 3px;
+    margin-top: 3px;
+    background-color: #bfbfbf;
+  }
+  .col-list{
+    height: 30px;
+  }
+  ion-col{
+    height: 60px;
+    font-size: 10px;
+  }
+  img{
+  }
+p{
+  width: 40px;
+  position: relative;
+  top:-15px;
+  text-align: center;
+}
+}

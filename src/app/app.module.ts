@@ -2,39 +2,92 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
-
-import { AboutPage } from '../pages/about/about';
-import { ContactPage } from '../pages/contact/contact';
-import { HomePage } from '../pages/home/home';
-import { TabsPage } from '../pages/tabs/tabs';
-
+import {HttpModule} from "@angular/http";
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
+import { File } from '@ionic-native/file';
+import { Camera } from '@ionic-native/camera';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import {HttpService} from "../pages/Service/HttpService";
+
+import { ActionSheet, ActionSheetOptions } from '@ionic-native/action-sheet';
+import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker';
+import {BackgroundMode} from "@ionic-native/background-mode";
+import {HttpClientModule,HttpClientJsonpModule} from "@angular/common/http";
+import {JsonpModule} from "@angular/http";
+import {BackButtonService} from "../pages/Service/backButtonService";
+import {AboutPageModule} from "../pages/about/about.module";
+import {ContactPageModule} from "../pages/contact/contact.module";
+import {ExitPzRecordPageModule} from "../pages/JianLiPZ/exit-pz-record/exit-pz-record.module";
+import {HomePageModule} from "../pages/home/home.module";
+import {JLProjectPageModule} from "../pages/JianLiPZ/JLProject.module";
+import {ListPageModule} from "../pages/Work/ep-mate-entry/list/list.module";
+import {LoginPageModule} from "../pages/login/login.module";
+import {Newpz1PageModule} from "../pages/JianLiPZ/newpz1/newpz1.module";
+import {NormalPzPageModule} from "../pages/JianLiPZ/normal-pz/normal-pz.module";
+import {ObservationPageModule} from "../pages/Work/observation/observation.module";
+import {ProjectPageModule} from "../pages/Project/project.module";
+import {PZJLPageModule} from "../pages/JianLiPZ/PZlist/PZJL.module";
+import {TabsPageModule} from "../pages/tabs/tabs.module";
+import {BeautyDirective} from "../pages/Service/CSSEL";
+import {AndroidPermissions} from "@ionic-native/android-permissions";
+import {MySlidesComponent} from "../components/my-slides/my-slides";
+import {IndexPageModule} from "../pages/index/index.module";
+import {GoodsService} from "../providers/goods-service";
+import {LookService} from "../providers/look-service";
+import {SecIssuesPageModule} from "../pages/Work/sec-issues/sec-issues.module";
+import {SecIssRecordPageModule} from "../pages/Work/sec-issues/sec-iss-record/sec-iss-record.module";
 
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
-    ContactPage,
-    HomePage,
-    TabsPage
+    BeautyDirective,
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    HttpClientModule,
+    HttpClientJsonpModule,
+    JsonpModule,
+    IonicModule.forRoot(MyApp,{
+      tabsHideOnSubPages:true,
+      preloadModules:true
+    }),
+    IndexPageModule,
+    AboutPageModule,
+    ContactPageModule,
+    ExitPzRecordPageModule,
+    HomePageModule,
+    JLProjectPageModule,
+    ListPageModule,
+    LoginPageModule,
+    Newpz1PageModule,
+    NormalPzPageModule,
+    ObservationPageModule,
+    ProjectPageModule,
+    PZJLPageModule,
+    TabsPageModule,
+    HttpModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
-    ContactPage,
-    HomePage,
-    TabsPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    FileTransfer,
+    FileTransferObject,
+    File,
+    ActionSheet,
+    ImagePicker,
+    Camera,
+    BackgroundMode,
+    HttpService,
+    BackButtonService,
+    AndroidPermissions,
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    GoodsService,
+    LookService,
   ]
 })
 export class AppModule {}

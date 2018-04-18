@@ -1,0 +1,33 @@
+<!-- Generated template for the MyworkComponent component -->
+<ion-grid>
+  <ng-container *ngIf="postion==1">
+  <ion-row *ngFor="let i of JianliYuan;let x = index;">
+    <ion-col *ngFor="let j of i;let y = index; "  (click)="SetClick(x,y,1)">
+      <span>
+        <img [src]="j.src"  alt="">
+        <p>{{j.name}}</p>
+      </span>
+    </ion-col>
+  </ion-row>
+  </ng-container>
+  <ng-container *ngIf="postion==2">
+  <ion-row *ngFor="let i1 of JianliShi;let x1 = index;">
+    <ion-col *ngFor="let j1 of i1;let y1 = index;" (click)="SetClick(x1,y1,2)">
+      <span>
+        <img [src]="j1.src"  alt="">
+        <p>{{j1.name}}</p>
+      </span>
+    </ion-col>
+  </ion-row>
+  </ng-container>
+  <ng-container *ngIf="postion==3">
+  <ion-row *ngFor="let i2 of ZongJian;let x2 = index;">
+    <ion-col *ngFor="let j2 of i2;let y2 = index;" (click)="SetClick(x2,y2,3)">
+      <span>
+        <img [src]="j2.src"  alt="">
+        <p>{{j2.name}}</p>
+      </span>
+    </ion-col>
+  </ion-row>
+  </ng-container>
+</ion-grid>

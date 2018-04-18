@@ -1,0 +1,39 @@
+<!--
+  Generated template for the FriendPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header id="header">
+  <div class="header-center">
+    <ion-title [ngStyle]="{'text-align':'center'}">联系人</ion-title>
+  </div>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <ion-item *ngFor="let pros of pro;">
+      <ion-avatar item-start>
+        <img src="./assets/imgs/common/project.png">
+      </ion-avatar>
+      <h2>{{pros.Name}}</h2>
+      <span [ngStyle]="{'color':'#f4f4f4','font-size':'10px'}">状态:</span><span [ngStyle]="{'color':'#32db64','font-size':'10px'}">{{pros.EPType}}</span>
+      <ion-note item-end (click)="openModal(pros)">
+        <img src="./assets/imgs/common/manger.png"/>
+      </ion-note>
+    </ion-item>
+  </ion-list>
+  <div>
+    <span [ngStyle]="{'color':'#87815e'}">
+    常用联系人
+    </span>
+  </div>
+
+  <ion-list>
+  <ion-item>
+    <img src="./assets/imgs/common/common-nodata.png"/>
+    <h2 class="itemh2">暂无常用联系人</h2>
+  </ion-item>
+  </ion-list>
+</ion-content>

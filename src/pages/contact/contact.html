@@ -1,17 +1,48 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>
-      Contact
-    </ion-title>
-  </ion-navbar>
+<ion-header id="header">
+  <div class="header-center">
+    <ion-title [ngStyle]="{'text-align':'center'}">个人中心</ion-title>
+  </div>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
   <ion-list>
-    <ion-list-header>Follow us on Twitter</ion-list-header>
-    <ion-item>
-      <ion-icon name="ionic" item-start></ion-icon>
-      @ionicframework
-    </ion-item>
+    <button ion-item >
+      <ion-avatar item-left>
+        <img [src]='this.imageURI' >
+      </ion-avatar>
+      <h2>{{this.RealName}}</h2>
+      <p>账号：{{this.name}}</p>
+    </button>
   </ion-list>
+
+  <ion-list>
+    <ion-item>
+      控件1
+    </ion-item>
+    <button ion-item>
+      控件2
+    </button>
+    <button ion-item>
+      <ion-avatar item-left>
+        <img src="../../assets/imgs/user.jpg" >
+      </ion-avatar>
+      控件3
+    </button>
+  </ion-list>
+
+  <ion-list>
+    <button ion-item>
+      版本号
+      <span  item-end>V1.0</span>
+    </button>
+    <button ion-item>
+      关于
+    </button>
+  </ion-list>
+
+  <div style="text-align: center; margin-left: 30px; margin-right: 30px;margin-top: 30px;">
+    <button ion-button color="danger" block (click)="logOut()">
+      退出登录
+    </button>
+  </div>
 </ion-content>

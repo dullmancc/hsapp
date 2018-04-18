@@ -1,0 +1,95 @@
+<!--
+  Generated template for the EpWitListPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header  id="header">
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>见证取样</span>
+  </div>
+  <div class="header-right">
+    <span></span>
+  </div>
+</ion-header>
+
+
+<ion-content padding>
+  <div padding color="dark">
+    <ion-segment [(ngModel)]="pet">
+      <ion-segment-button value="unfinished">
+        待审
+      </ion-segment-button>
+      <ion-segment-button value="finished">
+        已完成
+      </ion-segment-button>
+      <ion-segment-button value="trial">
+        送检中
+      </ion-segment-button>
+
+    </ion-segment>
+  </div>
+  <div [ngSwitch]="pet">
+    <ion-list *ngSwitchCase="'unfinished'">
+      <ion-item>
+        <ion-avatar item-start>
+          <img src="./assets/imgs/workicon/secissues.png">
+        </ion-avatar>
+        <h2>见证取样一<button ion-button color="danger" outline>待审中</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:向辉</p>
+        <ion-note item-end>7:45 pm</ion-note>
+      </ion-item>
+      <ion-item>
+        <ion-avatar item-start>
+          <img src="./assets/imgs/workicon/secissues.png">
+        </ion-avatar>
+        <h2>见证取样二<button ion-button color="danger" outline>待审中</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:向辉</p>
+        <ion-note item-end>7:45 pm</ion-note>
+      </ion-item>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'trial'">
+      <ion-item>
+        <img src="./assets/imgs/workicon/fushi.png"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
+        <h2>见证取样六<button ion-button color="danger" outline>送审中</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:向辉</p>
+        <ion-note item-end>7:45 pm</ion-note>
+      </ion-item>
+      <ion-item>
+        <img src="./assets/imgs/workicon/fushi.png"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
+        <h2>见证取样七<button ion-button color="danger" outline>送审中</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:向辉</p>
+        <ion-note item-end>7:45 pm</ion-note>
+      </ion-item>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'finished'">
+      <ion-item>
+        <img src="./assets/imgs/workicon/qualified.png"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
+        <h2>见证取样三<button ion-button color="light" outline>已完成</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:向辉</p>
+        <ion-note item-end>7:45 pm</ion-note>
+      </ion-item>
+      <ion-item>
+        <img src="./assets/imgs/workicon/qualified.png"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
+        <h2>见证取样四<button ion-button color="light" outline>已完成</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:向辉</p>
+        <ion-note item-end>7:45 pm</ion-note>
+      </ion-item>
+      <ion-item>
+        <img src="./assets/imgs/workicon/unqualified.png"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
+        <h2>见证取样五<button ion-button color="light" outline>已完成</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:向辉</p>
+        <ion-note item-end>7:45 pm</ion-note>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <ion-fab right bottom>
+    <button ion-fab color="light" (click)="addEPWit()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+</ion-content>

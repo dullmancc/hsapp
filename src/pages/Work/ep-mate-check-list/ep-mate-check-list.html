@@ -1,0 +1,35 @@
+<!--
+  Generated template for the EpMateCheckListPage page.
+epmatelist.png
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header  id="header">
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>材料进场审批</span>
+  </div>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item (click)="EnterMate()">
+      <ion-avatar item-start>
+        <img src="./assets/imgs/workicon/epmatelist.png">
+      </ion-avatar>
+      <h2>材料进场审核一</h2>
+      <p [ngStyle]="{'color':'gray'}">施工方:施工方一</p>
+      <ion-note item-end>7:45 am</ion-note>
+    </ion-item>
+    <ion-item (click)="EnterMate()">
+      <ion-avatar item-start>
+        <img src="./assets/imgs/workicon/epmatelist.png">
+      </ion-avatar>
+      <h2>材料进场审核二</h2>
+      <p [ngStyle]="{'color':'gray'}">施工方:施工方二</p>
+      <ion-note item-end>12:45 pm</ion-note>
+    </ion-item>
+  </ion-list>
+</ion-content>
