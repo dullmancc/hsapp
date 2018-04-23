@@ -7,11 +7,15 @@ import {Newpz1Page} from "../newpz1/newpz1";
 import {ExitPzRecordPage} from "../exit-pz-record/exit-pz-record";
 import {NormalPzPage} from "../normal-pz/normal-pz";
 import {IonicPage} from "ionic-angular";
+import {ApiUrl} from "../../../providers/Constants";
+
 @IonicPage()
 @Component({
   selector: 'page-PZJL',
   templateUrl: 'PZJL.html'
 })
+
+
 export class PZJLPage {
   flag:boolean[]=[true,true,true];
   iconName:string[]=["arrow-dropright","arrow-dropright","arrow-dropright"];
@@ -26,14 +30,13 @@ export class PZJLPage {
   public isLoad: boolean = true;
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public modalCtrl:ModalController,public alertCtrl:AlertController,private  http:HttpService) {
-    this.mypro = this.navParams.get('Project');
     this.userid = this.navParams.get('UserId');
     this.pzbl = this.navParams.get('PZBL');
     this.Load();
   }
   Load(){
     this.isLoad = true;
-    this.http.post('http://193.112.12.241/HSWebApi/api/Project/GetMyPangzhan?PZBelongId='+this.pzbl.PZBelongId+'&EProjectId='+this.mypro.EProjectID+'&EmployeeId='+this.userid,{}).subscribe((res:any)=>{
+    this.http.post(ApiUrl+'Project/GetMyPangzhan?PZBelongId='+this.pzbl.PZBelongId+'&EProjectId='+this.pzbl.EProjectID+'&EmployeeId='+this.userid,{}).subscribe((res:any)=>{
       this.SumbitPz = res.SumbitPz;
       this.unSumbitPz = res.unSumbitPz;
       this.PassPz = res.PassPz;
@@ -113,7 +116,7 @@ export class PZJLPage {
       handler: data => {
         if(data=='hltPZ')
         {
-          let modal=this.modalCtrl.create(Newpz1Page,{userid:this.userid,pzblid:this.pzbl.PZBelongId});
+          let modal=this.modalCtrl.create(Newpz1Page,{userid:this.userid,pzbl:this.pzbl});
           modal.present();
         }
         if(data=='tPZ')
@@ -123,7 +126,7 @@ export class PZJLPage {
         }
         if(data=='ptpz')
         {
-          let modal=this.modalCtrl.create(NormalPzPage,{userid:this.userid,pzblid:this.pzbl.PZBelongId});
+          let modal=this.modalCtrl.create(NormalPzPage,{userid:this.userid,pzbl:this.pzbl});
           modal.present();
         }
       }

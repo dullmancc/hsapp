@@ -106,4 +106,62 @@ export class Utils {
       return ++sequence;
     };
   })();
+
+  static StringToConstCase(sgCase:any){
+
+    let str = "";
+    let index = 0;
+
+    let Constrcase = [
+                       '1.采用',
+                       '商品混凝土厂家生产的商品砼，',
+                       '根振动棒振捣，现场有施工员' ,
+                       '名，质检员',
+                       '名，施工作业人员',
+                       '名，完成的混凝土数量共有',
+                        'm³，其中X层剪力墙、柱C40，',
+                        'm³，Y层梁、板C30，',
+      'm³,润滑砼泵管的砂浆已用接料斗另外装着，没有直接灌入柱、墙、板中。2.施工顺序、施工缝的处理均按施工方案进行施工。现场共抽查砼坍落度',
+      '次，设计坍落度为',
+      'mm，实际为',
+      'mm，符合设计及规范要求,砼严禁加生水。现场共做混凝土试块10组，其中C30',
+      '组，标养',
+      '组，同条件',
+      '组；C40',
+      '组，标养',
+      '组，同条件',
+      '组。抽查了板砼的厚度共',
+      '处，设计厚度为',
+      'mm，实际为',
+      '剪力墙、柱、梁、板浇捣顺序，剪力墙、柱与梁、板不同标号砼之间的处理措施严格按照施工方案执行。砼浇筑完后，施工单位对梁板砼表面进行了二次压实，并采用薄膜和（或）毛毡覆盖保养。\n施工情况附加信息:'
+    ];
+
+    for(let x in sgCase){
+      str = str+ Constrcase[index]+sgCase[x];
+      index++;
+    }
+
+    return str;
+  }
+
+  static ParamsToString(Params:any){
+
+    let epParams = '';
+
+    for(let x in Params){
+      epParams = epParams + x +'='+ Params[x]+'&';
+    }
+
+    return epParams.substr(0,epParams.length-1);
+
+  }
+
+  //序列化对象
+  static serializeObj(obj) {
+    var result = [];
+    for (var property in obj)
+      result.push(encodeURIComponent(property) + "=" + encodeURIComponent(obj[property]));
+
+    return result.join("&");
+  }
 }

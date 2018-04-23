@@ -24,6 +24,10 @@
 <ion-content padding overflow-scroll="true">
 <ion-list>
   <ion-item >
+    <ion-label color="primary" stacked>施工单位:</ion-label>
+    <ion-input type="text" [(ngModel)]="PZrecord.ConStructUnit" placeholder="施工单位"></ion-input>
+  </ion-item>
+  <ion-item >
     <ion-label color="primary" stacked>关键部位:</ion-label>
     <ion-input type="number" [(ngModel)]="part" placeholder="X层结构剪力墙、柱"></ion-input>
   </ion-item>
@@ -33,19 +37,19 @@
   </ion-item>
   <ion-item>
     <ion-label color="primary" stacked>旁站计划开始时间</ion-label>
-      <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="计划开始日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="planStartTime"></ion-datetime>
+      <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="计划开始日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="PZrecord.SchBeginTime"></ion-datetime>
   </ion-item>
   <ion-item>
     <ion-label  color="primary" stacked>旁站计划结束时间</ion-label>
-    <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="计划结束日期" [(ngModel)]="planEndTime" (ionChange)="changePlanDate()"></ion-datetime>
+    <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="计划结束日期" [(ngModel)]="PZrecord.SchEndTime" (ionChange)="changePlanDate()"></ion-datetime>
   </ion-item>
 <ion-item>
   <ion-label  color="primary" stacked>旁站开始时间</ion-label>
-  <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="开始日期" [(ngModel)]="startTime"></ion-datetime>
+  <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="开始日期" [(ngModel)]="PZrecord.BeginTime"></ion-datetime>
 </ion-item>
   <ion-item>
     <ion-label  color="primary" stacked>旁站结束时间</ion-label>
-    <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="结束日期" [(ngModel)]="endTime" (ionChange)="changeDate()"></ion-datetime>
+    <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="结束日期" [(ngModel)]="PZrecord.EndTime" (ionChange)="changeDate()"></ion-datetime>
   </ion-item>
     <ion-label  color="primary" style="margin-left:4% ;font-size: 1.0em;" stacked>施工情况</ion-label>
     <div margin-left="5%" margin-top="5%" class="xiahuaxian" style="text-indent: 2em">
@@ -83,11 +87,11 @@
     </div>
   <ion-item>
     <ion-label color="primary" stacked>发现的问题</ion-label>
-    <ion-input placeholder="发现的问题" [(ngModel)]="findProblem" type="text"></ion-input>
+    <ion-input placeholder="发现的问题" [(ngModel)]="PZrecord.FindPromble" type="text"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label color="primary" stacked>处理情况</ion-label>
-    <ion-input placeholder="处理情况" [(ngModel)]="dealCase" type="text"></ion-input>
+    <ion-input placeholder="处理情况" [(ngModel)]="PZrecord.Suggestion" type="text"></ion-input>
   </ion-item>
   <ion-label  color="primary" style="font-size: 1.0em;margin-left:5%">现场照片</ion-label>
   <div margin-left="5%" margin-top="5%" class="xiahuaxian">

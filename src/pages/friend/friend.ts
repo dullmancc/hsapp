@@ -4,6 +4,8 @@ import {ProjectPage} from "../Project/project";
 import {HttpService} from "../Service/HttpService";
 import {JLProjectPage} from "../JianLiPZ/JLProject";
 import {TabsPage} from "../tabs/tabs";
+import {Project} from "../../Model/EPProject";
+import {ApiUrl} from "../../providers/Constants";
 
 /**
  * Generated class for the FriendPage page.
@@ -20,12 +22,12 @@ import {TabsPage} from "../tabs/tabs";
 export class FriendPage {
   public pro:Project[];
   public items;
-  public url:string;
   public userId: number = -1 ;
   constructor(public navCtrl: NavController,public  navparm:NavParams,private http: HttpService,public modalCtrl: ModalController) {
     // If we navigated to this page, we will have an item available as a nav param
     this.pro = [];
-    this.url = "http://193.112.12.241/HSWebApi/api/";
+    //this.url = "http://193.112.12.241/HSWebApi/api/";
+    //http://localhost:1857/
     if(typeof (TabsPage.UserInfo)!=='undefined'){
       this.userId = TabsPage.UserInfo.employees.EmployeeID;
       this.Load();
@@ -45,7 +47,7 @@ export class FriendPage {
   * 4:公共交通项目
   * */
   Load() {
-    this.http.get(this.url+"Project/GetMyEProjects?EmployeeId="+TabsPage.UserInfo.employees.EmployeeID)
+    this.http.get(ApiUrl+"Project/GetMyEProjects?EmployeeId="+TabsPage.UserInfo.employees.EmployeeID)
       .subscribe(res => {
         //返回结果，直接是json形式
         this.items = res;
@@ -74,20 +76,5 @@ export class FriendPage {
         //错误信息
         alert(error);
       });
-  }
-}
-
-export class Project {
-  public EProjectID:number;    //项目id
-  public Name:string;          //项目名称
-  public EPState:number;       //项目状态
-  public EPTypeId:number;      //项目类型id
-  public EPType:string;        //项目类型名称
-  constructor(){
-    this.EProjectID=0;
-    this.Name = '';
-    this.EPState=0;
-    this.EPTypeId =0 ;
-    this.EPType ='';
   }
 }

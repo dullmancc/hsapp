@@ -8,14 +8,15 @@ import {BackgroundMode} from "@ionic-native/background-mode";
 import {Platform} from  "ionic-angular";
 import {BackButtonService} from "../Service/backButtonService";
 import {HttpClient,HttpHeaders} from '@angular/common/http';
+import {User} from "../../Model/User";
 /**
  * Generated class for the LoginPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
-const url = "http://193.112.12.241/HSWebApi/";
-//const url = "http://localhost:1857/";
+//const url = "http://193.112.12.241/HSWebApi/";
+const url = "http://localhost:1857/";
 @IonicPage()
 @Component({
   selector: 'page-login',
@@ -129,18 +130,4 @@ export class LoginPage {
     });
     alert.present();
   }
-
-  //序列化对象
-  private serializeObj(obj) {
-    var result = [];
-    for (var property in obj)
-      result.push(encodeURIComponent(property) + "=" + encodeURIComponent(obj[property]));
-
-    return result.join("&");
-  }
-}
-export class User{
-  public UserName:string;
-  public Password:string;
-  public grant_type:string;
 }

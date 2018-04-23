@@ -7,12 +7,17 @@ import {File} from "@ionic-native/file";
 import {ImagePicker, ImagePickerOptions} from "@ionic-native/image-picker";
 import {Camera, CameraOptions} from "@ionic-native/camera";
 import {ActionSheet, ActionSheetOptions} from "@ionic-native/action-sheet";
+import {PzRecord} from "../../../Model/EPPangzhan";
+import {Utils} from "../../../providers/Utils";
 /**
  * Generated class for the ExitPzRecordPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
+
+const url = "http://localhost:1857/api/";
+//const url = "http://193.112.12.241/HSWebApi/api/";
 @IonicPage()
 @Component({
   selector: 'page-exit-pz-record',
@@ -25,24 +30,7 @@ export class ExitPzRecordPage {
   endTime:any;
   planStartTime:any;
   planEndTime :any;
-  PZrecord:any={
-    PangzhanId:"",
-    EmployeeID:"",
-    Processno :"",
-    Partno:"",
-    ProductNo:"",
-    BeginTime:"",
-    PreBeginTime:"",
-    EndTime:"",
-    PreEndTime:"",
-    ConstructionCase:"",
-    SupervisorCase:"",
-    FindPromble:"",
-    Suggestion:"",
-    Remark:"",
-    ImagePath :"",
-    IsSubmit :"",
-    PZBelongId:"",};
+  PZrecord:PzRecord;
     PZtype:number;
     btcs:string;
   btcs1;
@@ -60,7 +48,8 @@ export class ExitPzRecordPage {
     }else {
       this.btcs1 = 'none';
     }
-    if(this.PZrecord.ImagePath!=null){
+    /*
+    if(this.PZrecord!=null){
       var arr = this.PZrecord.ImagePath.split(',');
       for(var i = 0;i<arr.length;i++){
         arr[i]='http://193.112.12.241'+ arr[i].substring(1);
@@ -68,7 +57,7 @@ export class ExitPzRecordPage {
         p.src = arr[i];
         this.photoes.push(p);
       }
-    }
+    }*/
     this.Trans = transfer.create();
   }
 
@@ -76,32 +65,32 @@ export class ExitPzRecordPage {
     console.log('ionViewDidLoad ExitPzRecordPage');
   }
   save(IsSubmit){
-    if(typeof (this.PZrecord.PreBeginTime)=='undefined'){
-      this.PZrecord.PreBeginTime = '2000-01-01';
-    }
-    if(typeof (this.PZrecord.BeginTime)=='undefined'){
-      this.PZrecord.BeginTime = '2000-01-01';
-    }
-    if(typeof (this.PZrecord.PreEndTime)=='undefined'){
-      this.PZrecord.PreEndTime = '2000-01-01';
-    }
-    if(typeof (this.PZrecord.EndTime)=='undefined'){
-      this.PZrecord.EndTime = '2000-01-01';
-    }
-    var data = 'PangzhanId='+this.PZrecord.PangzhanId+'&EmployeeID='+this.PZrecord.EmployeeID+
-      '&Processno='+this.PZrecord.Processno+'&Partno='+this.PZrecord.Partno+
-      '&ProductNo='+this.PZrecord.ProductNo+'&BeginTime='+this.PZrecord.BeginTime+
-      '&PreBeginTime='+this.PZrecord.PreBeginTime+'&EndTime='+this.PZrecord.EndTime+
-      '&PreEndTime='+this.PZrecord.PreEndTime+'&ConstructionCase='+this.PZrecord.ConstructionCase+
-      '&SupervisorCase='+this.PZrecord.SupervisorCase+'&FindPromble='+this.PZrecord.FindPromble+
-      '&Suggestion='+this.PZrecord.Suggestion+'&Remark='+this.PZrecord.Remark+'&ImagePath='+
-      this.PZrecord.ImagePath+'&IsSubmit='+this.PZrecord.IsSubmit+'&PZBelongId='+this.PZrecord.PZBelongId;
-    this.http.post('http://193.112.12.241/HSWebApi/api/Pangzhan/PostPangzhan',data).subscribe(res=>{
+
+    this.checkTime();
+    var data = Utils.ParamsToString(this.PZrecord);
+
+    this.http.post(url+'Pangzhan/PostPangzhan',data).subscribe(res=>{
       alert(res.ErrorMs);
     },error=>{
       alert(error);
     });
   }
+
+  checkTime(){
+    if(typeof (this.PZrecord.SchBeginTime)=='undefined'){
+      this.PZrecord.SchBeginTime = '2000-01-01';
+    }
+    if(typeof (this.PZrecord.BeginTime)=='undefined'){
+      this.PZrecord.BeginTime = '2000-01-01';
+    }
+    if(typeof (this.PZrecord.SchEndTime)=='undefined'){
+      this.PZrecord.SchEndTime = '2000-01-01';
+    }
+    if(typeof (this.PZrecord.EndTime)=='undefined'){
+      this.PZrecord.EndTime = '2000-01-01';
+    }
+  }
+
   presentToast(msg) {
     let toast = this.toastCtrl.create({
       message: msg,
@@ -122,8 +111,8 @@ export class ExitPzRecordPage {
     });
     loader.present();
 
-      const url = 'http://193.112.12.241/HSWebApi/api/Pangzhan/Get?id='+this.PZrecord.PangzhanId;
-      this.Trans.download(url, this.file.externalApplicationStorageDirectory  + 'Out1.doc').then((entry) => {
+      const url1 = 'http://193.112.12.241/HSWebApi/api/Pangzhan/Get?id='+this.PZrecord.PangzhanId;
+      this.Trans.download(url1, this.file.externalApplicationStorageDirectory  + 'Out1.doc').then((entry) => {
         console.log('download complete: ' + entry.toURL());
         alert('download complete: ' + entry.toURL());
         loader.dismiss();
@@ -216,30 +205,11 @@ export class ExitPzRecordPage {
   reUpload(){
     this.photoes = [];
     this.cd.detectChanges();
-    this.http.post("http://193.112.12.241/HSWebApi/api/Pangzhan/Repostimg",this.PZrecord.PangzhanId).subscribe(res=>{
+    this.http.post(url+"Pangzhan/Repostimg",this.PZrecord.PangzhanId).subscribe(res=>{
       alert("已清除原先上传图片，请重新上传");
     },error=>{
       alert("清除失败，请重试！");
     });
   }
-}
-export class PzRecord{
-  public PangzhanId;
-  public EmployeeID;
-  public Processno ;
-  public Partno;
-  public ProductNo;
-  public BeginTime;
-  public PreBeginTime;
-  public EndTime;
-  public PreEndTime;
-  public ConstructionCase;
-  public SupervisorCase;
-  public FindPromble;
-  public Suggestion;
-  public Remark;
-  public ImagePath;
-  public IsSubmit;
-  public PZBelongId;
 }
 

@@ -3,6 +3,7 @@ import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import {HttpService} from "../Service/HttpService";
 import {PZJLPage} from "./PZlist/PZJL";
 import { AlertController ,ToastController } from 'ionic-angular';
+import {ApiUrl} from "../../providers/Constants";
 @IonicPage()
 @Component({
   selector: 'page-JLProject',
@@ -13,18 +14,16 @@ export class JLProjectPage {
   public mypro;
   public mypzbl;
   public me;
-  public url:string;
   constructor(public navCtrl: NavController,private http: HttpService
               ,private navp:NavParams,private alertC:AlertController
               ,public toastCtrl: ToastController,private cd:ChangeDetectorRef){
-    this.url = 'http://193.112.12.241/HSWebApi/api/';
     this.mypro = this.navp.get('charNum');
     this.me = this.navp.get('userId');
     this.Load();
   }
 //Project/getPZBlong?EProjectId=6'
   Load(){
-    this.http.get(this.url+'Project/getPZBlong?EProjectId='+this.mypro.EProjectID).subscribe(res => {
+    this.http.get(ApiUrl+'Project/getPZBlong?EProjectId='+this.mypro.EProjectID).subscribe(res => {
       this.mypzbl = res;
       console.log(this.mypzbl);
     }, error => {
@@ -38,7 +37,7 @@ export class JLProjectPage {
   }
 
   ToMyPZJL(pro){
-      this.navCtrl.push(PZJLPage,{Project:this.mypro,PZBL:pro,UserId:this.me});
+      this.navCtrl.push(PZJLPage,{PZBL:pro,UserId:this.me});
   }
   newPZBL(){
       let prompt = this.alertC.create({
@@ -63,17 +62,17 @@ export class JLProjectPage {
             handler: data => {
               console.log(data);
               let pzbl =new PZBelong();
-              pzbl.Descrb = data.旁站描述;
+              pzbl.PZBelongName = data.旁站描述;
               pzbl.EProjectID = this.mypro.EProjectID;
               pzbl.EPZState = 0;
               pzbl.PZBelongId = '';
-              let res = 'PZBelongId='+pzbl.PZBelongId+'&Descrb='+pzbl.Descrb+'&EProjectID='+pzbl.EProjectID+'&EPZState='+ pzbl.EPZState;
-              this.http.post(this.url+'Pangzhan/PostPZbelong',res).subscribe(resp=>{
+              let res = 'PZBelongId='+pzbl.PZBelongId+'&PZBelongName='+pzbl.PZBelongName+'&EProjectID='+pzbl.EProjectID+'&EPZState='+ pzbl.EPZState;
+              this.http.post(ApiUrl+'Pangzhan/PostPZbelong',res).subscribe(resp=>{
                 let toast = this.toastCtrl.create({
                   message: '创建成功!',
                   duration: 3000
                 });
-                this.mypzbl.push(resp);
+                this.mypzbl.push(resp.pZBelong);
                 this.cd.detectChanges();
                 toast.present();
               },error=>{
@@ -92,7 +91,7 @@ export class JLProjectPage {
 }
 export class PZBelong{
   public PZBelongId:any;
-  public Descrb:string;
+  public PZBelongName:string;
   public EProjectID:string;
   public EPZState:number;
 }

@@ -42,30 +42,30 @@ export class MyworkComponent {
     this.LoadPosition();
   }
   LoadPosition(){
-    //如果不是管理人员
-    if(typeof TabsPage.UserInfo.userroles.ManangerRole === 'undefined'){
-
-    }else{
+    //如果是管理人员
+    if(TabsPage.UserInfo.userroles.Type =='Management'){
       this.postion = 3;
-    }
-
-    if(typeof TabsPage.UserInfo.userroles.ProjectRole === 'undefined'){
-      this.postion = -1;
-    }else{
-      switch(TabsPage.UserInfo.userroles.ProjectRole){
-        case 'JSE':
-          this.postion = 2;
-          break;
-        case 'SE':
-          this.postion = 1;
-          break;
-        case 'ChiefSE':
-          this.postion = 3;
-          break;
-        default:
-          break;
+    }else if(TabsPage.UserInfo.userroles.Type =='Project'){
+      if(typeof TabsPage.UserInfo.userroles.Role === 'undefined'){
+        this.postion = -1;
+      }else{
+        switch(TabsPage.UserInfo.userroles.Role){
+          case 'JSE':
+            this.postion = 2;
+            break;
+          case 'SE':
+            this.postion = 1;
+            break;
+          case 'ChiefSE':
+            this.postion = 3;
+            break;
+          default:
+            break;
+        }
       }
     }
+
+
   }
 
   getJianliYuan(){

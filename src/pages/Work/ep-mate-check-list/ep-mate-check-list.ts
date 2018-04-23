@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {ListPage} from "../ep-mate-entry/list/list";
 import {EpWitSamplePage} from "../ep-wit-sample/ep-wit-sample";
+import {EpWitListPage} from "../ep-wit-sample/ep-wit-list/ep-wit-list";
 
 /**
  * Generated class for the EpMateCheckListPage page.
@@ -34,7 +35,7 @@ export class EpMateCheckListPage {
     if(this.enter==1){
       this.navCtrl.push(ListPage);
     }else{
-      this.navCtrl.push(EpWitSamplePage);
+      this.navCtrl.push(EpWitListPage);
     }
 
   }

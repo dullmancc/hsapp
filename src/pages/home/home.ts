@@ -10,6 +10,7 @@ declare var AMap;
 import {IonicPage} from "ionic-angular";
 import {ProjectPage} from "../Project/project";
 import {JLProjectPage} from "../JianLiPZ/JLProject";
+import {ApiUrl} from "../../providers/Constants";
 @IonicPage()
 @Component({
   selector: 'page-home',
@@ -17,7 +18,6 @@ import {JLProjectPage} from "../JianLiPZ/JLProject";
 })
 
 export class HomePage {
-  public url;
   public pro:Project[];
   public  currentProject:Project;
   public items;
@@ -42,8 +42,6 @@ export class HomePage {
               private platform:Platform) {
 
     this.currentProject = new Project();
-
-    this.url = "http://193.112.12.241/HSWebApi/api/";
     this.Load();
     //权限询问
     var list = [
@@ -99,7 +97,7 @@ export class HomePage {
   }
 
   Load() {
-    this.http.get(this.url+"Project/GetMyEProjects?EmployeeId="+TabsPage.UserInfo.employees.EmployeeID)
+    this.http.get(ApiUrl+"Project/GetMyEProjects?EmployeeId="+TabsPage.UserInfo.employees.EmployeeID)
       .subscribe(res => {
         //返回结果，直接是json形式
         this.items = res;
