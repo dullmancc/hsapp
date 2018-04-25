@@ -25,7 +25,7 @@
       <ng-container *ngIf="!isLoad">
         <ion-item class="lineList" *ngFor="let uncompleteItem of getRecord(recordClass);" [hidden]="hiddenItem[i]" (click)="ToRecord(uncompleteItem,i)">
           <ion-avatar item-start>
-            <img src="./assets/icon/user.jpg">
+            <img src="./assets/icon/user.png">
           </ion-avatar>
           <h2 >{{uncompleteItem.PangzhanId}}</h2>
           <p item-right>{{uncompleteItem.EndTime.substring(0,uncompleteItem.EndTime.indexOf('-'))+'年'+uncompleteItem.EndTime.substring(uncompleteItem.EndTime.indexOf('-')+1,uncompleteItem.EndTime.indexOf('T'))+uncompleteItem.EndTime.substring(uncompleteItem.EndTime.indexOf('T')+1)}}</p>

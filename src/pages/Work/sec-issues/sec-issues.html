@@ -18,7 +18,7 @@
   <div padding color="dark">
     <ion-segment [(ngModel)]="pet">
       <ion-segment-button value="all">
-        全部
+        未完成
       </ion-segment-button>
       <ion-segment-button value="finished">
         已完成
@@ -28,6 +28,15 @@
   <div [ngSwitch]="pet">
 
     <ion-list *ngSwitchCase="'all'">
+      <ion-item *ngFor="let i of listSecIssus.unfinished;">
+        <ion-avatar item-start>
+          <img src="./assets/imgs/workicon/secissues.png">
+        </ion-avatar>
+        <h2>{{i.UnitPart}}<button ion-button color="light" outline>{{getState(i.State)}}</button></h2>
+        <p [ngStyle]="{'color':'gray'}">追踪人:{{i.Employee.RealName}}</p>
+        <ion-note item-end>{{i.EPSecIssueTime}}</ion-note>
+      </ion-item>
+      <!--
       <ion-item>
         <ion-avatar item-start>
           <img src="./assets/imgs/workicon/secissues.png">
@@ -76,9 +85,19 @@
         <p [ngStyle]="{'color':'gray'}">追踪人:向辉</p>
         <ion-note item-end>7:45 pm</ion-note>
       </ion-item>
+      -->
     </ion-list>
 
     <ion-list *ngSwitchCase="'finished'">
+      <ion-item *ngFor="let i of listSecIssus.finished;">
+        <ion-avatar item-start>
+          <img src="./assets/imgs/workicon/secissues.png">
+        </ion-avatar>
+        <h2>{{i.UnitPart}}<button ion-button color="light" outline>{{getState(i.State)}}</button></h2>
+        <p [ngStyle]="{'color':'gray'}">追踪人:{{i.Employee.RealName}}</p>
+        <ion-note item-end>{{i.EPSecIssueTime}}</ion-note>
+      </ion-item>
+        <!--
         <ion-item>
           <ion-avatar item-start>
             <img src="./assets/imgs/workicon/secissues.png">
@@ -103,6 +122,7 @@
           <p [ngStyle]="{'color':'gray'}">追踪人:向辉</p>
           <ion-note item-end>7:45 pm</ion-note>
         </ion-item>
+        -->
     </ion-list>
   </div>
   <!--

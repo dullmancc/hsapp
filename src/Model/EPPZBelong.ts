@@ -6,4 +6,5 @@ export class PZBelong{
   public PZBelongName:string;
   public EProjectID:string;
   public EPZState:number;
+
 }

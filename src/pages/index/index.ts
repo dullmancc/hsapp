@@ -38,4 +38,15 @@ export class IndexPage {
   denglu(){
     this.navCtrl.push(LoginPage);
   }
+  fileChanged(event){
+    if (event.target.files && event.target.files[0]) {
+      if (event.target.files[0].size > 512000) {
+        console.log(event.target.files[0]);
+        console.log('the file size more than 500kb');
+      } else {
+        console.log(event.target.files[0]);
+        console.log('the file size less than 500kb');
+      }
+    }
+  }
 }

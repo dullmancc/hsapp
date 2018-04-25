@@ -9,11 +9,14 @@ import {HttpService} from "../../Service/HttpService";
 import {ApiUrl} from "../../../providers/Constants";
 import {Utils} from "../../../providers/Utils";
 import {PzRecord} from "../../../Model/EPPangzhan";
+import {EPCSFile} from "../../../Model/EPCSFile";
 
 @IonicPage()
 export class photo
 {
   public src:any;
+  public isupload:boolean;
+  public ePfile:EPCSFile;
 }
 @Component({
   selector: 'page-newpz1',
@@ -21,14 +24,10 @@ export class photo
 })
 export class Newpz1Page {
     loader;
-    startTime:any;
-    endTime:any;
     planStartTime:any;
-    planEndTime :any;
     part:any;
     gongxu:any;
-    findProblem:any;
-    dealCase:any;
+
     sgCase:any={w1:"",w2:"",w3:"",w4:"",w5:"",
                  w6:"",w7:"",w8:"",w9:"",w10:"",
                 w11:"",w12:"",w13:"",w14:"",w15:"",
@@ -37,7 +36,7 @@ export class Newpz1Page {
     PZrecord:PzRecord;
     Pangzhanid:string;
     public PZBL;
-
+    ePfiles:EPCSFile[] = [];
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -65,19 +64,10 @@ export class Newpz1Page {
 
     this.checkTime();
     var data = Utils.ParamsToString(this.PZrecord);
-      /*
-          var data = 'PangzhanId='+this.PZrecord.PangzhanId+'&EmployeeID='+this.PZrecord.EmployeeID+
-            '&Processno='+this.PZrecord.Processno+'&Partno='+this.PZrecord.Partno+
-            '&ProductNo='+this.PZrecord.ProductNo+'&BeginTime='+this.PZrecord.BeginTime+
-            '&PreBeginTime='+this.PZrecord.PreBeginTime+'&EndTime='+this.PZrecord.EndTime+
-            '&PreEndTime='+this.PZrecord.PreEndTime+'&ConstructionCase='+this.PZrecord.ConstructionCase+
-            '&SupervisorCase='+this.PZrecord.SupervisorCase+'&FindPromble='+this.PZrecord.FindPromble+
-            '&Suggestion='+this.PZrecord.Suggestion+'&Remark='+this.PZrecord.Remark+'&ImagePath='+
-            this.PZrecord.ImagePath+'&IsSubmit='+this.PZrecord.IsSubmit+'&PZBelongId='+this.PZrecord.PZBelongId;*/
     this.http.post(ApiUrl+'Pangzhan/PostPangzhan',data).subscribe(res=>{
         alert(res.ErrorMs);
-        console.log(res.Pangzhanid);
-        this.Pangzhanid = res.Pangzhanid;
+        console.log(res.EPCSParentID);
+        this.Pangzhanid = res.EPCSParentID;
     },error=>{
       alert(error);
     });
@@ -100,6 +90,11 @@ export class Newpz1Page {
 
   upFile(i) {
     console.log(this.photoes.length);
+    //上传了跳过
+    if(this.photoes[i].isupload){
+      return this.upFile(i+1);
+    }
+
     if (i < this.photoes.length) {
 
       var fileTransfer: FileTransferObject = this.transfer.create();
@@ -111,9 +106,16 @@ export class Newpz1Page {
         mimeType: "image/jpeg",
         headers: {}
       }
-      fileTransfer.upload(this.photoes[i].src, ApiUrl+'Pangzhan/Post?panzhangid='+this.Pangzhanid+'&EmployeeId='+this.PZrecord.Employee_EmployeeID, options)
+
+      let data = {'FileUpPerson':this.PZrecord.Employee_EmployeeID,'EPCSID':this.PZrecord.PangzhanId};
+
+      var datastr = Utils.ParamsToString(data);
+      fileTransfer.upload(this.photoes[i].src, ApiUrl+'Pangzhan/PostFile?'+datastr, options)
         .then((data) => {
           i++;
+          this.photoes[i].isupload = true;
+
+          this.photoes[i].ePfile.EPSecFileID = JSON.parse(data.response).EPCSFileID;
           if (i == this.photoes.length ) {
             this.loader.dismiss();
           } else {
@@ -173,6 +175,10 @@ export class Newpz1Page {
    }
 
   addPhoto():void{
+    if(this.PZrecord.PangzhanId == ''){
+      alert("请先保存！");
+      return;
+    }
     const options0: CameraOptions = {
       quality: 100,
       destinationType: this.camera.DestinationType.DATA_URL,
@@ -203,7 +209,11 @@ export class Newpz1Page {
           let base64Image = 'data:image/jpeg;base64,' + imageData;
           let p=new photo();
           p.src=base64Image;
+          p.isupload = false;
+          p.ePfile = new EPCSFile(this.PZrecord.PangzhanId,this.PZrecord.Employee_EmployeeID);
           this.photoes.push(p);
+          this.uploadFile();
+
         }, (err) => {
           console.log(err);
         });
@@ -211,8 +221,11 @@ export class Newpz1Page {
         this.imagePicker.getPictures(options1).then((results) => {
           for (var i = 0; i < results.length; i++) {
             let p=new photo();
+            p.ePfile = new EPCSFile(this.PZrecord.PangzhanId,this.PZrecord.Employee_EmployeeID);
             p.src=results[i];
+            p.isupload = false;
             this.photoes.push(p);
+            this.uploadFile();
           }
         }, (err) => {
           console.log('获取图片失败');
@@ -221,13 +234,20 @@ export class Newpz1Page {
   }
 
   deletePhoto(i:number){
-    if(0<=i&&i<=this.photoes.length-1)
-    {
-      for(let k=i;k<this.photoes.length-1;k++)
+    this.http.post(ApiUrl+'Pangzhan/DeleteFile?FileID='+this.photoes[i].ePfile.EPSecFileID,{}).subscribe(res=>{
+      if(0<=i&&i<=this.photoes.length-1)
       {
-        this.photoes[k]=this.photoes[k+1];
+        for(let k=i;k<this.photoes.length-1;k++)
+        {
+          this.ePfiles[k] = this.ePfiles[k+1];
+          this.photoes[k]=this.photoes[k+1];
+        }
+        this.ePfiles.length--;
+        this.photoes.length--;
       }
-      this.photoes.length--;
-    }
+    },error=>{
+      alert("删除失败！");
+    });
+
   }
 }

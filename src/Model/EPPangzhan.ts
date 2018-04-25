@@ -18,6 +18,7 @@ export class PzRecord{
   public Remark;
   public State;
   public PZBelongId;
+  public EPCSParent;
 
   constructor(){
   this.PangzhanId = '';

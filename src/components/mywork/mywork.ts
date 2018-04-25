@@ -99,7 +99,7 @@ export class MyworkComponent {
           'name':'安全履职',
           'src':'assets/imgs/workicon/security.png',
           'alt':SecIssuesPage,
-          'NavParm':{}
+          'NavParm':{'EProject':this.MyProject}
         },
         {
           'name':'材料进场',
@@ -187,7 +187,7 @@ export class MyworkComponent {
                   'name':'安全履职',
                   'src':'assets/imgs/workicon/security.png',
                   'alt':SecIssuesPage,
-                  'NavParm':{}
+                  'NavParm':{'EProject':this.MyProject}
                 },
                 {'name':'模块5',
                   'src':'assets/imgs/workicon/three.png',
@@ -253,7 +253,7 @@ export class MyworkComponent {
                   'name':'安全履职',
                   'src':'assets/imgs/workicon/security.png',
                   'alt':SecIssuesPage,
-                  'NavParm':{}
+                  'NavParm':{'EProject':this.MyProject}
                 },
                 {'name':'模块5',
                   'src':'assets/imgs/workicon/three.png',
