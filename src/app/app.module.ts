@@ -37,6 +37,8 @@ import {GoodsService} from "../providers/goods-service";
 import {LookService} from "../providers/look-service";
 import {SecIssuesPageModule} from "../pages/Work/sec-issues/sec-issues.module";
 import {SecIssRecordPageModule} from "../pages/Work/sec-issues/sec-iss-record/sec-iss-record.module";
+import {SecIssueslistPage} from "../pages/Work/sec-issues/sec-issueslist/sec-issueslist";
+import {SecIssRecordPage} from "../pages/Work/sec-issues/sec-iss-record/sec-iss-record";
 
 @NgModule({
   declarations: [
@@ -66,6 +68,7 @@ import {SecIssRecordPageModule} from "../pages/Work/sec-issues/sec-iss-record/se
     ProjectPageModule,
     PZJLPageModule,
     TabsPageModule,
+    SecIssuesPageModule,
     HttpModule,
   ],
   bootstrap: [IonicApp],

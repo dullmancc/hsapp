@@ -18,7 +18,6 @@ import {ApiUrl} from "../../../providers/Constants";
  * Ionic pages and navigation.
  */
 
-const url = "http://localhost:1857/api/";
 //const url = "http://193.112.12.241/HSWebApi/api/";
 @IonicPage()
 @Component({
@@ -59,6 +58,7 @@ export class ExitPzRecordPage {
         var p = new  photo();
         p.src = ApiUrl.slice(0,ApiUrl.length-4)+ this.ePfiles[i].FilePath.substring(2);
         this.photoes.push(p);
+        this.photoes[i].ePfile = this.ePfiles[i];
       }
     }
     this.Trans = transfer.create();
@@ -73,7 +73,7 @@ export class ExitPzRecordPage {
     this.PZrecord.State = IsSubmit;
     var data = Utils.ParamsToString(this.PZrecord);
 
-    this.http.post(url+'Pangzhan/PostPangzhan',data).subscribe(res=>{
+    this.http.post(ApiUrl+'Pangzhan/PostPangzhan',data).subscribe(res=>{
       alert(res.ErrorMs);
     },error=>{
       alert(error);
@@ -267,10 +267,8 @@ export class ExitPzRecordPage {
       {
         for(let k=i;k<this.photoes.length-1;k++)
         {
-          this.ePfiles[k] = this.ePfiles[k+1];
           this.photoes[k]=this.photoes[k+1];
         }
-        this.ePfiles.length--;
         this.photoes.length--;
       }
     },error=>{

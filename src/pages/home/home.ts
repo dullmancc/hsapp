@@ -213,7 +213,7 @@ export class HomePage {
           __this._tempture = data.lives[0].temperature;
           //由于跨域等问题，我们先用web api上获取了信息在，通过访问web api 获得天气信息
          // __this.http.get('http://193.112.12.241/HSWebApi/api/Pangzhan/GetWeather?city='+encodeURI(__this._city.substring(0,__this._city.length-1))).subscribe(data=>{
-          __this.http.get('http://localhost:1857/api/pangzhan/getweather?city='+encodeURI(__this._city.substring(0,__this._city.length-1))).subscribe(data=>{
+          __this.http.get(ApiUrl+'pangzhan/getweather?city='+encodeURI(__this._city.substring(0,__this._city.length-1))).subscribe(data=>{
             //更新天气信息
             __this.imageURI ='./assets/weather/'+data.HeWeather6[0].now.cond_code+'.png';
             __this._weather  = data.HeWeather6[0].now.cond_txt;

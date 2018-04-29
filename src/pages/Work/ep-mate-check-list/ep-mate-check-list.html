@@ -15,21 +15,13 @@ epmatelist.png
 
 <ion-content padding>
   <ion-list>
-    <ion-item (click)="EnterMate()">
+    <ion-item *ngFor="let i of epMaterialsCheck" (click)="EnterMate(i)">
       <ion-avatar item-start>
         <img src="./assets/imgs/workicon/epmatelist.png">
       </ion-avatar>
-      <h2>材料进场审核一</h2>
-      <p [ngStyle]="{'color':'gray'}">施工方:施工方一</p>
-      <ion-note item-end>7:45 am</ion-note>
-    </ion-item>
-    <ion-item (click)="EnterMate()">
-      <ion-avatar item-start>
-        <img src="./assets/imgs/workicon/epmatelist.png">
-      </ion-avatar>
-      <h2>材料进场审核二</h2>
-      <p [ngStyle]="{'color':'gray'}">施工方:施工方二</p>
-      <ion-note item-end>12:45 pm</ion-note>
+      <h2>{{i.EPCheckName}}</h2>
+      <p [ngStyle]="{'color':'gray'}">施工方:{{i.ECUnitName}}</p>
+      <ion-note item-end>{{GetTime(i.EntryDate)}}</ion-note>
     </ion-item>
   </ion-list>
 </ion-content>

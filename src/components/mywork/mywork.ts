@@ -105,7 +105,7 @@ export class MyworkComponent {
           'name':'材料进场',
           'src':'assets/imgs/workicon/mateentry.png',
           'alt':EpMateCheckListPage,
-          'NavParm':{'type':1}
+          'NavParm':{'type':1,'EProjectID':this.MyProject,'EmployeeID':TabsPage.UserInfo.employees.EmployeeID}
         },
         { 'name':'搜索',
           'src':'assets/imgs/workicon/sousuo.png',
@@ -124,7 +124,7 @@ export class MyworkComponent {
           'name':'见证取样',
           'src':'assets/imgs/workicon/quyang.png',
           'alt':EpMateCheckListPage,
-          'NavParm':{'type':2}
+          'NavParm':{'type':2,'EProjectID':this.MyProject,'EmployeeID':TabsPage.UserInfo.employees.EmployeeID}
         },
       ]
     ]
@@ -162,14 +162,14 @@ export class MyworkComponent {
                   'name':'材料进场',
                   'src':'assets/imgs/workicon/mateentry.png',
                   'alt':EpMateCheckListPage,
-                  'NavParm':{'type':1}
+                  'NavParm':{'type':1,'EProjectID':this.MyProject,'EmployeeID':TabsPage.UserInfo.employees.EmployeeID}
                 },
                 //quyang.png
                 {
                   'name':'见证取样',
                   'src':'assets/imgs/workicon/quyang.png',
                   'alt':EpMateCheckListPage,
-                  'NavParm':{'type':2}
+                  'NavParm':{'type':2,'EProjectID':this.MyProject,'EmployeeID':TabsPage.UserInfo.employees.EmployeeID}
                 },
                 {'name':'工作记录',
                   'src':'assets/imgs/workicon/workrecord.png',
@@ -229,13 +229,13 @@ export class MyworkComponent {
                   'name':'材料进场',
                   'src':'assets/imgs/workicon/mateentry.png',
                   'alt':EpMateCheckListPage,
-                  'NavParm':{'type':1}
+                  'NavParm':{'type':1,'EProjectID':this.MyProject,'EmployeeID':TabsPage.UserInfo.employees.EmployeeID}
                 },
                 {
                   'name':'见证取样',
                   'src':'assets/imgs/workicon/quyang.png',
                   'alt':EpMateCheckListPage,
-                  'NavParm':{'type':2}
+                  'NavParm':{'type':2,'EProjectID':this.MyProject,'EmployeeID':TabsPage.UserInfo.employees.EmployeeID}
                 },
                 {'name':'工作记录',
                   'src':'assets/imgs/workicon/workrecord.png',

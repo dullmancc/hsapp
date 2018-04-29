@@ -26,15 +26,25 @@
       <ion-segment-button value="trial">
         送检中
       </ion-segment-button>
+      <ion-segment-button value="review">
+        复查中
+      </ion-segment-button>
       <ion-segment-button value="finished">
         已完成
       </ion-segment-button>
-
-
     </ion-segment>
   </div>
   <div [ngSwitch]="pet">
     <ion-list *ngSwitchCase="'unfinished'">
+      <ion-item *ngFor="let unfinpro of Sampling" (click)="goEPWit(unfinpro)">
+        <ion-avatar item-start>
+          <img src="./assets/imgs/workicon/secissues.png">
+        </ion-avatar>
+        <h2>{{unfinpro.EPCSID}}<button ion-button color="danger" outline>待审中</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:{{unfinpro.Employee.RealName}}</p>
+        <ion-note item-end>{{GetTime(unfinpro.RecordTime)}}</ion-note>
+      </ion-item>
+      <!--
       <ion-item>
         <ion-avatar item-start>
           <img src="./assets/imgs/workicon/secissues.png">
@@ -51,9 +61,26 @@
         <p [ngStyle]="{'color':'gray'}">负责人:向辉</p>
         <ion-note item-end>7:45 pm</ion-note>
       </ion-item>
+    -->
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'review'">
+      <ion-item *ngFor="let reviewpro of Review" (click)="goEPWit(reviewpro)">
+        <img src="./assets/imgs/workicon/fushi.png"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
+        <h2>{{reviewpro.EPCSID}}<button ion-button color="danger" outline>复查中</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:{{reviewpro.Employee.RealName}}</p>
+        <ion-note item-end>{{GetTime(reviewpro.RecordTime)}}</ion-note>
+      </ion-item>
     </ion-list>
 
     <ion-list *ngSwitchCase="'trial'">
+      <ion-item *ngFor="let trialpro of Trial" (click)="goEPWit(trialpro)">
+        <img src="./assets/imgs/workicon/fushi.png"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
+        <h2>{{trialpro.EPCSID}}<button ion-button color="danger" outline>送审中</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:{{trialpro.Employee.RealName}}</p>
+        <ion-note item-end>{{GetTime(trialpro.RecordTime)}}</ion-note>
+      </ion-item>
+      <!--
       <ion-item>
         <img src="./assets/imgs/workicon/fushi.png"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
         <h2>见证取样六<button ion-button color="danger" outline>送审中</button></h2>
@@ -66,9 +93,23 @@
         <p [ngStyle]="{'color':'gray'}">负责人:向辉</p>
         <ion-note item-end>7:45 pm</ion-note>
       </ion-item>
+      -->
     </ion-list>
 
     <ion-list *ngSwitchCase="'finished'">
+      <ion-item *ngFor="let qualifiedpro of Qualified" (click)="goEPWit(qualifiedpro)">
+        <img src="./assets/imgs/workicon/qualified.png"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
+        <h2>{{qualifiedpro.EPCSID}}<button ion-button color="light" outline>已完成</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:{{qualifiedpro.Employee.RealName}}</p>
+        <ion-note item-end>{{GetTime(qualifiedpro.RecordTime)}}</ion-note>
+      </ion-item>
+      <ion-item *ngFor="let unqualifiedpro of Unqualified" (click)="goEPWit(unqualifiedpro)">
+        <img src="./assets/imgs/workicon/unqualified.png"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
+        <h2>{{unqualifiedpro.EPCSID}}<button ion-button color="light" outline>已完成</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:{{unqualifiedpro.Employee.RealName}}</p>
+        <ion-note item-end>{{GetTime(unqualifiedpro.RecordTime)}}</ion-note>
+      </ion-item>
+      <!--
       <ion-item>
         <img src="./assets/imgs/workicon/qualified.png"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
         <h2>见证取样三<button ion-button color="light" outline>已完成</button></h2>
@@ -87,10 +128,11 @@
         <p [ngStyle]="{'color':'gray'}">负责人:向辉</p>
         <ion-note item-end>7:45 pm</ion-note>
       </ion-item>
+      -->
     </ion-list>
   </div>
 
   <ion-fab right bottom>
-    <button ion-fab color="light" (click)="addEPWit()"><ion-icon name="add"></ion-icon></button>
+    <button ion-fab color="light" (click)="addEPWitSamp()"><ion-icon name="add"></ion-icon></button>
   </ion-fab>
 </ion-content>

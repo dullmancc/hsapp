@@ -28,13 +28,13 @@
   <div [ngSwitch]="pet">
 
     <ion-list *ngSwitchCase="'all'">
-      <ion-item *ngFor="let i of listSecIssus.unfinished;">
+      <ion-item *ngFor="let i of listSecIssus.unfinished;" (click)="GoToExitRecord(i,0)">
         <ion-avatar item-start>
           <img src="./assets/imgs/workicon/secissues.png">
         </ion-avatar>
-        <h2>{{i.UnitPart}}<button ion-button color="light" outline>{{getState(i.State)}}</button></h2>
+        <h2>{{i.EPCSID}}<button ion-button color="light" outline>{{getState(i.State)}}</button></h2>
         <p [ngStyle]="{'color':'gray'}">追踪人:{{i.Employee.RealName}}</p>
-        <ion-note item-end>{{i.EPSecIssueTime}}</ion-note>
+        <ion-note item-end>{{GetTime(i.EPSecIssueTime)}}</ion-note>
       </ion-item>
       <!--
       <ion-item>
@@ -89,13 +89,13 @@
     </ion-list>
 
     <ion-list *ngSwitchCase="'finished'">
-      <ion-item *ngFor="let i of listSecIssus.finished;">
+      <ion-item *ngFor="let i of listSecIssus.finished;" (click)="GoToExitRecord(i,1)">
         <ion-avatar item-start>
           <img src="./assets/imgs/workicon/secissues.png">
         </ion-avatar>
-        <h2>{{i.UnitPart}}<button ion-button color="light" outline>{{getState(i.State)}}</button></h2>
+        <h2>{{i.EPCSID}}<button ion-button color="danger" outline>{{getState(i.State)}}</button></h2>
         <p [ngStyle]="{'color':'gray'}">追踪人:{{i.Employee.RealName}}</p>
-        <ion-note item-end>{{i.EPSecIssueTime}}</ion-note>
+        <ion-note item-end>{{GetTime(i.EPSecIssueTime)}}</ion-note>
       </ion-item>
         <!--
         <ion-item>

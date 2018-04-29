@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import {ContactPage} from "../../contact/contact";
 import {FriendPage} from "../../friend/friend";
 import {AboutPage} from "../../about/about";
@@ -36,7 +36,7 @@ export class SecIssuesPage {
 
   ionViewDidLoad() {
     this.EProject = this.navParams.get('EProject');
-    this.EMPloyeeID = TabsPage.UserInfo.EmployeeID;
+    this.EMPloyeeID = TabsPage.UserInfo.employees.EmployeeID;
 
     let navP = {'EmployeeId':this.EMPloyeeID,'EProjectId':this.EProject.EProjectID};
 
@@ -46,14 +46,52 @@ export class SecIssuesPage {
     },error=>{
       alert("请求安全隐患列表出错！");
     });
+    console.log(this.listSecIssus);
   }
 
   goBack(){
     this.navCtrl.pop();
   }
-  newPZBL(){
 
+  GetTime(itemtime){
+    let dateitem;
+    dateitem = itemtime.substring(0,itemtime.indexOf('-'))+'年'+itemtime.substring(itemtime.indexOf('-')+1,itemtime.indexOf('T'))+itemtime.substring(itemtime.indexOf('T')+1);
+    let year =itemtime.slice(0,4);
+    let nowyear = new Date().getFullYear().toString();
+    let month = dateitem.slice(5,7);
+    let nowmonth = (new Date().getMonth()+1).toString();
+    if(nowmonth.length==1){
+      nowmonth = '0'+nowmonth;
+    }
+    let day  = dateitem.slice(8,10);
+    let nowday = new  Date().getDate();
+    // 08:00
+    let hourmintes = dateitem.substr(dateitem.length-8,5);
+    //04-27 08:00
+    let monthhour =  dateitem.substr(5,dateitem.length-8).slice(0,5)+' '+hourmintes;
+    //2018年04-27
+    let YearMonth = dateitem.substr(0,10);
+    if(year==nowyear){
+      if(month==nowmonth&&day == nowday){
+        return hourmintes;
+      }else {
+        return monthhour;
+      }
+    }else {
+      return YearMonth;
+    }
   }
+
+
+  GoToExitRecord(EPSecIssue,num){
+    if(num==0){
+      this.navCtrl.push(SecIssRecordPage,{'EProject':this.EProject.EProjectID,'EMPloyeeID':this.EMPloyeeID,'Type':1,'EPSecIssue':EPSecIssue});
+    }else if(num==1){
+      this.navCtrl.push(SecIssueslistPage,{'EProject':this.EProject.EProjectID,'EMPloyeeID':this.EMPloyeeID,'Type':1,'EPSecIssue':EPSecIssue});
+    }
+
+}
+
 
   getState(num){
     switch (num){
@@ -63,6 +101,18 @@ export class SecIssuesPage {
   }
 
   addSecurityIssues(){
-    this.navCtrl.push(SecIssRecordPage,{'EProject':this.EProject,'EMPloyeeID':this.EMPloyeeID});
+    this.navCtrl.push(SecIssRecordPage,{'EProject':this.EProject.EProjectID,'EMPloyeeID':this.EMPloyeeID,'Type':0});
+  }
+
+  ionViewWillEnter(){
+    let navP = {'EmployeeId':this.EMPloyeeID,'EProjectId':this.EProject.EProjectID};
+
+    var data = Utils.ParamsToString(navP);
+    this.http.get(ApiUrl+"EPSecIssues/GetEPSecIssueForEM?"+data).subscribe(res=>{
+      this.listSecIssus = res;
+    },error=>{
+      alert("请求安全隐患列表出错！");
+    });
+    console.log(this.listSecIssus);
   }
 }

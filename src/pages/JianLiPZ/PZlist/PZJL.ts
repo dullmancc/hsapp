@@ -34,6 +34,11 @@ export class PZJLPage {
     this.pzbl = this.navParams.get('PZBL');
     this.Load();
   }
+
+  ionViewDidEnter(){
+    this.Load();
+  }
+
   Load(){
     this.isLoad = true;
     this.http.post(ApiUrl+'Project/GetMyPangzhan?PZBelongId='+this.pzbl.PZBelongId+'&EProjectId='+this.pzbl.EProjectID+'&EmployeeId='+this.userid,{}).subscribe((res:any)=>{
@@ -84,6 +89,35 @@ export class PZJLPage {
 
     if(recordClass==this.recordClasses[2])
       return this.SumbitPz;
+  }
+
+  GetTime(itemtime){
+    let dateitem;
+    dateitem = itemtime.substring(0,itemtime.indexOf('-'))+'年'+itemtime.substring(itemtime.indexOf('-')+1,itemtime.indexOf('T'))+itemtime.substring(itemtime.indexOf('T')+1);
+    let year =itemtime.slice(0,4);
+    let nowyear = new Date().getFullYear().toString();
+    let month = dateitem.slice(5,7);
+    let nowmonth = (new Date().getMonth()+1).toString();
+    if(nowmonth.length==1){
+      nowmonth = '0'+nowmonth;
+    }
+    let day  = dateitem.slice(8,10);
+    let nowday = new  Date().getDate();
+    // 08:00
+    let hourmintes = dateitem.substr(dateitem.length-8,5);
+    //04-27 08:00
+    let monthhour =  dateitem.substr(5,dateitem.length-8).slice(0,5)+' '+hourmintes;
+    //2018年04-27
+    let YearMonth = dateitem.substr(0,10);
+    if(year==nowyear){
+      if(month==nowmonth&&day == nowday){
+        return hourmintes;
+      }else {
+        return monthhour;
+      }
+    }else {
+      return YearMonth;
+    }
   }
 
   newRecord(){

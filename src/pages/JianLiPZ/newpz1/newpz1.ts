@@ -17,6 +17,7 @@ export class photo
   public src:any;
   public isupload:boolean;
   public ePfile:EPCSFile;
+  public isPhoto:boolean;
 }
 @Component({
   selector: 'page-newpz1',
@@ -67,6 +68,7 @@ export class Newpz1Page {
     this.http.post(ApiUrl+'Pangzhan/PostPangzhan',data).subscribe(res=>{
         alert(res.ErrorMs);
         console.log(res.EPCSParentID);
+        this.PZrecord.PangzhanId = res.EPCSParentID;
         this.Pangzhanid = res.EPCSParentID;
     },error=>{
       alert(error);

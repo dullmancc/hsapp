@@ -6,6 +6,9 @@ import {ProjectPage} from "../../../Project/project";
 import {JLProjectPage} from "../../../JianLiPZ/JLProject";
 import {IonicPage} from "ionic-angular";
 import {EpMateEntryPage} from "../ep-mate-entry";
+import {ApiUrl} from "../../../../providers/Constants";
+import {EPMaterials} from "../../../../Model/EPMaterials";
+import {EpMateEntrySeePage} from "../ep-mate-entry-see/ep-mate-entry-see";
 @IonicPage()
 @Component({
   selector: 'page-list',
@@ -17,41 +20,41 @@ listPage 项目列表页面用于   1.我的项目 2.旁站监理
                          2:旁站监理
 * */
 export class ListPage {
-  public pro:Project[];
+  public EProjectID;
   public items;
-  public url:string;
-  public userId: number = -1 ;
-  public type:number;
+  public EmployeeID;
+  public ePMaterialsCheck;
+  public all:EPMaterials[] = [];
+  public finished:EPMaterials[]=[];
+  public unfinished:EPMaterials[]=[];
   public titlename:string = "我的工程项目";
   constructor(public navCtrl: NavController,public  navparm:NavParams,private http: HttpService,public modalCtrl: ModalController) {
     // If we navigated to this page, we will have an item available as a nav param
-    this.userId = this.navparm.get("userId");
-    this.url = "http://193.112.12.241/HSWebApi/api/";
+    this.EmployeeID = this.navparm.get("EmployeeID");
+    this.ePMaterialsCheck = this.navparm.get('EPMaterialsCheck');
+    this.EProjectID = this.navparm.get('EProjectID');
     this.Load();
-    this.type =this.navparm.get("type");
-    if (this.type==1){
-      this.titlename = "我的工程项目";
-    }else if(this.type==2){
-      this.titlename = "选择工程项目";
-    }
-  }
-
-  //跳转进入下个页面
-  openModal(characterNum) {
-    if(this.type==1){
-      this.navCtrl.push(ProjectPage,{charNum:characterNum})
-    }else if(this.type==2){
-      this.navCtrl.push(JLProjectPage,{charNum:characterNum,userId:this.userId})
-    }
   }
   goBack(){
     this.navCtrl.pop();
   }
 
   addEPMateEntry(){
-    this.navCtrl.push(EpMateEntryPage);
+    this.navCtrl.push(EpMateEntryPage,{'EmployeeID':this.EmployeeID,'EPMaterialsCheck':this.ePMaterialsCheck,'Type':0});
   }
 
+  goEPMate(item){
+    if(item.State==1){
+      this.navCtrl.push(EpMateEntrySeePage,{'EmployeeID':this.EmployeeID,'EPMaterialsCheck':this.ePMaterialsCheck,'Type':1,'EPMaterials':item});
+    }else{
+      this.navCtrl.push(EpMateEntryPage,{'EmployeeID':this.EmployeeID,'EPMaterialsCheck':this.ePMaterialsCheck,'Type':1,'EPMaterials':item});
+    }
+  }
+
+  ionViewDidEnter() {
+    this.Load();
+    console.log("list again DIdLoad");
+  }
 
   /*
   *数字类型代表项目类型
@@ -61,35 +64,59 @@ export class ListPage {
   * 4:公共交通项目
   * */
   Load() {
-    this.http.get(this.url+"Project/GetMyEProjects?EmployeeId="+this.userId)
+    this.http.get(ApiUrl+"EPMateEntries/GetCheckMates?EPCheckID="+this.ePMaterialsCheck.EPCheckID)
       .subscribe(res => {
         //返回结果，直接是json形式
-        this.items = res;
-        console.log(this.items);
-        this.pro =[];
-
-        for(var i = 0; i < this.items.length; i++){
-          var proj = new Project();
-          proj.EProjectID =this.items[i].EProjectID;
-          proj.Name = this.items[i].Name;
-          proj.EPState =this.items[i].EPState;
-          proj.EPTypeId =this.items[i].EPTypeID;
-          if(this.items[i].EPTypeID==1){
-            proj.EPType = '民用建筑项目';
-          }else if(this.items[i].EPTypeID==2){
-            proj.EPType = '土建工程项目';
-          }else if(this.items[i].EPTypeID==3){
-            proj.EPType = '地铁项目';
-          }else if(this.items[i].EPTypeID==4){
-            proj.EPType = '公共交通项目';
-          }
-          this.pro.push(proj);
-        }
-        console.log(this.pro);
+        this.all = res.all;
+        this.finished = res.finished;
+        this.unfinished = res.unfinished;
+        console.log(res);
       }, error => {
         //错误信息
         alert(error);
       });
+  }
+
+  /**EPEntryResult
+    EPMR01   --  进场
+    EPMR02   --  退场
+    EPMR03   --  进场后检测
+   **/
+  GetTuPian(itemResult){
+    switch (itemResult){
+      case 'EPMR01': return './assets/imgs/workicon/jinchang.png';
+      case 'EPMR02': return './assets/imgs/workicon/tuichang.png';
+      case 'EPMR02': return './assets/imgs/workicon/fushi.png';
+    }
+  }
+
+  GetTime(itemtime){
+    let dateitem;
+    dateitem = itemtime.substring(0,itemtime.indexOf('-'))+'年'+itemtime.substring(itemtime.indexOf('-')+1,itemtime.indexOf('T'))+itemtime.substring(itemtime.indexOf('T')+1);
+    let year =itemtime.slice(0,4);
+    let nowyear = new Date().getFullYear().toString();
+    let month = dateitem.slice(5,7);
+    let nowmonth = (new Date().getMonth()+1).toString();
+    if(nowmonth.length==1){
+      nowmonth = '0'+nowmonth;
+    }
+    let day  = dateitem.slice(8,10);
+    let nowday = new  Date().getDate();
+    // 08:00
+    let hourmintes = dateitem.substr(dateitem.length-8,5);
+    //04-27 08:00
+    let monthhour =  dateitem.substr(5,dateitem.length-8).slice(0,5)+' '+hourmintes;
+    //2018年04-27
+    let YearMonth = dateitem.substr(0,10);
+    if(year==nowyear){
+      if(month==nowmonth&&day == nowday){
+        return hourmintes;
+      }else {
+        return monthhour;
+      }
+    }else {
+      return YearMonth;
+    }
   }
 }
 

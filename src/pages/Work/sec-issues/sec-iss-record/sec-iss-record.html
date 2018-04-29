@@ -13,8 +13,10 @@
     <span>新增安全问题</span>
   </div>
   <ion-buttons end>
-      <button ion-button clear color="dark" (click)="newSecIssues()">
-        <ion-icon name="person-add"></ion-icon>
+      <button ion-button clear color="dark" (click)="newSecIssues(0)">
+        保存
+      </button>
+     <button ion-button clear color="royal"  (click)="newSecIssues(1)">
         提交
       </button>
   </ion-buttons>
@@ -26,32 +28,25 @@
     <ion-item>
       <img item-left src="assets/imgs/workicon/unitroject.png">
       <ion-label color="dark">发生工程阶段</ion-label>
-      <ion-input item-end placeholder="单元工程"></ion-input>
+      <ion-input item-end type="text" [(ngModel)]="ePSecIssue.UnitPart" placeholder="单元工程"></ion-input>
     </ion-item>
-
     <ion-item>
       <ion-icon name="ios-construct-outline" item-start></ion-icon>
-      <ion-label>问题类型:{{gaming}}</ion-label>
-      <ion-select [(ngModel)]="gaming" interface="popover" item-end>
-        <ion-option value="问题一">问题一</ion-option>
-        <ion-option value="问题二">问题二</ion-option>
-        <ion-option value="问题三">问题三</ion-option>
-        <ion-option value="问题四">问题四</ion-option>
-        <ion-option value="问题五">问题五</ion-option>
+      <ion-label>问题类型:{{curProblems.Desc}}</ion-label>
+      <ion-select [(ngModel)]="curProblems" interface="popover" [compareWith]="compareFn"  item-end>
+        <ion-option *ngFor="let epproblems of ePSecProblems;" [value]="epproblems">{{epproblems.Desc}}</ion-option>
       </ion-select>
     </ion-item>
     <ion-item>
       <ion-icon name="ios-nuclear-outline" item-start></ion-icon>
-      <ion-label>危险评估:{{risk}}</ion-label>
-      <ion-select [(ngModel)]="risk"  interface="popover" item-end>
-        <ion-option value="一般">一般</ion-option>
-        <ion-option value="较严重">较严重</ion-option>
-        <ion-option value="严重">严重</ion-option>
+      <ion-label>危险评估:{{curRisks.Desc}}</ion-label>
+      <ion-select [(ngModel)]="curRisks"  interface="popover"  [compareWith]="compare1Fn"  item-end>
+        <ion-option *ngFor="let epsecrisks of ePSecRisks;"  [value]="epsecrisks">{{epsecrisks.Desc}}</ion-option>
       </ion-select>
     </ion-item>
     <ion-item>
       <ion-icon name="ios-create-outline" item-start></ion-icon>
-      <textarea type="text" [ngStyle]="{'height':'100px','width':'250px'}" placeholder="请输入问题描述"></textarea>
+      <textarea type="text" [ngStyle]="{'height':'100px','width':'250px'}" placeholder="请输入问题描述"  [(ngModel)]="ePSecIssue.Details"></textarea>
     </ion-item>
     <ion-item>
       <ion-icon name="ios-camera-outline" item-start></ion-icon>
@@ -61,18 +56,19 @@
         添加照片
       </ion-buttons>
       <ul style="list-style: none;margin:0;padding:0">
-        <li *ngFor="let photo of photoes;let i=index" style="display: inline-block;margin-right: 5px;position: relative">
-          <img style="width:120px;height:120px;display: inline-block" [src]="photoes[i].src">
+        <li *ngFor="let photo of photoes;let i=index" style="margin-right: 5px;position: relative">
+          <img style="width:120px;height:120px;" [src]="photoes[i].src" *ngIf="photoes[i].isPhoto">
+          <span *ngIf="!photoes[i].isPhoto">{{photoes[i].src}}</span>
           <ion-icon name="ios-close-circle-outline" small style="position: absolute;right:0;top:0;" (click)="deletePhoto(i)"></ion-icon>
         </li>
       </ul>
     </ion-item>
     <ion-item>
       <ion-label color="dark">安全隐患记录时间</ion-label>
-      <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="planStartTime"></ion-datetime>
+      <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ePSecIssue.EPSecIssueTime"></ion-datetime>
     </ion-item>
-    <ion-item>
-      <input type="file">
+    <ion-item *ngIf="this.EPCSID">
+      <a [href]="ToUplod">上传</a>
     </ion-item>
   </ion-list>
 </ion-content>

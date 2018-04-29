@@ -21,6 +21,9 @@ export class JLProjectPage {
     this.me = this.navp.get('userId');
     this.Load();
   }
+  ionViewDidEnter(){
+    this.Load();
+  }
 //Project/getPZBlong?EProjectId=6'
   Load(){
     this.http.get(ApiUrl+'Project/getPZBlong?EProjectId='+this.mypro.EProjectID).subscribe(res => {
