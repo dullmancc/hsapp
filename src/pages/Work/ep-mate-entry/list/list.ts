@@ -67,7 +67,7 @@ export class ListPage {
     alert.addButton({
       text: '确定',
       handler: data => {
-        this.navCtrl.push(EpMateEntryPage,{'EmployeeID':this.EmployeeID,'EPMaterialsCheck':this.ePMaterialsCheck,'Type':0,'EnterType':data});
+        this.navCtrl.push(EpMateEntryPage,{'EmployeeID':this.EmployeeID,'EPMaterialsCheck':this.ePMaterialsCheck,'Type':0,'EnterType':data,'EProjectID':this.EProjectID});
       }
     });
     alert.present();
@@ -77,7 +77,7 @@ export class ListPage {
     if(item.State==1){
       this.navCtrl.push(EpMateEntrySeePage,{'EmployeeID':this.EmployeeID,'EPMaterialsCheck':this.ePMaterialsCheck,'Type':1,'EPMaterials':item});
     }else{
-      this.navCtrl.push(EpMateEntryPage,{'EmployeeID':this.EmployeeID,'EPMaterialsCheck':this.ePMaterialsCheck,'Type':1,'EPMaterials':item});
+      this.navCtrl.push(EpMateEntryPage,{'EmployeeID':this.EmployeeID,'EPMaterialsCheck':this.ePMaterialsCheck,'Type':1,'EPMaterials':item,'EProjectID':this.EProjectID});
     }
   }
 

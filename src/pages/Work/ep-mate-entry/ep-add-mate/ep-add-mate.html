@@ -33,7 +33,7 @@
       <ion-icon name="ios-arrow-forward"></ion-icon>
     </button>
   </ion-item>
-  <ion-item>
+  <ion-item no-lines>
     <ion-label color="dark">材料单位</ion-label>
     <button ion-button icon-right clear item-end (click)="GetMateName(2,0)">
       {{curMaterialUnits.UnitName}}
@@ -57,6 +57,12 @@
     <ion-item>
       <ion-label color="dark">数量</ion-label>
       <ion-input text-right icon-end [(ngModel)]="item.EPMaterialNums"  placeholder="请输入"></ion-input>
+    </ion-item>
+    <ion-item no-lines>
+      <ion-label color="dark">进场结果</ion-label>
+      <ion-select [(ngModel)]="item.EPEntryResult"  interface="popover" [compareWith]="compare1Fn" item-end>
+        <ion-option *ngFor="let j of ePEntryResult;" [value]="j">{{j.Desc}}</ion-option>
+      </ion-select>
     </ion-item>
   </div>
   <!--

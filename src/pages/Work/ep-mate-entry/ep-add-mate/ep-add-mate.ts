@@ -11,6 +11,7 @@ import {
   EPMateInfoForEntry, EPMaterialModel, MaterialBrand, MaterialInfo,
   MaterialUnit
 } from "../../../../Model/EPMateInfoForEntry";
+import {EPEntryResult} from "../../../../Model/EPMaterials";
 
 /**
  * Generated class for the EpAddMatePage page.
@@ -27,8 +28,10 @@ import {
 export class EpAddMatePage implements OnDestroy{
   materialInfo;
   materialUnits;
+  public ePEntryResult:EPEntryResult[];
   callback;
   EPCSID;
+  leavetype:boolean = false;
   curMaterialBrand:MaterialBrand = new MaterialBrand();
   curMaterialUnits:MaterialUnit = new MaterialUnit();
   curMaterialInfo :MaterialInfo = new MaterialInfo();
@@ -48,16 +51,35 @@ export class EpAddMatePage implements OnDestroy{
     this.ePMateInfoForEntry = this.navParams.get('ePMateInfoForEntry');
     this.curMaterialInfo = this.navParams.get('curMateInfo');
 
+    console.log(this.ePMateInfoForEntry);
+    console.log(this.curMaterialInfo)
+
     if(this.ePMateInfoForEntry.length==0){
       this.MaterModel = new EPMaterialModel();
       this.ePMateInfoForEntry.push(this.ePInfo);
     }else {
+
       this.curMaterialInfo.MaterialBrands.forEach(v=>{
         if(v.MaterialBrandID==this.ePMateInfoForEntry[0].MaterialBrandID){
           this.curMaterialBrand = v;
         }
       });
+      this.curMaterialUnits = this.ePMateInfoForEntry[0].MaterialUnit;
     }
+
+    this.http.get(ApiUrl+'EPMateEntries/GetMateType').subscribe(res=>{
+      this.ePEntryResult = res.ePEntryResults;
+      console.log(res);
+      this.ePMateInfoForEntry.forEach(v=>{
+          for(let s=0 ;s< this.ePEntryResult.length;s++){
+            if(this.ePEntryResult[s].EPEntryResultID==v.EPEntryResultID){
+              v.EPEntryResult = this.ePEntryResult[s];
+            }
+          }
+        });
+    },error=>{
+      alert(error.toString());
+    });
 
     this.http.get(ApiUrl+'MaterialInfoes/GetMaterialInfoes').subscribe(res=>{
       this.materialInfo = res.materialInfos;
@@ -70,6 +92,10 @@ export class EpAddMatePage implements OnDestroy{
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad EpAddMatePage');
+  }
+
+  compare1Fn(e1:EPEntryResult, e2: EPEntryResult): boolean {
+    return e1 && e2 ? e1.EPEntryResultID === e2.EPEntryResultID : e1 === e2;
   }
 
 
@@ -92,7 +118,6 @@ export class EpAddMatePage implements OnDestroy{
       this.componentRef[this.componentRef.length-1].instance.materialInfo = this.curMaterialInfo;
   }*/
   deleteComponent(index){
-    this.ePMateInfoForEntry.splice(index,1);
     if(this.ePMateInfoForEntry[index].EPMaterialModelID!=''){
       this.http.post(ApiUrl+'EPMateInfoForEntries/DeleteEPMateInfoForEntry',{'id':this.ePMateInfoForEntry[index].EPMateInfoForEntryID}).subscribe(res=>{
         console.log(res);
@@ -100,6 +125,8 @@ export class EpAddMatePage implements OnDestroy{
         console.log(error);
       });
     }
+    this.ePMateInfoForEntry.splice(index,1);
+
   }
 
   GetMateName(i,index){
@@ -150,17 +177,18 @@ export class EpAddMatePage implements OnDestroy{
   }
 
   SelectFinish(){
-    if(this.curMaterialInfo.MaterialInfoID==''||this.curMaterialBrand.MaterialBrandID==''||this.curMaterialUnits.MaterialUnitID==''){
+    if(this.curMaterialInfo.MaterialInfoID==""||this.curMaterialBrand.MaterialBrandID==""||this.curMaterialUnits.MaterialUnitID==""){
       alert('请填完信息！');
       return;
     }
 
     for(var s = 0;s<this.ePMateInfoForEntry.length;s++){
-      this.ePMateInfoForEntry[s].EPCSID = this.EPCSID;
+      this.ePMateInfoForEntry[s].EPMateEntryID = this.EPCSID;
       this.ePMateInfoForEntry[s].MaterialUnitID = this.curMaterialUnits.MaterialUnitID;
       this.ePMateInfoForEntry[s].MaterialBrandID = this.curMaterialBrand.MaterialBrandID;
       this.ePMateInfoForEntry[s].MaterialInfoID = this.curMaterialInfo.MaterialInfoID;
       this.ePMateInfoForEntry[s].EPMateInfoForEntryID = '';
+      this.ePMateInfoForEntry[s].EPEntryResultID = this.ePMateInfoForEntry[s].EPEntryResult.EPEntryResultID;
       this.ePMateInfoForEntry[s].EPMaterialModelID = this.ePMateInfoForEntry[s].EPMaterialModel.EPMaterialModelID;
       if(this.ePMateInfoForEntry[s].EPMaterialModelID == ''){
         alert('请填完信息！');
@@ -174,17 +202,26 @@ export class EpAddMatePage implements OnDestroy{
     }
 
     this.callback(data);
+
+    this.leavetype = true;
     this.navCtrl.pop();
   }
 
   goBack(){
+    if(this.curMaterialInfo.MaterialInfoID==""){
+      this.ePMateInfoForEntry =[];
+    }
+
     let data ={
       'MaterialInfoName':this.curMaterialInfo,
       'Record':this.ePMateInfoForEntry,
     }
 
     this.callback(data);
+    this.leavetype = false;
     this.navCtrl.pop();
   }
+  ionViewWillLeave(){
 
+  }
 }

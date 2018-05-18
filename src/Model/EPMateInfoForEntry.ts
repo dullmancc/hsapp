@@ -1,19 +1,24 @@
 import {Injectable} from '@angular/core';
+import {EPEntryResult} from "./EPMaterials";
 
 @Injectable()
 export class EPMateInfoForEntry{
   public EPMateInfoForEntryID;
-  public EPCSID;
+  public EPMateEntryID;
   public MaterialInfoID;
   public MaterialBrandID;
   public EPMaterialModelID;
   public MaterialUnitID;
   public EPMaterialNums;
+  public EPEntryResultID ;
+  public EPEntryResult:EPEntryResult;
+  public MaterialUnit;
 
   public EPMaterialModel:EPMaterialModel;
   constructor(){
   this.EPMateInfoForEntryID='';
-  this.EPCSID='';
+  this.EPMateEntryID='';
+  this.EPEntryResultID='' ;
   this.MaterialInfoID='';
   this.MaterialBrandID='';
   this.EPMaterialModelID='';

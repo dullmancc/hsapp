@@ -52,13 +52,6 @@
       <ion-input item-end type="text" [(ngModel)]="ePMaterials.UsePlace" placeholder="请输入请用部位" text-right></ion-input>
     </ion-item>
     <ion-list-header></ion-list-header>
-    <ion-item no-lines>
-      <ion-label>进场结果</ion-label>
-      <ion-select [(ngModel)]="curResult"  interface="popover" [compareWith]="compare1Fn" item-end>
-        <ion-option *ngFor="let i of ePEntryResult;" [value]="i">{{i.Desc}}</ion-option>
-      </ion-select>
-    </ion-item>
-    <ion-list-header></ion-list-header>
     <textarea type="text"  [(ngModel)]="ePMaterials.Details" placeholder="请输入现场进场情况"></textarea>
     <ion-item (click)="addPhoto()">
       <ion-icon name="ios-camera-outline" item-start></ion-icon>

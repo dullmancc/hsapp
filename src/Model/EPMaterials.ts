@@ -6,7 +6,6 @@ export class EPMaterials{
   public  EntryDate ;
   public  entryType:EPMateEntryType ;
   public  UsePlace ;
-  public  EPEntryResultID ;
   public  ECUnitID ;
   public  Details ;
   public  State ;
@@ -15,15 +14,16 @@ export class EPMaterials{
   public  EPCSParent;
   public Employee;
   public EPMateInfoForEntries;
+  public EProject_EProjectID;
 
-  public constructor(ECUnitID,EmployeeID,EPCheckID){
+  public constructor(ECUnitID,EmployeeID,EPCheckID,EProjectID){
     this.EPCSID = '';
     this.EntryDate = '2000-01-01T00:00:00Z';
     this.entryType = 0;
     this.UsePlace = '';
-    this.EPEntryResultID = '';
     this.ECUnitID = ECUnitID;
     this.Details = '';
+    this.EProject_EProjectID = EProjectID;
     this.EPCheckID = EPCheckID;
     this.Employee_EmployeeID = EmployeeID;
   }

@@ -6,9 +6,6 @@ page-ep-add-mate {
     height: 10px;
     background-color: #f7f3f3;
   }
-  .content{
-    background-color: white;
-  }
   .button-clear-md {
     color: #222222;
   }
@@ -16,5 +13,7 @@ page-ep-add-mate {
     position:absolute;
     left:90%;
   }
-
+  .item-md [item-left], .item-md [item-right], .item-md [item-start], .item-md [item-end] {
+    margin: 0px;
+  }
 }

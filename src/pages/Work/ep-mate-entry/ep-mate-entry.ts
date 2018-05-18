@@ -25,10 +25,9 @@ import {ChoosePhotoService, Photo} from "../../../providers/ChoosePhotoService";
 })
 export class EpMateEntryPage {
 
-  //当前材料种类信息
-  public curMateInfo:MaterialInfo = new MaterialInfo();
-  public ePEntryResult:EPEntryResult[];
   public photoes:Photo[]=[];
+  //当前材料种类信息
+  public curMateInfo:MaterialInfo;
   //材料进场记录
   public ePMaterials:EPMaterials;
   //材料型号记录
@@ -45,47 +44,37 @@ export class EpMateEntryPage {
   //当前选择施工单位
   public curECUnit;
   //当前进场结果
-  public curResult:EPEntryResult;
+  public EProjectID;
   constructor(public platform:Platform,
               public navCtrl: NavController,
               public navParams: NavParams,
               public http:HttpService,
               private choosephoto:ChoosePhotoService,
               public toastCtrl: ToastController) {
-
     this.epmatecheck = this.navParams.get('EPMaterialsCheck');
     this.EmployeeID = this.navParams.get('EmployeeID');
     this.type = this.navParams.get('Type');
-    console.log(this.type);
+    this.EProjectID = this.navParams.get('EProjectID');
+    console.log(this.EProjectID);
     if(this.type==1){
       this.ePMaterials = this.navParams.get('EPMaterials');
       console.log(this.ePMaterials);
       this.initPhoto();
       if(this.ePMaterials.EPMateInfoForEntries.length>0){
-        this.curMateInfo = this.ePMaterials.EPMateInfoForEntries[0].MaterialInfo || new MaterialInfo();
+        this.curMateInfo = this.ePMaterials.EPMateInfoForEntries[0].MaterialInfo;
+      }else{
+        this.curMateInfo = new MaterialInfo();
       }
       this.choosephoto.InitParams(this.ePMaterials.EPCSID,this.EmployeeID);
       this.ePMateInfoForEntry = this.ePMaterials.EPMateInfoForEntries;
     }else if(this.type==0){
-      this.ePMaterials = new EPMaterials(this.epmatecheck.ECUnit,this.EmployeeID,this.epmatecheck.EPCheckID);
+      this.ePMaterials = new EPMaterials(this.epmatecheck.ECUnit,this.EmployeeID,this.epmatecheck.EPCheckID,this.EProjectID);
       this.EnterType = this.navParams.get("EnterType");
+      this.curMateInfo = new MaterialInfo();
       this.ePMaterials.entryType = this.EnterType;
       this.ePMateInfoForEntry = [];
     }
 
-    this.http.get(ApiUrl+'EPMateEntries/GetMateType').subscribe(res=>{
-      this.ePEntryResult = res.ePEntryResults;
-      console.log(res);
-      if(this.type==1){
-        for(let s=0 ;s< this.ePEntryResult.length;s++){
-          if(this.ePEntryResult[s].EPEntryResultID==this.ePMaterials.EPEntryResultID){
-            this.curResult = this.ePEntryResult[s];
-          }
-        }
-      }
-      },error=>{
-      this.presentToast(error.toString());
-    });
 
     this.http.get(ApiUrl+'Project/GetECUnit').subscribe(res=>{
       this.ECUnit = res;
@@ -101,7 +90,6 @@ export class EpMateEntryPage {
 
   newSecIssues(IsSubmit){
     this.ePMaterials.State = IsSubmit;
-    this.ePMaterials.EPEntryResultID = this.curResult.EPEntryResultID;
     if(typeof this.curECUnit !=='undefined'){
       this.ePMaterials.ECUnitID = this.curECUnit.ECUnitID;
     }
@@ -113,10 +101,10 @@ export class EpMateEntryPage {
       if(res.EPCSParentID!=-1){
         this.ePMaterials.EPCSID = res.EPCSParentID;
         this.ePMateInfoForEntry.forEach(V=>{
-          V.EPCSID = res.EPCSParentID;
+          V.EPMateEntryID = res.EPCSParentID;
           if(V.EPMateInfoForEntryID==''&&V.MaterialInfoID!=''){
             let data1 = Utils.ParamsToString(V);
-            this.http.post(ApiUrl+'EPMateInfoForEntries/PostEPMateInfoForEntry',data1).subscribe(res1=>{
+            this.http.post(ApiUrl+'EPMateInfoForEntries/PostEPMateInfoForEntry?Type='+IsSubmit,data1).subscribe(res1=>{
               V.EPMateInfoForEntryID = res1.EPMateInfoForEntryID;
               console.log(res1);
             },error=>{
@@ -149,8 +137,8 @@ export class EpMateEntryPage {
     this.choosephoto.InitPhoto(this.photoes);
   }
 
-  ionViewDidEnter(){
-    if(this.ePMaterials.EPCSID==''){
+  ionViewDidLoad(){
+    if(this.ePMaterials.EPCSID==""){
 
     }else {
         this.http.get(ApiUrl+'EPWitnSamples/GetEPFiles?EPCSID='+this.ePMaterials.EPCSID).subscribe(res=>{
@@ -175,9 +163,6 @@ export class EpMateEntryPage {
     this.navCtrl.push(EpAddMatePage,data);
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad EpMateEntryPage');
-  }
   goBack(){
     this.navCtrl.pop();
   }
