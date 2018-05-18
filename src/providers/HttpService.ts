@@ -8,11 +8,16 @@ import 'rxjs/add/operator/toPromise';
 import {Observable} from "rxjs";
 import {Utils} from "./Utils";
 import {GlobalData} from "./GlobalData";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable()
 export class HttpService {
 
-  constructor(public http: Http, private globalData: GlobalData) {
+  constructor(public http: Http, private globalData: GlobalData,public httpc:HttpClient) {
+  }
+
+  public gets(url:string,paramMap?:any){
+   return this.httpc.get(url,{'headers':new HttpHeaders().set('Authorization','Bearer '+sessionStorage.getItem('accessToken')),'params':paramMap});
   }
 
   public get(url: string, paramMap?: any): Observable<Response> {

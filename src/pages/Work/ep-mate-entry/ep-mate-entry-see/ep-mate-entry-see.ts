@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import {photo} from "../../../JianLiPZ/newpz1/newpz1";
 import {ApiUrl} from "../../../../providers/Constants";
+import {MaterialInfo} from "../../../../Model/EPMateInfoForEntry";
+import {HttpService} from "../../../Service/HttpService";
+import {Photo} from "../../../../providers/ChoosePhotoService";
 
 /**
  * Generated class for the EpMateEntrySeePage page.
@@ -18,26 +20,39 @@ import {ApiUrl} from "../../../../providers/Constants";
 export class EpMateEntrySeePage {
 
   public ePMaterials;
-
-  ePfiles;
-  photoes:photo[]=[];
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  curMaterialInfo :MaterialInfo = new MaterialInfo();
+  photoes:Photo[]=[];
+  constructor(public navCtrl: NavController, public navParams: NavParams,public http:HttpService) {
     this.ePMaterials = this.navParams.get('EPMaterials');
-    this.ePfiles = this.ePMaterials.EPCSParent.EPCSFiles;
-    for (var i = 0; i < this.ePfiles.length; i++) {
-      var p = new photo();
-      var tupian = this.ePfiles[i].FileName.substr(this.ePfiles[i].FileName.lastIndexOf('.'));
+    let ePfiles = this.ePMaterials.EPCSParent.EPCSFiles;
+    for (var i = 0; i < ePfiles.length; i++) {
+      var p = new Photo();
+      var tupian = ePfiles[i].FileName.substr(ePfiles[i].FileName.lastIndexOf('.'));
       if (tupian == '.png' || tupian == '.jpg' || tupian == '.gif' || tupian == '.tiff' || tupian == '.svg') {
-        p.src = ApiUrl.slice(0, ApiUrl.length - 4) + this.ePfiles[i].FilePath.substring(2);
+        p.src = ApiUrl.slice(0, ApiUrl.length - 4) + ePfiles[i].FilePath.substring(2);
         p.isPhoto = true;
       } else {
-        p.src = this.ePfiles[i].FileName;
+        p.src = ePfiles[i].FileName;
         p.isPhoto = false;
       }
       this.photoes.push(p);
-      this.photoes[i].ePfile = this.ePfiles[i];
+      this.photoes[i].ePfile = ePfiles[i];
 
     }
+
+    if(this.ePMaterials.EPMateInfoForEntries.length!=0){
+      this.curMaterialInfo = this.ePMaterials.EPMateInfoForEntries[0].MaterialInfo;
+    }
+
+    this.http.get(ApiUrl+'MaterialInfoes/GetMaterialInfoes').subscribe(res=>{
+      res.materialInfos.forEach(v=>{
+        if(v.MaterialInfoID==this.ePMaterials.EPMateInfoForEntries[0].MaterialInfoID){
+          this.curMaterialInfo = v;
+        }
+      });
+    },error=>{
+      console.log(error);
+    });
   }
 
   ionViewDidLoad() {
@@ -54,10 +69,13 @@ export class EpMateEntrySeePage {
    EPMR03   --  进场后检测
    **/
   GetResult(itemResult){
-    switch (itemResult){
-      case 'EPMR01': return '进场';
-      case 'EPMR02': return '退场';
-      case 'EPMR02': return '进场后检测';
+
+    if(itemResult=='EPMR01'){
+      return '进场';
+    }else if(itemResult=='EPMR02'){
+      return '退场';
+    }else if(itemResult=='EPMR03'){
+      return '进场后检测';
     }
   }
 }

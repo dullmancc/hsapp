@@ -178,7 +178,7 @@ export class Utils {
     let epParams = '';
 
     for(let x in Params){
-      if(x=='EPCSParent'||x=='Employee'||x==''){
+      if(x=='EPCSParent'||x=='Employee'||x==''||x=='EPMaterialModel'||x=='EPMateInfoForEntries'){
         continue;
       }
       epParams = epParams + x +'='+ Params[x]+'&';

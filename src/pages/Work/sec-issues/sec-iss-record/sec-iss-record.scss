@@ -1,15 +1,40 @@
 page-sec-iss-record {
+  ion-icon{
+    color: #5aaadb;
+  }
   .item_right_div {
     margin-right: 5%;
-    //display: flex;
-    //display: -webkit-box;
-    //display: -ms-flexbox;
-    //display: -webkit-flex;
-    //flex-direction: column;
+  }
+  .content{
+    background-color: white;
+  }
+  .list-header-md{
+    padding-left: 0px;
+    margin-bottom: 0px;
+    min-height: 0.1rem;
+    height: 10px;
+    background-color: #f7f3f3;
+  }
+  textarea{
+    height:150px;
+    width:100%;
+    resize:none;
+    font-size: 15px;
+    overflow-x:hidden;
+    overflow-y:auto;
+    border-radius:10px;
+    padding: 7px;
+  }
+  ion-label{
+   font-size:1.6rem;
   }
   .item_right_one_content {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  a{
+    color: #222222;
+    text-decoration: none;
   }
 }

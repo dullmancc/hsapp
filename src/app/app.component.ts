@@ -7,13 +7,13 @@ import { TabsPage } from '../pages/tabs/tabs';
 import {BackButtonService} from "../pages/Service/backButtonService";
 import { Nav, ToastController} from 'ionic-angular';
 import {SecIssRecordPage} from "../pages/Work/sec-issues/sec-iss-record/sec-iss-record";
-import {ListPage} from "../pages/Work/ep-mate-entry/list/list";
+import {EpAddMatePage} from "../pages/Work/ep-mate-entry/ep-add-mate/ep-add-mate";
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   rootPage:any = TabsPage;
-  //rootPage:any = ListPage;
+  //rootPage:any = EpAddMatePage;
   platform: any = Platform;
   toast: any = ToastController;
   backButtonPressed: boolean = false;  //用于判断返回键是否触发

@@ -9,50 +9,51 @@
     <img src="assets/imgs/common/back.png"/>
   </div>
   <div class="header-center">
-    <span>材料进场记录</span>
-  </div>
-  <div class="header-right">
-    <span></span>
+    <span>材料进场</span>
   </div>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
   <ion-list>
+    <ion-item >
+      基本信息
+    </ion-item>
     <ion-item>
       <img item-left src="assets/imgs/workicon/mateinfo.png">
-      <textarea type="text" [ngStyle]="{'height':'100px','width':'250px'}" placeholder="材料基本信息" [(ngModel)]="ePMaterials.MaterialInfo"></textarea>
+      <ion-label color="dark">材料信息</ion-label>
+      <button ion-button icon-right clear item-end>
+        {{curMaterialInfo.MaterialInfoName}}
+        <ion-icon name="ios-arrow-forward"></ion-icon>
+      </button>
     </ion-item>
-
     <ion-item>
+      <ion-icon name="time" item-start></ion-icon>
       <ion-label color="dark">进场时间</ion-label>
       <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ePMaterials.EntryDate"></ion-datetime>
     </ion-item>
-    <ion-item>
+    <ion-item no-lines>
       <ion-icon name="ios-construct-outline" style="margin: 0px;" item-start></ion-icon>
       <ion-label color="dark">使用部位</ion-label>
-      <ion-input item-end type="text" [(ngModel)]="ePMaterials.UsePlace" placeholder="请输入请用部位"></ion-input>
+      <ion-input item-end type="text" [(ngModel)]="ePMaterials.UsePlace" placeholder="请输入请用部位" text-right></ion-input>
     </ion-item>
-    <ion-item>
-      <ion-icon name="ios-create-outline" item-start></ion-icon>
-      <textarea type="text" [ngStyle]="{'height':'100px','width':'250px'}" placeholder="请输入进场情况描述" [(ngModel)]="ePMaterials.Details"></textarea>
+    <ion-list-header></ion-list-header>
+    <ion-item no-lines>
+      <ion-label>进场结果</ion-label>
+      <ion-label item-end text-right>{{GetResult(ePMaterials.EPEntryResultID)}}</ion-label>
     </ion-item>
-    <ion-item>
-      <ion-label>进场结果: {{GetResult(ePMaterials.EPEntryResultID)}}</ion-label>
-    </ion-item>
+    <ion-list-header></ion-list-header>
+    <textarea type="text"  [(ngModel)]="ePMaterials.Details" placeholder="请输入现场进场情况"></textarea>
     <ion-item>
       <ion-icon name="ios-camera-outline" item-start></ion-icon>
-      照片(0)
-      <ion-buttons item-end clear>
-        <ion-icon name='ios-add-outline'></ion-icon>
-        添加照片
-      </ion-buttons>
+      记录上传文件数量:{{photoes.length}}
       <ul style="list-style: none;margin:0;padding:0">
         <li *ngFor="let photo of photoes;let i=index" style="margin-right: 5px;position: relative">
-          <img style="width:120px;height:120px;" [src]="photoes[i].src" *ngIf="photoes[i].isPhoto">
           <span *ngIf="!photoes[i].isPhoto">{{photoes[i].src}}</span>
+        </li>
+        <li *ngFor="let photo1 of photoes;let i=index" style="display: inline-block;margin-right: 5px;position: relative">
+          <img style="width:120px;height:120px;" [src]="photo1.src" *ngIf="photo1.isPhoto">
         </li>
       </ul>
     </ion-item>
   </ion-list>
 </ion-content>
-

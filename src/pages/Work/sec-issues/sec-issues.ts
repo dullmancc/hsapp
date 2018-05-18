@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
 import {ContactPage} from "../../contact/contact";
 import {FriendPage} from "../../friend/friend";
 import {AboutPage} from "../../about/about";
@@ -27,12 +27,14 @@ export class SecIssuesPage {
   tab1Root:any = SecIssueslistPage;
   tab2Root:any = SecIssueslistPage;
   tab3Root:any = ErrorPage;
-  listSecIssus:any[];
+  finished:any[]=[]
+  unfinished:any[]=[];
   EProject;
   EMPloyeeID;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,public http:HttpService){
+  constructor(public pltaform:Platform,public navCtrl: NavController, public navParams: NavParams,public http:HttpService) {
   }
+
 
   ionViewDidLoad() {
     this.EProject = this.navParams.get('EProject');
@@ -42,11 +44,12 @@ export class SecIssuesPage {
 
     var data = Utils.ParamsToString(navP);
     this.http.get(ApiUrl+"EPSecIssues/GetEPSecIssueForEM?"+data).subscribe(res=>{
-      this.listSecIssus = res;
+      this.unfinished = res.unfinished;
+      this.finished = res.finished;
     },error=>{
       alert("请求安全隐患列表出错！");
     });
-    console.log(this.listSecIssus);
+    //console.log(this.listSecIssus);
   }
 
   goBack(){
@@ -109,10 +112,11 @@ export class SecIssuesPage {
 
     var data = Utils.ParamsToString(navP);
     this.http.get(ApiUrl+"EPSecIssues/GetEPSecIssueForEM?"+data).subscribe(res=>{
-      this.listSecIssus = res;
+      this.unfinished = res.unfinished;
+      this.finished = res.finished;
     },error=>{
       alert("请求安全隐患列表出错！");
     });
-    console.log(this.listSecIssus);
+    //    console.log(this.listSecIssus);
   }
 }

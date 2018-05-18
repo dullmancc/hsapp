@@ -39,7 +39,5 @@ export class HttpService {
       })
     })
       .map(res => res.json());
-
-
-}
+  }
 }

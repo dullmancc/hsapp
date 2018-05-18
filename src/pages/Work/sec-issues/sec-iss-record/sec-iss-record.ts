@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import {photo} from "../../../JianLiPZ/newpz1/newpz1";
+import {
+  NavController, NavParams, Platform,
+  ToastController
+} from 'ionic-angular';
 import {HttpService} from '../../../Service/HttpService';
 import {ApiUrl} from "../../../../providers/Constants";
-import {EPCSFile} from "../../../../Model/EPCSFile";
 import {Utils} from "../../../../providers/Utils";
 import {EPSecIssue, EPSecProblem, EPSecRisk} from "../../../../Model/EPSecIssue";
-import {Project} from "../../ep-mate-entry/list/list";
-import {ActionSheet, ActionSheetOptions} from "@ionic-native/action-sheet";
+import {ChoosePhotoService, Photo} from "../../../../providers/ChoosePhotoService";
 
 /**
  * Generated class for the SecIssRecordPage page.
@@ -20,31 +20,76 @@ import {ActionSheet, ActionSheetOptions} from "@ionic-native/action-sheet";
   templateUrl: 'sec-iss-record.html',
 })
 export class SecIssRecordPage {
-  photoes:photo[]=[];
+  employees;
+  photoes:Photo[]=[];
   ePSecProblems:EPSecProblem[]= [];
   ePSecRisks:EPSecRisk[] =[];
-  ePfiles:EPCSFile[] = [];
   EProject;
   EMPloyeeID;
+  //当前跟踪人
+  curEmployee;
+  //安全隐患类
   ePSecIssue:EPSecIssue;
-  EPCSID:boolean = false;
+  //页面类型 新建 or 保存
   type;
-  ToUplod;
+  //当前选择问题种类
   curProblems:EPSecProblem = new EPSecProblem();
+  //当前选择风险评估
   curRisks:EPSecRisk = new EPSecRisk();
-  constructor(public navCtrl: NavController, public navParams: NavParams,public http:HttpService,public  actionSheet:ActionSheet) {
+
+  init(){
+    alert("this work!");
+    this.initPhoto();
+  }
+
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              public http:HttpService,
+              private choosephoto:ChoosePhotoService,
+              public toastCtrl: ToastController,
+              public platform:Platform) {
+    /*添加从后台回到前台时间
+    this.platform.ready().then(() => {
+      var this_ = this;
+      function mywork(){
+        this_.http.get(ApiUrl+'EPWitnSamples/GetEPFiles?EPCSID='+this.ePMaterials.EPCSID).subscribe(res=>{
+          alert("this work!");
+          this_.ePSecIssue.EPCSParent.EPCSFiles = res;
+          this_.initPhoto();
+        },error=>{
+          //alert(error);
+        });
+      }
+
+      document.addEventListener('resume',mywork,false);
+      });
+      */
+    //
     this.EProject = this.navParams.get("EProject");
     this.EMPloyeeID = this.navParams.get("EMPloyeeID");
     this.type = this.navParams.get("Type");
     if(this.type==1){
-      this.EPCSID = true;
       this.ePSecIssue = this.navParams.get('EPSecIssue');
-      this.initPhoto()
+      this.initPhoto();
+      this.choosephoto.InitParams(this.ePSecIssue.EPCSID,this.EMPloyeeID);
     }else if(this.type==0){
       this.ePSecIssue = new EPSecIssue(this.EMPloyeeID,this.EProject);
     }
-    this.ToUplod = ApiUrl.slice(0,ApiUrl.length-4)+"1.html?FileUpPerson="+this.EMPloyeeID+"&EPCSID="+ this.ePSecIssue.EPCSID;
     console.log('ionViewDidLoad SecIssRecordPage');
+
+    //获得与这个项目关联的Employees
+    this.http.get(ApiUrl+'Project/getEmployees?EProjectId='+this.EProject).subscribe(res=>{
+      this.employees = res;
+      this.employees.forEach(v=>{
+        if(this.ePSecIssue.TrackEmployeeID==v.EmployeeID){
+          this.curEmployee = v;
+        }
+      });
+    },error=>{
+      alert(error);
+    });
+
+    //获得拉下列表
     this.http.get(ApiUrl+'EPSecIssues/GetKeyType').subscribe(res=>{
       for(var i = 0;i<res.ePSecProblems.length;i++){
         var secproblem = new EPSecProblem();
@@ -72,48 +117,7 @@ export class SecIssRecordPage {
     });
   }
 
-  ionViewDidLoad() {
-
-  }
-
-  newSecIssues(IsSubmit){
-    this.ePSecIssue.State = IsSubmit;
-    this.ePSecIssue.EPSecProblemID = this.curProblems.EPSecProblemID;
-    this.ePSecIssue.EPSecRiskID = this.curRisks.EPSecRiskID;
-    var data = Utils.ParamsToString(this.ePSecIssue);
-
-    this.http.post(ApiUrl+'EPSecIssues/PostEPSecIssue',data).subscribe(res=>{
-      alert(res.ErrorMs);
-      if(res.EPCSParentID!=-1){
-        this.ePSecIssue.EPCSID = res.EPCSParentID;
-        this.ToUplod = ApiUrl.slice(0,ApiUrl.length-4)+"1.html?FileUpPerson="+this.EMPloyeeID+"&EPCSID="+ this.ePSecIssue.EPCSID;
-        this.EPCSID =true;
-      }
-    },error=>{
-      alert(error);
-    });
-  }
-
-  goBack(){
-    this.navCtrl.pop();
-  }
-  initPhoto(){
-    this.ePfiles = this.ePSecIssue.EPCSParent.EPCSFiles;
-    for(var i = 0;i<this.ePfiles.length;i++){
-      var p = new  photo();
-      var tupian = this.ePfiles[i].FileName.substr(this.ePfiles[i].FileName.lastIndexOf('.'));
-      if(tupian=='.png'||tupian=='.jpg'||tupian=='.gif'||tupian=='.tiff'||tupian=='.svg'){
-        p.src = ApiUrl.slice(0,ApiUrl.length-4)+ this.ePfiles[i].FilePath.substring(2);
-        p.isPhoto = true;
-      }else{
-        p.src = this.ePfiles[i].FileName;
-        p.isPhoto = false;
-      }
-      this.photoes.push(p);
-      this.photoes[i].ePfile = this.ePfiles[i];
-    }
-  }
-
+  //初始化图片
   ionViewDidEnter(){
     if(this.ePSecIssue.EPCSID==''){
 
@@ -127,54 +131,118 @@ export class SecIssRecordPage {
     }
   }
 
-  deletePhoto(i:number){
-    this.http.post(ApiUrl+'EPSecIssues/DeleteFile?FileID='+this.photoes[i].ePfile.EPSecFileID,{}).subscribe(res=>{
-      if(0<=i&&i<=this.photoes.length-1)
-      {
-        for(let k=i;k<this.photoes.length-1;k++)
-        {
-          this.photoes[k]=this.photoes[k+1];
-        }
-        this.photoes.length--;
+  ionViewDidLoad() {
+
+  }
+
+  newSecIssues(IsSubmit){
+    this.ePSecIssue.State = IsSubmit;
+    this.ePSecIssue.EPSecProblemID = this.curProblems.EPSecProblemID;
+    this.ePSecIssue.EPSecRiskID = this.curRisks.EPSecRiskID;
+    if(this.ePSecIssue.EPNoticeListstate==true){
+      this.ePSecIssue.EPNoticeListstate = 1;
+    }else if(this.ePSecIssue.EPNoticeListstate==false){
+      this.ePSecIssue.EPNoticeListstate = 0;
+    }
+    this.ePSecIssue.TrackEmployeeID = this.curEmployee.EmployeeID;
+    var data = Utils.ParamsToString(this.ePSecIssue);
+
+    this.http.post(ApiUrl+'EPSecIssues/PostEPSecIssue',data).subscribe(res=>{
+      this.presentToast(res.ErrorMs);
+      if(res.EPCSParentID!=-1){
+        this.ePSecIssue.EPCSID = res.EPCSParentID;
+        this.choosephoto.InitParams(this.ePSecIssue.EPCSID,this.EMPloyeeID);
       }
     },error=>{
-      alert("删除失败！");
+      this.presentToast(error.toString());
     });
   }
+
+  goBack(){
+    console.log(this.ePSecIssue.EPNoticeListstate);
+    this.navCtrl.pop();
+  }
+
+  initPhoto(){
+    let ePfiles = this.ePSecIssue.EPCSParent.EPCSFiles;
+    this.photoes = [];
+    for(var i = 0;i<ePfiles.length;i++){
+      var p = new  Photo();
+      var tupian = ePfiles[i].FileName.substr(ePfiles[i].FileName.lastIndexOf('.'));
+      if(tupian=='.png'||tupian=='.jpg'||tupian=='.gif'||tupian=='.tiff'||tupian=='.svg'){
+        p.src = ApiUrl.slice(0,ApiUrl.length-4)+ ePfiles[i].FilePath.substring(2);
+        p.isPhoto = true;
+      }else{
+        p.src = ePfiles[i].FileName;
+        p.isPhoto = false;
+      }
+      this.photoes.push(p);
+      this.photoes[i].ePfile = ePfiles[i];
+    }
+    this.choosephoto.InitPhoto(this.photoes);
+  }
+
   compareFn(e1: EPSecProblem, e2: EPSecProblem): boolean {
     return e1 && e2 ? e1.EPSecProblemID === e2.EPSecProblemID : e1 === e2;
   }
   compare1Fn(e1: EPSecRisk, e2: EPSecRisk): boolean {
     return e1 && e2 ? e1.EPSecRiskID === e2.EPSecRiskID : e1 === e2;
   }
-/*
-  ionViewCanLeave() :boolean {
-    let buttonLabels = ['保存','提交','取消'];
+  compare2Fn(e1: any,e2:any): boolean {
+    return e1 && e2 ? e1.EmployeeID === e2.EmployeeID : e1 === e2;
+  }
+  /*
+    ionViewCanLeave() :boolean {
+      let buttonLabels = ['保存','提交','取消'];
 
-    const options: ActionSheetOptions = {
-      title: '离开',
-      buttonLabels: buttonLabels,
-      addDestructiveButtonWithLabel: '取消',
-      androidTheme: 5,
-      destructiveButtonLast: true
-    };
+      const options: ActionSheetOptions = {
+        title: '离开',
+        buttonLabels: buttonLabels,
+        addDestructiveButtonWithLabel: '取消',
+        androidTheme: 5,
+        destructiveButtonLast: true
+      };
 
-     let CanLeave;
+       let CanLeave;
 
-     this.actionSheet.show(options).then((buttonIndex: number) => {
-      if (buttonIndex == 1) {
-          this.newSecIssues(0);
+       this.actionSheet.show(options).then((buttonIndex: number) => {
+        if (buttonIndex == 1) {
+            this.newSecIssues(0);
+            CanLeave = true;
+        }
+        if (buttonIndex == 2){
+          this.newSecIssues(1);
           CanLeave = true;
-      }
-      if (buttonIndex == 2){
-        this.newSecIssues(1);
-        CanLeave = true;
-      }
-      if(buttonIndex==3){
-        CanLeave = false
-      }
-      });
+        }
+        if(buttonIndex==3){
+          CanLeave = false
+        }
+        });
 
-     return CanLeave;
-  }*/
+       return CanLeave;
+    }*/
+
+
+  presentToast(msg) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 3000,
+      position: 'bottom'
+    });
+
+    toast.onDidDismiss(() => {
+      console.log('Dismissed toast');
+    });
+
+    toast.present();
+  }
+
+  addPhoto():void{
+    this.photoes = this.choosephoto.addPhoto();
+  }
+
+  deletePhoto(i:number){
+    this.photoes = this.choosephoto.deletePhoto(i);
+  }
+
 }

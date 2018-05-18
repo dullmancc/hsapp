@@ -1,16 +1,15 @@
-import {ChangeDetectorRef, Component} from '@angular/core';
-import {IonicPage, LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
-import {photo} from "../newpz1/newpz1";
+import { Component} from '@angular/core';
+import {
+  IonicPage, LoadingController, NavController, NavParams,
+  ToastController
+} from 'ionic-angular';
 import {HttpService} from "../../Service/HttpService";
-import {FileTransfer, FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer";
+import {FileTransfer} from "@ionic-native/file-transfer";
 import {File} from "@ionic-native/file";
-import {ImagePicker, ImagePickerOptions} from "@ionic-native/image-picker";
-import {Camera, CameraOptions} from "@ionic-native/camera";
-import {ActionSheet, ActionSheetOptions} from "@ionic-native/action-sheet";
 import {PzRecord} from "../../../Model/EPPangzhan";
 import {Utils} from "../../../providers/Utils";
-import {EPCSFile} from "../../../Model/EPCSFile";
 import {ApiUrl} from "../../../providers/Constants";
+import {ChoosePhotoService, Photo} from "../../../providers/ChoosePhotoService";
 /**
  * Generated class for the ExitPzRecordPage page.
  *
@@ -26,25 +25,32 @@ import {ApiUrl} from "../../../providers/Constants";
 })
 
 export class ExitPzRecordPage {
-  photoes:photo[]=[];
-  ePfiles:EPCSFile[] = [];
+  photoes:Photo[]=[];
   startTime:any;
   endTime:any;
   planStartTime:any;
   planEndTime :any;
   PZrecord:PzRecord;
+  //页面类型
   PZtype:number;
+  //按钮样式
   btcs:string;
   btcs1;
-  Trans;
-  loader;
-  constructor(public navCtrl: NavController, public navParams: NavParams, private camera: Camera,
-              private actionSheet:ActionSheet,
-              private imagePicker: ImagePicker,private http: HttpService,private transfer: FileTransfer,
-              private file: File ,public loadingCtrl: LoadingController, public toastCtrl: ToastController,private cd:ChangeDetectorRef) {
+  //文件传输
+  Trans
+
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              private http: HttpService,
+              private transfer: FileTransfer,
+              private file: File ,
+              public loadingCtrl: LoadingController,
+              public toastCtrl: ToastController,
+              private choosephoto:ChoosePhotoService) {
+
     this.PZrecord = this.navParams.get('record');
     this.PZtype = this.navParams.get('type');
-    console.log(this.PZtype);
+    //判断该页面为查看页面 or 保存页面
     if(this.PZtype>0){
       this.btcs = 'none';
 
@@ -53,30 +59,33 @@ export class ExitPzRecordPage {
     }
 
     if(this.PZrecord!=null){
-      this.ePfiles = this.PZrecord.EPCSParent.EPCSFiles;
-      for(var i = 0;i<this.ePfiles.length;i++){
-        var p = new  photo();
-        p.src = ApiUrl.slice(0,ApiUrl.length-4)+ this.ePfiles[i].FilePath.substring(2);
+      let ePfiles = this.PZrecord.EPCSParent.EPCSFiles;
+      for(var i = 0;i<ePfiles.length;i++){
+        var p = new  Photo();
+        p.src = ApiUrl.slice(0,ApiUrl.length-4)+ ePfiles[i].FilePath.substring(2);
         this.photoes.push(p);
-        this.photoes[i].ePfile = this.ePfiles[i];
+        this.photoes[i].ePfile = ePfiles[i];
       }
     }
-    this.Trans = transfer.create();
+
+    this.choosephoto.InitPhoto(this.photoes);
+    this.choosephoto.InitParams(this.PZrecord.EPCSID,this.PZrecord.Employee_EmployeeID);
+    this.Trans = this.transfer.create();
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ExitPzRecordPage');
   }
-  save(IsSubmit){
 
+  save(IsSubmit){
     this.checkTime();
     this.PZrecord.State = IsSubmit;
     var data = Utils.ParamsToString(this.PZrecord);
 
     this.http.post(ApiUrl+'Pangzhan/PostPangzhan',data).subscribe(res=>{
-      alert(res.ErrorMs);
+      this.presentToast(res.ErrorMs);
     },error=>{
-      alert(error);
+      this.presentToast(error.toString());
     });
   }
 
@@ -109,72 +118,21 @@ export class ExitPzRecordPage {
     toast.present();
   }
 
-  upFile(i) {
-    console.log(this.photoes.length);
-    //上传了跳过
-    if(this.photoes[i].isupload){
-      return this.upFile(i+1);
-    }
-
-    if (i < this.photoes.length) {
-
-      var fileTransfer: FileTransferObject = this.transfer.create();
-
-      let options: FileUploadOptions = {
-        fileKey: 'ionicfile',
-        fileName: 'ionicfile',
-        chunkedMode: false,
-        mimeType: "image/jpeg",
-        headers: {}
-      }
-
-      let data = {'FileUpPerson':this.PZrecord.Employee_EmployeeID,'EPCSID':this.PZrecord.PangzhanId};
-
-      var datastr = Utils.ParamsToString(data);
-      fileTransfer.upload(this.photoes[i].src, ApiUrl+'Pangzhan/PostFile?'+datastr, options)
-        .then((data) => {
-          i++;
-          this.photoes[i].isupload = true;
-
-          this.photoes[i].ePfile.EPSecFileID = JSON.parse(data.response).EPCSFileID;
-          if (i == this.photoes.length ) {
-            this.loader.dismiss();
-          } else {
-            this.presentToast(i-1 + "Image uploaded successfully");
-            return this.upFile(i);
-          }
-
-        }, (err) => {
-          console.log(err);
-          this.loader.dismiss();
-          this.presentToast(err);
-        });
-    }else{
-      this.loader.dismiss();
-      this.presentToast("Image uploaded successfully");
-    }
+  goBack(){
+    this.navCtrl.pop();
   }
-
-  uploadFile() {
-    this.loader = this.loadingCtrl.create({
-      content: "Uploading..."
-    });
-    this.loader.present();
-    this.upFile(0);
-  }
-
+  
   Download(){
     let loader = this.loadingCtrl.create({
-      content: "Uploading..."
+      content: "文档导出中..."
     });
     loader.present();
 
-      const url1 = 'http://193.112.12.241/HSWebApi/api/Pangzhan/Get?id='+this.PZrecord.PangzhanId;
+      const url1 = ApiUrl+'Pangzhan/Get?id='+this.PZrecord.EPCSID;
       this.Trans.download(url1, this.file.externalApplicationStorageDirectory  + 'Out1.doc').then((entry) => {
         console.log('download complete: ' + entry.toURL());
-        alert('download complete: ' + entry.toURL());
         loader.dismiss();
-        this.presentToast("Image uploaded successfully");
+        this.presentToast("文档导出完成，存储路径为:"+entry.toURL());
       }, (error) => {
         // handle error
         loader.dismiss();
@@ -203,78 +161,11 @@ export class ExitPzRecordPage {
   }
 
   addPhoto():void{
-    if(this.PZrecord.PangzhanId == ''){
-      alert("请先保存！");
-      return;
-    }
-    const options0: CameraOptions = {
-      quality: 100,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE,
-      sourceType: this.camera.PictureSourceType.CAMERA,
-      saveToPhotoAlbum:true
-    };
-    // 设置选项
-    const options1: ImagePickerOptions = {
-      maximumImagesCount:9,
-      quality: 100
-    };
-
-    let buttonLabels = ['拍照', '从相册选择照片'];
-
-    const options: ActionSheetOptions = {
-      title: '请选择您想要获取图片的方式',
-      buttonLabels: buttonLabels,
-      addDestructiveButtonWithLabel: '取消',
-      androidTheme: 5,
-      destructiveButtonLast: true
-    };
-
-    this.actionSheet.show(options).then((buttonIndex: number) => {
-      if(buttonIndex==1)
-        this.camera.getPicture(options0).then((imageData) => {
-          let base64Image = 'data:image/jpeg;base64,' + imageData;
-          let p=new photo();
-          p.src=base64Image;
-          p.isupload = false;
-          p.ePfile = new EPCSFile(this.PZrecord.PangzhanId,this.PZrecord.Employee_EmployeeID);
-          this.photoes.push(p);
-          this.uploadFile();
-
-        }, (err) => {
-          console.log(err);
-        });
-      if(buttonIndex==2)
-        this.imagePicker.getPictures(options1).then((results) => {
-          for (var i = 0; i < results.length; i++) {
-            let p=new photo();
-            p.ePfile = new EPCSFile(this.PZrecord.PangzhanId,this.PZrecord.Employee_EmployeeID);
-            p.src=results[i];
-            p.isupload = false;
-            this.photoes.push(p);
-            this.uploadFile();
-          }
-        }, (err) => {
-          console.log('获取图片失败');
-        });
-    });
+    this.photoes = this.choosephoto.addPhoto();
   }
 
   deletePhoto(i:number){
-    this.http.post(ApiUrl+'Pangzhan/DeleteFile?FileID='+this.photoes[i].ePfile.EPSecFileID,{}).subscribe(res=>{
-      if(0<=i&&i<=this.photoes.length-1)
-      {
-        for(let k=i;k<this.photoes.length-1;k++)
-        {
-          this.photoes[k]=this.photoes[k+1];
-        }
-        this.photoes.length--;
-      }
-    },error=>{
-      alert("删除失败！");
-    });
-
+    this.photoes = this.choosephoto.deletePhoto(i);
   }
 }
 

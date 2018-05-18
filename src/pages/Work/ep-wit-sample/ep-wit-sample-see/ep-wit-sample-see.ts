@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import {photo} from "../../../JianLiPZ/newpz1/newpz1";
 import {ApiUrl} from "../../../../providers/Constants";
+import {Photo} from "../../../../providers/ChoosePhotoService";
 
 /**
  * Generated class for the EpWitSampleSeePage page.
@@ -19,23 +19,22 @@ export class EpWitSampleSeePage {
 
   public ePWitSamp;
   ResultDesc;
-  ePfiles;
-  photoes:photo[]=[];
+  photoes:Photo[]=[];
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.ePWitSamp = this.navParams.get('EPWitSamples');
-    this.ePfiles = this.ePWitSamp.EPCSParent.EPCSFiles;
-    for (var i = 0; i < this.ePfiles.length; i++) {
-      var p = new photo();
-      var tupian = this.ePfiles[i].FileName.substr(this.ePfiles[i].FileName.lastIndexOf('.'));
+    let ePfiles = this.ePWitSamp.EPCSParent.EPCSFiles;
+    for (var i = 0; i < ePfiles.length; i++) {
+      var p = new Photo();
+      var tupian = ePfiles[i].FileName.substr(ePfiles[i].FileName.lastIndexOf('.'));
       if (tupian == '.png' || tupian == '.jpg' || tupian == '.gif' || tupian == '.tiff' || tupian == '.svg') {
-        p.src = ApiUrl.slice(0, ApiUrl.length - 4) + this.ePfiles[i].FilePath.substring(2);
+        p.src = ApiUrl.slice(0, ApiUrl.length - 4) + ePfiles[i].FilePath.substring(2);
         p.isPhoto = true;
       } else {
-        p.src = this.ePfiles[i].FileName;
+        p.src = ePfiles[i].FileName;
         p.isPhoto = false;
       }
       this.photoes.push(p);
-      this.photoes[i].ePfile = this.ePfiles[i];
+      this.photoes[i].ePfile = ePfiles[i];
 
     }
 

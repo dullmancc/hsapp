@@ -3,15 +3,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import {HttpModule} from "@angular/http";
-import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
 import { Camera } from '@ionic-native/camera';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {HttpService} from "../pages/Service/HttpService";
 
-import { ActionSheet, ActionSheetOptions } from '@ionic-native/action-sheet';
-import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker';
+import { ActionSheet } from '@ionic-native/action-sheet';
+import { ImagePicker} from '@ionic-native/image-picker';
 import {BackgroundMode} from "@ionic-native/background-mode";
 import {HttpClientModule,HttpClientJsonpModule} from "@angular/common/http";
 import {JsonpModule} from "@angular/http";
@@ -31,14 +31,13 @@ import {PZJLPageModule} from "../pages/JianLiPZ/PZlist/PZJL.module";
 import {TabsPageModule} from "../pages/tabs/tabs.module";
 import {BeautyDirective} from "../pages/Service/CSSEL";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
-import {MySlidesComponent} from "../components/my-slides/my-slides";
 import {IndexPageModule} from "../pages/index/index.module";
 import {GoodsService} from "../providers/goods-service";
-import {LookService} from "../providers/look-service";
 import {SecIssuesPageModule} from "../pages/Work/sec-issues/sec-issues.module";
 import {SecIssRecordPageModule} from "../pages/Work/sec-issues/sec-iss-record/sec-iss-record.module";
-import {SecIssueslistPage} from "../pages/Work/sec-issues/sec-issueslist/sec-issueslist";
-import {SecIssRecordPage} from "../pages/Work/sec-issues/sec-iss-record/sec-iss-record";
+import {EpAddMatePage} from "../pages/Work/ep-mate-entry/ep-add-mate/ep-add-mate";
+import {EpAddMatePageModule} from "../pages/Work/ep-mate-entry/ep-add-mate/ep-add-mate.module";
+import {ChoosePhotoService} from "../providers/ChoosePhotoService";
 
 @NgModule({
   declarations: [
@@ -54,6 +53,7 @@ import {SecIssRecordPage} from "../pages/Work/sec-issues/sec-iss-record/sec-iss-
       tabsHideOnSubPages:true,
       preloadModules:true
     }),
+    EpAddMatePageModule,
     IndexPageModule,
     AboutPageModule,
     ContactPageModule,
@@ -90,7 +90,7 @@ import {SecIssRecordPage} from "../pages/Work/sec-issues/sec-iss-record/sec-iss-
     AndroidPermissions,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     GoodsService,
-    LookService,
+    ChoosePhotoService
   ]
 })
 export class AppModule {}

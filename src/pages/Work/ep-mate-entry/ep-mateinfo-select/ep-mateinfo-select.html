@@ -1,0 +1,52 @@
+<!--
+  Generated template for the EpMateinfoSelectPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header  id="header">
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>{{title}}</span>
+  </div>
+  <div class="header-right">
+    <button ion-button clear (click)="SeletedFinish()">
+      完成
+    </button>
+  </div>
+</ion-header>
+<ion-content>
+  <ion-searchbar color="primary"
+                 [(ngModel)]="queryText"
+                 (ionInput)="updateSchedule()"
+                 placeholder="Search">
+  </ion-searchbar>
+  <ion-list [ngSwitch]="type">
+    <!--材料名称-->
+    <div *ngSwitchCase="0">
+      <ion-item *ngFor="let i of ShowItem;" (click)="Seleted(i)">
+        {{i.MaterialInfoName}}
+      </ion-item>
+    </div>
+    <!--材料品牌-->
+    <div *ngSwitchCase="1">
+      <ion-item *ngFor="let i of ShowItem;" (click)="Seleted(i)">
+        {{i.BrandName}}
+      </ion-item>
+    </div>
+    <!--材料单位-->
+    <div *ngSwitchCase="2">
+      <ion-item *ngFor="let i of ShowItem;" (click)="Seleted(i)">
+        {{i.UnitName}}
+      </ion-item>
+    </div>
+    <!--材料型号-->
+    <div *ngSwitchCase="3" >
+      <ion-item *ngFor="let i of ShowItem;" (click)="Seleted(i)">
+        {{i.Desc}}
+      </ion-item>
+    </div>
+  </ion-list>
+</ion-content>

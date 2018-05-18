@@ -54,14 +54,10 @@ export class MySlidesComponent {
     console.dir(this.slides);
     //this.slides.startAutoplay();
   }
-   GetMyPos(){
-     let s = document.getElementsByClassName("pr_left").item(0);
-     //console.log("X: "+s.getAttribute("left")+" ,Y: "+s.getAttribute("top"));
-   }
+
   slideChanged(){
     let currentIndex = (this.slides.getActiveIndex()-1)%5;
     let preIndex =( this.slides.getPreviousIndex()-1)%5;
-    console.log("current:"+(currentIndex+1)+"preIndex: "+(preIndex+1));
     if(preIndex<0||currentIndex==5){
       return;
     }
@@ -71,6 +67,5 @@ export class MySlidesComponent {
   }
   barChanged(i){
     this.slides.slideTo(i, 500);
-    console.log("Changes");
   }
 }

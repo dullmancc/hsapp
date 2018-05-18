@@ -1,6 +1,6 @@
 import { Component,ChangeDetectorRef } from '@angular/core';
 import {AlertController, NavController, Platform} from 'ionic-angular';
-import {ListPage, Project} from "../Work/ep-mate-entry/list/list";
+import { Project} from "../Work/ep-mate-entry/list/list";
 import {TabsPage} from "../tabs/tabs";
 import {ObservationPage} from "../Work/observation/observation";
 import {HttpService} from "../Service/HttpService";
@@ -43,25 +43,8 @@ export class HomePage {
 
     this.currentProject = new Project();
     this.Load();
-    //权限询问
-    var list = [
-      androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION,
-      androidPermissions.PERMISSION.ACCESS_FINE_LOCATION,
-      androidPermissions.PERMISSION.READ_PHONE_STATE,
-      androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE
-    ];
-
-    //仅针对android平台
-    if(this.platform.is('android')){
-      //是否有定位权限
-      this.androidPermissions.checkPermission(list[0]).then(
-        result => console.log('Has permission?',result.hasPermission),
-        err => this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
-      );
-      this.androidPermissions.requestPermissions(list);
-    }
     //默认天气
-    this.imageURI='./assets/weather/0.png';
+    this.imageURI='./assets/weather/999.png';
     this.nowweather =  new WeatherCode();
     //加载天气
     this.LoadLocation();

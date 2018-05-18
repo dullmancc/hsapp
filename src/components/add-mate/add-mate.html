@@ -1,0 +1,23 @@
+<!-- Generated template for the AddMateComponent component -->
+<div style="margin-left: 20px">
+  型号{{index+2}}
+  <div class="myDelete" style="display: inline-block" (click)="deleteComp()">
+    删除
+  </div>
+</div>
+<ion-item>
+  <ion-icon name="add" item-start>
+  </ion-icon>
+  <ion-label color="dark">型号</ion-label>
+  <button ion-button icon-right clear item-end (click)="GetMateName()">
+    {{MaterModel.Desc}}
+    <ion-icon name="ios-arrow-forward"></ion-icon>
+  </button>
+</ion-item>
+<ion-item>
+  <ion-icon name="add" item-start>
+  </ion-icon>
+  <ion-label color="dark">数量</ion-label>
+  <ion-input text-right icon-end [(ngModel)]="ePInfo.EPMaterialNums" placeholder="请输入"></ion-input>
+</ion-item>
+

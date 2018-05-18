@@ -28,7 +28,7 @@
   <div [ngSwitch]="pet">
 
     <ion-list *ngSwitchCase="'all'">
-      <ion-item *ngFor="let i of listSecIssus.unfinished;" (click)="GoToExitRecord(i,0)">
+      <ion-item *ngFor="let i of unfinished;" (click)="GoToExitRecord(i,0)">
         <ion-avatar item-start>
           <img src="./assets/imgs/workicon/secissues.png">
         </ion-avatar>
@@ -89,7 +89,7 @@
     </ion-list>
 
     <ion-list *ngSwitchCase="'finished'">
-      <ion-item *ngFor="let i of listSecIssus.finished;" (click)="GoToExitRecord(i,1)">
+      <ion-item *ngFor="let i of finished;" (click)="GoToExitRecord(i,1)">
         <ion-avatar item-start>
           <img src="./assets/imgs/workicon/secissues.png">
         </ion-avatar>

@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
-import {IonicPage, LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
-import {photo} from "../newpz1/newpz1";
-import {Camera, CameraOptions} from "@ionic-native/camera";
-import {FileTransfer, FileTransferObject,FileUploadOptions} from "@ionic-native/file-transfer";
-import {ImagePicker, ImagePickerOptions} from "@ionic-native/image-picker";
-import {ActionSheet, ActionSheetOptions} from "@ionic-native/action-sheet";
+import {
+  AlertController, IonicPage, NavController, NavParams,
+  ToastController
+} from 'ionic-angular';
 import {HttpService} from "../../Service/HttpService";
-import {File} from "@ionic-native/file";
 import {PzRecord} from "../../../Model/EPPangzhan";
 import {Utils} from "../../../providers/Utils";
 import {ApiUrl} from "../../../providers/Constants";
+import {ChoosePhotoService, Photo} from "../../../providers/ChoosePhotoService";
 
 /**
  * Generated class for the NormalPzPage page.
@@ -25,21 +23,40 @@ import {ApiUrl} from "../../../providers/Constants";
   templateUrl: 'normal-pz.html',
 })
 export class NormalPzPage {
-  loader;
-  photoes:photo[]=[];
+  photoes:Photo[]=[];
   PZrecord:PzRecord;
   Pangzhanid:string;
   PZBL;
-
+  PZtype;
+  btcs;
+  btcs1;
   constructor(public navCtrl: NavController, public navParams: NavParams,
-              private camera: Camera,
-  private actionSheet:ActionSheet,
-  private imagePicker: ImagePicker,private http: HttpService,private transfer: FileTransfer,
-  private file: File ,public loadingCtrl: LoadingController, public toastCtrl: ToastController) {
+              private alertCtrl:AlertController,
+              private http: HttpService,
+              public toastCtrl: ToastController,
+              private choosephoto:ChoosePhotoService) {
+    this.PZrecord = new PzRecord();
     this.PZrecord.Employee_EmployeeID = this.navParams.get('userid');
-    // this.PZrecord.PZBelongId = this.navParams.get('pzbl').PZBelongId;
     this.PZBL = this.navParams.get('pzbl');
     this.PZrecord.PZBelongId =  this.PZBL.PZBelongId;
+    this.PZtype = this.navParams.get('type');
+
+
+    //判断该页面为查看页面 or 保存页面
+    if(this.PZtype>0){
+      this.btcs = 'none';
+
+    }else {
+      this.btcs1 = 'none';
+    }
+
+
+    //初始化
+    this.choosephoto.InitPhoto(this.photoes);
+  }
+
+  goBack(){
+    this.navCtrl.pop();
   }
 
   ionViewDidLoad() {
@@ -56,12 +73,38 @@ export class NormalPzPage {
     var data = Utils.ParamsToString(this.PZrecord);
 
     this.http.post(ApiUrl+'Pangzhan/PostPangzhan',data).subscribe(res=>{
-      alert(res.ErrorMs);
+      this.presentToast(res.ErrorMs);
       console.log(res.Pangzhanid);
       this.Pangzhanid = res.Pangzhanid;
+      this.choosephoto.InitParams(res.EPCSParentID,this.PZrecord.Employee_EmployeeID);
     },error=>{
-      alert(error);
+      this.presentToast(error.toString());
     });
+  }
+
+  //提示框
+  presentAlert(title,msg){
+    let alert = this.alertCtrl.create({
+      title: title,
+      subTitle: msg,
+      buttons: ['确认']
+    });
+
+    alert.present();
+  }
+
+  presentToast(msg) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 3000,
+      position: 'bottom'
+    });
+
+    toast.onDidDismiss(() => {
+      console.log('Dismissed toast');
+    });
+
+    toast.present();
   }
 
   checkTime(){
@@ -78,137 +121,31 @@ export class NormalPzPage {
       this.PZrecord.EndTime = '2000-01-01';
     }
   }
-
-  upFile(i) {
-    console.log(this.photoes.length);
-    if (i < this.photoes.length) {
-
-      var fileTransfer: FileTransferObject = this.transfer.create();
-
-      let options: FileUploadOptions = {
-        fileKey: 'ionicfile',
-        fileName: 'ionicfile',
-        chunkedMode: false,
-        mimeType: "image/jpeg",
-        headers: {}
-      }
-      fileTransfer.upload(this.photoes[i].src, ApiUrl+'Pangzhan/Post?panzhangid='+this.Pangzhanid+'&EmployeeId='+this.PZrecord.Employee_EmployeeID, options)
-        .then((data) => {
-          i++;
-          if (i == this.photoes.length ) {
-            this.loader.dismiss();
-          } else {
-            this.presentToast(i-1 + "Image uploaded successfully");
-            return this.upFile(i);
-          }
-
-        }, (err) => {
-          console.log(err);
-          this.loader.dismiss();
-          this.presentToast(err);
-        });
-    }else{
-      this.loader.dismiss();
-      this.presentToast("Image uploaded successfully");
-    }
-  }
-
-  uploadFile() {
-    this.loader = this.loadingCtrl.create({
-      content: "Uploading..."
-    });
-    this.loader.present();
-    this.upFile(0);
-  }
-
-  presentToast(msg) {
-    let toast = this.toastCtrl.create({
-      message: msg,
-      duration: 3000,
-      position: 'bottom'
-    });
-
-    toast.onDidDismiss(() => {
-      console.log('Dismissed toast');
-    });
-
-    toast.present();
-  }
   changeDate():void{
     let startTime=this.PZrecord.BeginTime.toString();
     let endTime=this.PZrecord.EndTime.toString();
     if(startTime>endTime)
     {
-      alert("开始时间不能大于结束时间，请重新输入");
-      this.PZrecord.EndTime=this.PZrecord.BeginTime;
+      this.presentAlert('时间选择错误','开始时间不能大于结束时间,请重新输入！');
+      this.PZrecord.EndTime =this.PZrecord.BeginTime;
     }
   }
 
   changePlanDate():void {
-    let planEndTime=this.PZrecord.SchBeginTime.toString();
+    let planEndTime=this.PZrecord.SchEndTime.toString();
     let planStartTime=this.PZrecord.SchBeginTime.toString();
     if(planStartTime>planEndTime){
-      alert("计划开始时间不能大于计划结束时间,请重新输入");
+      this.presentAlert('时间选择错误','计划开始时间不能大于计划结束时间,请重新输入！');
       this.PZrecord.SchEndTime=this.PZrecord.SchBeginTime;
     }
   }
 
-  addPhoto():void{
-    const options0: CameraOptions = {
-      quality: 100,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE,
-      sourceType: this.camera.PictureSourceType.CAMERA,
-      saveToPhotoAlbum:true
-    };
-    // 设置选项
-    const options1: ImagePickerOptions = {
-      maximumImagesCount:9,
-      quality: 100
-    };
-
-    let buttonLabels = ['拍照', '从相册选择照片'];
-
-    const options: ActionSheetOptions = {
-      title: '请选择您想要获取图片的方式',
-      buttonLabels: buttonLabels,
-      addDestructiveButtonWithLabel: '取消',
-      androidTheme: 5,
-      destructiveButtonLast: true
-    };
-
-    this.actionSheet.show(options).then((buttonIndex: number) => {
-      if(buttonIndex==1)
-        this.camera.getPicture(options0).then((imageData) => {
-          let base64Image = 'data:image/jpeg;base64,' + imageData;
-          let p=new photo();
-          p.src=base64Image;
-          this.photoes.push(p);
-        }, (err) => {
-          console.log(err);
-        });
-      if(buttonIndex==2)
-        this.imagePicker.getPictures(options1).then((results) => {
-          for (var i = 0; i < results.length; i++) {
-            let p=new photo();
-            p.src=results[i];
-            this.photoes.push(p);
-          }
-        }, (err) => {
-          console.log('获取图片失败');
-        });
-    });
+  addPhoto() {
+    this.photoes = this.choosephoto.addPhoto();
   }
 
   deletePhoto(i:number){
-    if(0<=i&&i<=this.photoes.length-1)
-    {
-      for(let k=i;k<this.photoes.length-1;k++)
-      {
-        this.photoes[k]=this.photoes[k+1];
-      }
-      this.photoes.length--;
-    }
+    this.photoes = this.choosephoto.deletePhoto(i);
   }
+
 }

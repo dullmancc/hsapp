@@ -18,7 +18,7 @@ export class ContactPage {
   public imageURI;
 
   public path;
-  constructor(public navCtrl: NavController,public modal:ModalController,private http: HttpService,private transfer: FileTransfer,
+  constructor(public navCtrl: NavController,private http: HttpService,private transfer: FileTransfer,
               private file: File,private app:App,private alertCtrl: AlertController) {
        this.name = TabsPage.UserInfo.employees.EmployeeID;
        this.RealName = TabsPage.UserInfo.employees.RealName;

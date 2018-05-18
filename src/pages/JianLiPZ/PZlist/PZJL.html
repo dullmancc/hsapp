@@ -1,18 +1,16 @@
-<ion-header>
-
-  <ion-navbar>
-    <ion-title text-center>
-      旁站记录
-    </ion-title>
-    <ion-buttons right>
-      <button ion-button icon-only (click)="newRecord()">
-        <ion-icon ios="ios-add-circle-outline" md="md-add-circle"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-navbar>
-
+<ion-header  id="header">
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span> 旁站记录</span>
+  </div>
+  <div class="header-right" (click)="newRecord()">
+    <button clear ion-button clear icon-only>
+      <ion-icon ios="ios-add-circle-outline" md="md-add-circle"></ion-icon>
+    </button>
+  </div>
 </ion-header>
-
 <!--style="background-color: #d6d6d6;"-->
 
 <ion-content >

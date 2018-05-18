@@ -34,7 +34,6 @@
     "@ionic-native/splash-screen": "4.6.0",
     "@ionic-native/status-bar": "4.6.0",
     "@ionic/storage": "2.1.3",
-    "com.synconset.imagepicker": "^2.1.10",
     "cordova-android": "6.3.0",
     "cordova-plugin-actionsheet": "^2.3.3",
     "cordova-plugin-android-permissions": "^1.0.0",
@@ -45,6 +44,7 @@
     "cordova-plugin-file-opener2": "^2.0.19",
     "cordova-plugin-file-transfer": "^1.7.1",
     "cordova-plugin-filechooser": "^1.0.1",
+    "cordova-plugin-image-picker": "git+https://github.com/Findiglay/cordova-imagePicker.git",
     "cordova-plugin-ionic-keyboard": "^2.0.5",
     "cordova-plugin-ionic-webview": "^1.1.16",
     "cordova-plugin-splashscreen": "^5.0.2",
@@ -74,9 +74,6 @@
       "cordova-plugin-camera": {},
       "cordova-plugin-file-transfer": {},
       "cordova-plugin-actionsheet": {},
-      "com.synconset.imagepicker": {
-        "PHOTO_LIBRARY_USAGE_DESCRIPTION": "your usage message"
-      },
       "cordova-plugin-android-permissions": {},
       "cordova-plugin-background-mode": {},
       "cordova-plugin-file": {},
@@ -86,7 +83,8 @@
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-filechooser": {}
+      "cordova-plugin-filechooser": {},
+      "cordova-plugin-image-picker": {}
     },
     "platforms": [
       "android"

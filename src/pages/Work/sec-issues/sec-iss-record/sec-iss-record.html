@@ -23,7 +23,7 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
   <ion-list>
     <ion-item>
       <img item-left src="assets/imgs/workicon/unitroject.png">
@@ -32,43 +32,75 @@
     </ion-item>
     <ion-item>
       <ion-icon name="ios-construct-outline" item-start></ion-icon>
-      <ion-label>问题类型:{{curProblems.Desc}}</ion-label>
+      <ion-label color="dark">问题类型</ion-label>
       <ion-select [(ngModel)]="curProblems" interface="popover" [compareWith]="compareFn"  item-end>
         <ion-option *ngFor="let epproblems of ePSecProblems;" [value]="epproblems">{{epproblems.Desc}}</ion-option>
       </ion-select>
     </ion-item>
-    <ion-item>
+    <ion-item no-lines>
       <ion-icon name="ios-nuclear-outline" item-start></ion-icon>
-      <ion-label>危险评估:{{curRisks.Desc}}</ion-label>
+      <ion-label color="dark">危险评估</ion-label>
       <ion-select [(ngModel)]="curRisks"  interface="popover"  [compareWith]="compare1Fn"  item-end>
         <ion-option *ngFor="let epsecrisks of ePSecRisks;"  [value]="epsecrisks">{{epsecrisks.Desc}}</ion-option>
       </ion-select>
     </ion-item>
+    <ion-list-header>
+    </ion-list-header>
     <ion-item>
-      <ion-icon name="ios-create-outline" item-start></ion-icon>
-      <textarea type="text" [ngStyle]="{'height':'100px','width':'250px'}" placeholder="请输入问题描述"  [(ngModel)]="ePSecIssue.Details"></textarea>
+      <ion-icon name="person" item-start></ion-icon>
+      <ion-label color="dark">施工处理人</ion-label>
+      <ion-input text-right item-end type="text" placeholder="请输入" [(ngModel)]="ePSecIssue.HandleEmployee"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-icon name="ios-camera-outline" item-start></ion-icon>
-      照片(0)
-      <ion-buttons item-end clear>
-        <ion-icon name='ios-add-outline'></ion-icon>
-        添加照片
-      </ion-buttons>
-      <ul style="list-style: none;margin:0;padding:0">
-        <li *ngFor="let photo of photoes;let i=index" style="margin-right: 5px;position: relative">
-          <img style="width:120px;height:120px;" [src]="photoes[i].src" *ngIf="photoes[i].isPhoto">
-          <span *ngIf="!photoes[i].isPhoto">{{photoes[i].src}}</span>
-          <ion-icon name="ios-close-circle-outline" small style="position: absolute;right:0;top:0;" (click)="deletePhoto(i)"></ion-icon>
-        </li>
-      </ul>
+      <ion-icon name="person" item-start></ion-icon>
+      <ion-label color="dark">问题跟踪人</ion-label>
+      <ion-select [(ngModel)]="curEmployee"  interface="popover"  [compareWith]="compare2Fn"  item-end>
+        <ion-option *ngFor="let emp of employees;"  [value]="emp">{{emp.RealName}}</ion-option>
+      </ion-select>
     </ion-item>
     <ion-item>
+      <ion-icon name="time" item-start></ion-icon>
+      <ion-label color="dark">限期完成时间</ion-label>
+      <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ePSecIssue.Deadline"></ion-datetime>
+    </ion-item>
+    <ion-item no-lines>
       <ion-label color="dark">安全隐患记录时间</ion-label>
       <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ePSecIssue.EPSecIssueTime"></ion-datetime>
     </ion-item>
+    <ion-list-header>
+    </ion-list-header>
+    <ion-item>
+      <ion-label color="dark">整改要求</ion-label>
+    </ion-item>
+    <ion-item>
+      <textarea type="text" placeholder="请输入整改要求"  [(ngModel)]="ePSecIssue.ModifyRequirement"></textarea>
+    </ion-item>
+    <ion-item>
+      <textarea type="text" placeholder="请输入问题描述"  [(ngModel)]="ePSecIssue.Details"></textarea>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">是否下发监理通知单</ion-label>
+      <ion-toggle [(ngModel)]="ePSecIssue.EPNoticeListstate" checked="false"></ion-toggle>
+    </ion-item>
+    <ion-item no-lines>
+      <ion-icon name="ios-camera-outline" item-start></ion-icon>
+      文件({{photoes.length}})
+      <ul style="list-style: none;margin:0;padding:0">
+        <li *ngFor="let photo of photoes;let i=index" style="margin-right: 5px;position: relative">
+          <span *ngIf="!photoes[i].isPhoto">{{photoes[i].src}}</span>
+          <ion-icon *ngIf="ePSecIssue.State==0&&!photoes[i].isPhoto" name="close" small style="position: absolute;right:0;top:0;" (click)="deletePhoto(i)"></ion-icon>
+        </li>
+        <li *ngFor="let photo1 of photoes;let i=index" style="display: inline-block;margin-right: 5px;position: relative">
+          <img style="width:120px;height:120px;" [src]="photo1.src" *ngIf="photo1.isPhoto">
+          <ion-icon *ngIf="ePSecIssue.State==0&&photo1.isPhoto" name="close" small style="position: absolute;right:0;top:0;" (click)="deletePhoto(i)"></ion-icon>
+        </li>
+      </ul>
+    </ion-item>
+    <ion-list-header>
+    </ion-list-header>
     <ion-item *ngIf="this.EPCSID">
-      <a [href]="ToUplod">上传</a>
+      <ion-icon name="camera" item-start></ion-icon>
+      <a (click)="addPhoto()">上传</a>
     </ion-item>
   </ion-list>
 </ion-content>

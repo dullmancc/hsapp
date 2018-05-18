@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import {EPEntryResult} from "../../../Model/EPMaterials";
+import {
+  IonicPage, NavController, NavParams, Platform,
+  ToastController
+} from 'ionic-angular';
 import {Utils} from "../../../providers/Utils";
 import {ApiUrl} from "../../../providers/Constants";
-import {ActionSheet, ActionSheetOptions} from "@ionic-native/action-sheet";
 import {EPWitnSample} from "../../../Model/EPWitnSample";
 import {HttpService} from "../../Service/HttpService";
-import {EPCSFile} from "../../../Model/EPCSFile";
-import {photo} from "../../JianLiPZ/newpz1/newpz1";
+import {ChoosePhotoService, Photo} from "../../../providers/ChoosePhotoService";
 
 /**
  * Generated class for the EpWitSamplePage page.
@@ -26,13 +26,16 @@ export class EpWitSamplePage {
   public ePWitSamples:EPWitnSample;
   public curResult:WitResultType;
   public ResultList:WitResultType[]= [];
-  public photoes:photo[]=[];
-  public ePfiles:EPCSFile[] = [];
+  public photoes:Photo[]=[];
   public epmatecheck;
   public EmployeeID;
-  public ToUplod;
-  public EPCSID:boolean=false;
-  constructor(public navCtrl: NavController, public navParams: NavParams,public http:HttpService,public actionSheet:ActionSheet) {
+  constructor(public platform:Platform,
+              public navCtrl: NavController,
+              public navParams: NavParams,
+              public http:HttpService,
+              private choosephoto:ChoosePhotoService,
+              public toastCtrl: ToastController) {
+
       this.ePWitSamples = this.navParams.get('EPWitSamples');
       this.epmatecheck = this.navParams.get('EPMaterialsCheck');
       this.EmployeeID = this.navParams.get('EmployeeID');
@@ -45,7 +48,9 @@ export class EpWitSamplePage {
         this.ePWitSamples.ECUnitID = this.epmatecheck.ECUnit;
       }else {
         this.initPhoto();
+        this.choosephoto.InitParams(this.ePWitSamples.EPCSID,this.EmployeeID);
       }
+
       this.initList();
   }
 
@@ -58,31 +63,16 @@ export class EpWitSamplePage {
     var data = Utils.ParamsToString(this.ePWitSamples);
 
     this.http.post(ApiUrl+'EPWitnSamples/PostEPWitSamp',data).subscribe(res=>{
-      alert(res.ErrorMs);
+      this.presentToast(res.ErrorMs);
       if(res.EPCSParentID!=-1){
         this.ePWitSamples.EPCSID = res.EPCSParentID;
-        this.ToUplod = ApiUrl.slice(0,ApiUrl.length-4)+"1.html?FileUpPerson="+this.EmployeeID+"&EPCSID="+ this.ePWitSamples.EPCSID;
-        this.EPCSID =true;
+        this.choosephoto.InitParams(this.ePWitSamples.EPCSID,this.EmployeeID);
       }
     },error=>{
-      alert(error);
+      this.presentToast(error.toString());
     });
   }
 
-  deletePhoto(i:number){
-    this.http.post(ApiUrl+'EPSecIssues/DeleteFile?FileID='+this.photoes[i].ePfile.EPSecFileID,{}).subscribe(res=>{
-      if(0<=i&&i<=this.photoes.length-1)
-      {
-        for(let k=i;k<this.photoes.length-1;k++)
-        {
-          this.photoes[k]=this.photoes[k+1];
-        }
-        this.photoes.length--;
-      }
-    },error=>{
-      alert("删除失败！");
-    });
-  }
   /*
   ionViewCanLeave() :boolean {
     let buttonLabels = ['保存','提交','取消'];
@@ -153,21 +143,22 @@ export class EpWitSamplePage {
   }
 
   initPhoto(){
-    this.EPCSID = true;
-    this.ePfiles = this.ePWitSamples.EPCSParent.EPCSFiles;
-    for(var i = 0;i<this.ePfiles.length;i++){
-      var p = new  photo();
-      var tupian = this.ePfiles[i].FileName.substr(this.ePfiles[i].FileName.lastIndexOf('.'));
+    let ePfiles = this.ePWitSamples.EPCSParent.EPCSFiles;
+    this.photoes = [];
+    for(var i = 0;i<ePfiles.length;i++){
+      var p = new  Photo();
+      var tupian = ePfiles[i].FileName.substr(ePfiles[i].FileName.lastIndexOf('.'));
       if(tupian=='.png'||tupian=='.jpg'||tupian=='.gif'||tupian=='.tiff'||tupian=='.svg'){
-        p.src = ApiUrl.slice(0,ApiUrl.length-4)+ this.ePfiles[i].FilePath.substring(2);
+        p.src = ApiUrl.slice(0,ApiUrl.length-4)+ ePfiles[i].FilePath.substring(2);
         p.isPhoto = true;
       }else{
-        p.src = this.ePfiles[i].FileName;
+        p.src = ePfiles[i].FileName;
         p.isPhoto = false;
       }
       this.photoes.push(p);
-      this.photoes[i].ePfile = this.ePfiles[i];
+      this.photoes[i].ePfile = ePfiles[i];
     }
+    this.choosephoto.InitPhoto(this.photoes);
   }
 
   ionViewDidEnter(){
@@ -182,6 +173,29 @@ export class EpWitSamplePage {
       });
     }
   }
+
+  presentToast(msg) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 3000,
+      position: 'bottom'
+    });
+
+    toast.onDidDismiss(() => {
+      console.log('Dismissed toast');
+    });
+
+    toast.present();
+  }
+
+  addPhoto():void{
+    this.photoes = this.choosephoto.addPhoto();
+  }
+
+  deletePhoto(i:number){
+    this.photoes = this.choosephoto.deletePhoto(i);
+  }
+
 }
 export class WitResultType{
   public id;

@@ -16,8 +16,8 @@
     <ion-input id="user_password" placeholder="请输入密码" clearInput type="password"style="padding-left: 15px"  [(ngModel)]="password">{{password}}</ion-input>
     <ion-toggle [(ngModel)]="mushrooms"style="margin-top: 2px;margin-right: 5px"  [checked]="mushrooms"></ion-toggle>
   </div>
-  <div id="btn_login">
-    <div style="color:gray" (click)="logIn()">登录</div>
+  <div id="btn_login"  (click)="logIn()">
+    <div style="color:gray">登录</div>
   </div>
   <div id="onetep_btn_login">
     <div style="color: red">注册</div>

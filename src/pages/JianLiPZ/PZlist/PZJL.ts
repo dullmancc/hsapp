@@ -80,6 +80,10 @@ export class PZJLPage {
     this.navCtrl.push(ExitPzRecordPage,{record:record,type:i});
   }
 
+  goBack(){
+    this.navCtrl.pop();
+  }
+
   getRecord(recordClass){
     if(recordClass==this.recordClasses[0])
       return this.unSumbitPz;

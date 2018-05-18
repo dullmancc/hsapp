@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import {EPEntryResult, EPMateEntryType, EPMaterials} from "../../../Model/EPMaterials";
+import {
+  IonicPage,NavController, NavParams, Platform,
+  ToastController
+} from 'ionic-angular';
+import {EPEntryResult,EPMaterials} from "../../../Model/EPMaterials";
 import {HttpService} from "../../Service/HttpService";
 import {ApiUrl} from "../../../providers/Constants";
-import {EPSecIssue, EPSecProblem, EPSecRisk} from "../../../Model/EPSecIssue";
-import {photo} from "../../JianLiPZ/newpz1/newpz1";
-import {EPCSFile} from "../../../Model/EPCSFile";
 import {Utils} from "../../../providers/Utils";
-import {ActionSheet, ActionSheetOptions} from "@ionic-native/action-sheet";
+import {EpAddMatePage} from "./ep-add-mate/ep-add-mate";
+import {EPMateInfoForEntry, MaterialInfo} from "../../../Model/EPMateInfoForEntry";
+import {ChoosePhotoService, Photo} from "../../../providers/ChoosePhotoService";
 
 /**
  * Generated class for the EpMateEntryPage page.
@@ -23,34 +25,55 @@ import {ActionSheet, ActionSheetOptions} from "@ionic-native/action-sheet";
 })
 export class EpMateEntryPage {
 
-  public ePMateEntryType:EPMateEntryType[];
+  //当前材料种类信息
+  public curMateInfo:MaterialInfo = new MaterialInfo();
   public ePEntryResult:EPEntryResult[];
-  public photoes:photo[]=[];
-  public ePfiles:EPCSFile[] = [];
+  public photoes:Photo[]=[];
+  //材料进场记录
   public ePMaterials:EPMaterials;
+  //材料型号记录
+  public ePMateInfoForEntry:EPMateInfoForEntry[]=[];
+  //材料进场审批
   public epmatecheck;
   public EmployeeID;
+  //页面类型 type
   public type;
-  public ToUplod;
+  //进场类型
+  public EnterType;
+  //所有与该工程相关的施工单位
+  public ECUnit=[];
+  //当前选择施工单位
+  public curECUnit;
+  //当前进场结果
   public curResult:EPEntryResult;
-  EPCSID:boolean = false;
-  constructor(public navCtrl: NavController, public navParams: NavParams,public http:HttpService,public  actionSheet:ActionSheet) {
+  constructor(public platform:Platform,
+              public navCtrl: NavController,
+              public navParams: NavParams,
+              public http:HttpService,
+              private choosephoto:ChoosePhotoService,
+              public toastCtrl: ToastController) {
+
     this.epmatecheck = this.navParams.get('EPMaterialsCheck');
     this.EmployeeID = this.navParams.get('EmployeeID');
-    this.type = this.navParams.get("Type");
-
+    this.type = this.navParams.get('Type');
+    console.log(this.type);
     if(this.type==1){
-      this.EPCSID = true;
       this.ePMaterials = this.navParams.get('EPMaterials');
+      console.log(this.ePMaterials);
       this.initPhoto();
-
+      if(this.ePMaterials.EPMateInfoForEntries.length>0){
+        this.curMateInfo = this.ePMaterials.EPMateInfoForEntries[0].MaterialInfo || new MaterialInfo();
+      }
+      this.choosephoto.InitParams(this.ePMaterials.EPCSID,this.EmployeeID);
+      this.ePMateInfoForEntry = this.ePMaterials.EPMateInfoForEntries;
     }else if(this.type==0){
       this.ePMaterials = new EPMaterials(this.epmatecheck.ECUnit,this.EmployeeID,this.epmatecheck.EPCheckID);
+      this.EnterType = this.navParams.get("EnterType");
+      this.ePMaterials.entryType = this.EnterType;
+      this.ePMateInfoForEntry = [];
     }
-    this.ToUplod = ApiUrl.slice(0,ApiUrl.length-4)+"1.html?FileUpPerson="+this.EmployeeID+"&EPCSID="+ this.ePMaterials.EPCSID;
 
     this.http.get(ApiUrl+'EPMateEntries/GetMateType').subscribe(res=>{
-      this.ePMateEntryType = res.ePMateEntryTypes;
       this.ePEntryResult = res.ePEntryResults;
       console.log(res);
       if(this.type==1){
@@ -61,44 +84,69 @@ export class EpMateEntryPage {
         }
       }
       },error=>{
-      alert(error);
+      this.presentToast(error.toString());
     });
 
-  }
-
-  newSecIssues(IsSubmit){
-    this.ePMaterials.State = IsSubmit;
-    this.ePMaterials.EPEntryResultID = this.curResult.EPEntryResultID;
-    this.ePMaterials.EPMateEntryTypeID = this.ePMateEntryType[0].EPMateEntryTypeID;
-    var data = Utils.ParamsToString(this.ePMaterials);
-
-    this.http.post(ApiUrl+'EPMateEntries/PostEPMatesEntry',data).subscribe(res=>{
-      alert(res.ErrorMs);
-      if(res.EPCSParentID!=-1){
-        this.ePMaterials.EPCSID = res.EPCSParentID;
-        this.ToUplod = ApiUrl.slice(0,ApiUrl.length-4)+"1.html?FileUpPerson="+this.EmployeeID+"&EPCSID="+ this.ePMaterials.EPCSID;
-        this.EPCSID =true;
-      }
+    this.http.get(ApiUrl+'Project/GetECUnit').subscribe(res=>{
+      this.ECUnit = res;
+      this.ECUnit.forEach(v=>{
+        if(v.ECUnitID==this.ePMaterials.ECUnitID){
+          this.curECUnit = v;
+        }
+      });
     },error=>{
       alert(error);
     });
   }
 
+  newSecIssues(IsSubmit){
+    this.ePMaterials.State = IsSubmit;
+    this.ePMaterials.EPEntryResultID = this.curResult.EPEntryResultID;
+    if(typeof this.curECUnit !=='undefined'){
+      this.ePMaterials.ECUnitID = this.curECUnit.ECUnitID;
+    }
+    var data = Utils.ParamsToString(this.ePMaterials);
+
+    this.http.post(ApiUrl+'EPMateEntries/PostEPMatesEntry',data).subscribe(res=>{
+      this.presentToast(res.ErrorMs);
+      this.choosephoto.InitParams(res.EPCSParentID,this.EmployeeID);
+      if(res.EPCSParentID!=-1){
+        this.ePMaterials.EPCSID = res.EPCSParentID;
+        this.ePMateInfoForEntry.forEach(V=>{
+          V.EPCSID = res.EPCSParentID;
+          if(V.EPMateInfoForEntryID==''&&V.MaterialInfoID!=''){
+            let data1 = Utils.ParamsToString(V);
+            this.http.post(ApiUrl+'EPMateInfoForEntries/PostEPMateInfoForEntry',data1).subscribe(res1=>{
+              V.EPMateInfoForEntryID = res1.EPMateInfoForEntryID;
+              console.log(res1);
+            },error=>{
+              console.log(error);
+            });
+          }
+        });
+      }
+    },error=>{
+      this.presentToast(error.toString());
+    });
+  }
+
   initPhoto(){
-    this.ePfiles = this.ePMaterials.EPCSParent.EPCSFiles;
-    for(var i = 0;i<this.ePfiles.length;i++){
-      var p = new  photo();
-      var tupian = this.ePfiles[i].FileName.substr(this.ePfiles[i].FileName.lastIndexOf('.'));
+    let ePfiles = this.ePMaterials.EPCSParent.EPCSFiles;
+    this.photoes = [];
+    for(var i = 0;i<ePfiles.length;i++){
+      var p = new  Photo();
+      var tupian = ePfiles[i].FileName.substr(ePfiles[i].FileName.lastIndexOf('.'));
       if(tupian=='.png'||tupian=='.jpg'||tupian=='.gif'||tupian=='.tiff'||tupian=='.svg'){
-        p.src = ApiUrl.slice(0,ApiUrl.length-4)+ this.ePfiles[i].FilePath.substring(2);
+        p.src = ApiUrl.slice(0,ApiUrl.length-4)+ ePfiles[i].FilePath.substring(2);
         p.isPhoto = true;
       }else{
-        p.src = this.ePfiles[i].FileName;
+        p.src = ePfiles[i].FileName;
         p.isPhoto = false;
       }
       this.photoes.push(p);
-      this.photoes[i].ePfile = this.ePfiles[i];
+      this.photoes[i].ePfile = ePfiles[i];
     }
+    this.choosephoto.InitPhoto(this.photoes);
   }
 
   ionViewDidEnter(){
@@ -109,55 +157,24 @@ export class EpMateEntryPage {
           this.ePMaterials.EPCSParent.EPCSFiles = res;
           this.initPhoto();
         },error=>{
-          alert(error);
+          this.presentToast(error.toString());
         });
     }
   }
 
-  deletePhoto(i:number){
-    this.http.post(ApiUrl+'EPSecIssues/DeleteFile?FileID='+this.photoes[i].ePfile.EPSecFileID,{}).subscribe(res=>{
-      if(0<=i&&i<=this.photoes.length-1)
-      {
-        for(let k=i;k<this.photoes.length-1;k++)
-        {
-          this.photoes[k]=this.photoes[k+1];
-        }
-        this.photoes.length--;
-      }
-    },error=>{
-      alert("删除失败！");
-    });
+  addMateInfo(){
+    let data={
+        'EPCSID':this.ePMaterials.EPCSID,
+        'curMateInfo':this.curMateInfo,
+        'ePMateInfoForEntry':this.ePMateInfoForEntry,
+        callback:data=>{
+         this.curMateInfo = data.MaterialInfoName;
+         this.ePMateInfoForEntry = data.Record;
+       }
+    }
+    this.navCtrl.push(EpAddMatePage,data);
   }
-  /*
-  ionViewCanLeave() :boolean {
-    let buttonLabels = ['保存','提交','取消'];
 
-    const options: ActionSheetOptions = {
-      title: '离开',
-      buttonLabels: buttonLabels,
-      addDestructiveButtonWithLabel: '取消',
-      androidTheme: 5,
-      destructiveButtonLast: true
-    };
-
-    let CanLeave;
-
-    this.actionSheet.show(options).then((buttonIndex: number) => {
-      if (buttonIndex == 1) {
-        this.newSecIssues(0);
-        CanLeave = true;
-      }
-      if (buttonIndex == 2){
-        this.newSecIssues(1);
-        CanLeave = true;
-      }
-      if(buttonIndex==3){
-        CanLeave = false
-      }
-    });
-
-    return CanLeave;
-  }*/
   ionViewDidLoad() {
     console.log('ionViewDidLoad EpMateEntryPage');
   }
@@ -167,4 +184,30 @@ export class EpMateEntryPage {
   compare1Fn(e1:EPEntryResult, e2: EPEntryResult): boolean {
     return e1 && e2 ? e1.EPEntryResultID === e2.EPEntryResultID : e1 === e2;
   }
+  compare3Fn(e1:any, e2: any): boolean {
+    return e1 && e2 ? e1.ECUnitID === e2.ECUnitID : e1 === e2;
+  }
+
+  presentToast(msg) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 3000,
+      position: 'bottom'
+    });
+
+    toast.onDidDismiss(() => {
+      console.log('Dismissed toast');
+    });
+
+    toast.present();
+  }
+
+  addPhoto():void{
+    this.photoes =  this.choosephoto.addPhoto();
+  }
+
+  deletePhoto(i:number){
+    this.photoes = this.choosephoto.deletePhoto(i);
+  }
+
 }

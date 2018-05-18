@@ -36,7 +36,7 @@
     <ion-list *ngSwitchCase="'finished'">
       <ion-item *ngFor="let finishedpro of finished" (click)="goEPMate(finishedpro)">
         <img [src]="GetTuPian(finishedpro.EPEntryResultID)"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
-        <h2>{{finishedpro.EPCSID}}<button ion-button color="light" outline>已完成</button></h2>
+        <h2>{{finishedpro.EPCSID}}<button ion-button color="light" class="myfinishbt" outline>已完成</button></h2>
         <p [ngStyle]="{'color':'gray'}">负责人:{{finishedpro.Employee.RealName}}</p>
         <ion-note item-end>{{GetTime(finishedpro.EntryDate)}}</ion-note>
       </ion-item>

@@ -7,46 +7,54 @@
     <img src="assets/imgs/common/back.png"/>
   </div>
   <div class="header-center">
-    <span>新增安全问题</span>
+    <span>问题跟踪处理</span>
   </div>
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
   <ion-list>
-    <ion-item>
-      <img item-left src="assets/imgs/workicon/unitroject.png">
-      <ion-label color="dark">发生工程阶段:{{ePSecIssue.UnitPart}}</ion-label>
-    </ion-item>
+  <div class="fenge"></div>
+  <div class="EPInfo" (click)="Down()" >
+    <ion-label>基本信息</ion-label>
+    <div>
+      <span>{{ePSecIssue.Details}}</span>
+      <img [src]="imgpath" style="position: absolute;left:90%; ">
+    </div>
+    <div [hidden]="IsDown==0" >
+      <p>限 期 完 成: {{GetTime(ePSecIssue.Deadline)}}</p>
+      <p>施 工 处 理 人: {{ePSecIssue.HandleEmployee}}</p>
+      <p>问 题 跟 踪 人: {{ePSecIssue.Employee.RealName}}</p>
+      <p>风 险 评 估:{{ePSecIssue.EPSecRisk.Desc}}</p>
+    </div>
+    <ul style="list-style: none;margin-top: 10px;padding:0">
+      <li *ngFor="let photo of photoes;let i=index" style="margin-right: 5px;position: relative">
+        <span *ngIf="!photoes[i].isPhoto">{{photoes[i].src}}</span>
+      </li>
+      <li *ngFor="let photo1 of photoes;let i=index" style="display: inline-block;margin-right: 5px;position: relative">
+        <img style="width:120px;height:120px;" [src]="photo1.src" *ngIf="photo1.isPhoto">
+      </li>
+    </ul>
+  </div>
+  <div class="fenge"></div>
 
-    <ion-item>
-      <ion-icon name="ios-construct-outline" item-start></ion-icon>
-      <ion-label>问题类型:{{ePSecIssue.EPSecProblem.Desc}}</ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-icon name="ios-nuclear-outline" item-start></ion-icon>
-      <ion-label>危险评估:{{ePSecIssue.EPSecRisk.Desc}}</ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-icon name="ios-create-outline" item-start></ion-icon>
-      <textarea type="text" [ngStyle]="{'height':'100px','width':'250px'}" placeholder="请输入问题描述"[(ngModel)]="ePSecIssue.Details"></textarea>
-    </ion-item>
-    <ion-item>
-      <ion-icon name="ios-camera-outline" item-start></ion-icon>
-      照片(0)
-      <ion-buttons item-end clear>
-        <ion-icon name='ios-add-outline'></ion-icon>
-        添加照片
-      </ion-buttons>
-      <ul style="list-style: none;margin:0;padding:0">
-        <li *ngFor="let photo of photoes;let i=index" style="margin-right: 5px;position: relative">
-          <img style="width:120px;height:120px;" [src]="photoes[i].src" *ngIf="photoes[i].isPhoto">
-          <span *ngIf="!photoes[i].isPhoto">{{photoes[i].src}}</span>
-        </li>
-      </ul>
-    </ion-item>
-    <ion-item>
-      <ion-label color="dark">安全隐患记录时间:{{ePSecIssue.EPSecIssueTime}}</ion-label>
-    </ion-item>
+  <div color="dark">
+    <ion-segment [(ngModel)]="pet">
+      <ion-segment-button value="all">
+        复查结果
+      </ion-segment-button>
+      <ion-segment-button value="finished">
+        措施汇总
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+  <div [ngSwitch]="pet">
+    <h2>暂无数据</h2>
+  </div>
+    <ion-buttons style="text-align:center;">
+      <button ion-button round>
+        添加
+      </button>
+    </ion-buttons>
   </ion-list>
 </ion-content>

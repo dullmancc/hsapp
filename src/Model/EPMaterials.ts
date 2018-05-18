@@ -4,10 +4,9 @@ import {Injectable} from '@angular/core';
 export class EPMaterials{
   public  EPCSID ;
   public  EntryDate ;
-  public  EPMateEntryTypeID ;
+  public  entryType:EPMateEntryType ;
   public  UsePlace ;
   public  EPEntryResultID ;
-  public  MaterialInfo
   public  ECUnitID ;
   public  Details ;
   public  State ;
@@ -15,28 +14,23 @@ export class EPMaterials{
   public  Employee_EmployeeID;
   public  EPCSParent;
   public Employee;
+  public EPMateInfoForEntries;
 
   public constructor(ECUnitID,EmployeeID,EPCheckID){
     this.EPCSID = '';
     this.EntryDate = '2000-01-01T00:00:00Z';
-    this.EPMateEntryTypeID = '';
+    this.entryType = 0;
     this.UsePlace = '';
     this.EPEntryResultID = '';
-    this.MaterialInfo = '';
     this.ECUnitID = ECUnitID;
     this.Details = '';
     this.EPCheckID = EPCheckID;
     this.Employee_EmployeeID = EmployeeID;
   }
 }
-export class EPMateEntryType
+export enum EPMateEntryType
 {
-  public EPMateEntryTypeID;
-  public Desc ;
-  constructor (){
-    this.EPMateEntryTypeID = '';
-    this.Desc = '';
-  }
+  材料进场,设备进场
 }
 export class EPEntryResult
 {

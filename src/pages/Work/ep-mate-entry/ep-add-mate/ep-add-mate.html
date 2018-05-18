@@ -1,0 +1,73 @@
+<!--
+  Generated template for the EpAddMatePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header  id="header">
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>材料信息</span>
+  </div>
+  <div class="header-right">
+    <button ion-button clear (click)="SelectFinish()">
+    完成
+    </button>
+  </div>
+</ion-header>
+<ion-content>
+  <ion-list-header></ion-list-header>
+  <ion-item>
+    <ion-label color="dark">材料名称</ion-label>
+    <button ion-button icon-right clear item-end (click)="GetMateName(0,0)">
+      {{curMaterialInfo.MaterialInfoName}}
+      <ion-icon name="ios-arrow-forward"></ion-icon>
+    </button>
+  </ion-item>
+  <ion-item>
+    <ion-label color="dark">材料品牌</ion-label>
+    <button ion-button icon-right clear item-end (click)="GetMateName(1,0)">
+      {{curMaterialBrand.BrandName}}
+      <ion-icon name="ios-arrow-forward"></ion-icon>
+    </button>
+  </ion-item>
+  <ion-item>
+    <ion-label color="dark">材料单位</ion-label>
+    <button ion-button icon-right clear item-end (click)="GetMateName(2,0)">
+      {{curMaterialUnits.UnitName}}
+      <ion-icon name="ios-arrow-forward"></ion-icon>
+    </button>
+  </ion-item>
+  <div *ngFor="let item of ePMateInfoForEntry;let i=index;">
+    <div style="margin-left: 20px">
+      型号{{i+1}}
+      <div class="myDelete" style="display: inline-block" (click)="deleteComponent(i)">
+        删除
+      </div>
+    </div>
+    <ion-item>
+      <ion-label color="dark">型号</ion-label>
+      <button ion-button icon-right clear item-end  (click)="GetMateName(3,i)">
+        {{item.EPMaterialModel.Desc}}
+        <ion-icon name="ios-arrow-forward"></ion-icon>
+      </button>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">数量</ion-label>
+      <ion-input text-right icon-end [(ngModel)]="item.EPMaterialNums"  placeholder="请输入"></ion-input>
+    </ion-item>
+  </div>
+  <!--
+  <ng-template  #addContainer></ng-template>
+  -->
+  <ion-item no-lines>
+    <ion-buttons style="text-align: center;" >
+      <button ion-button outline icon-left (click)="creatComponent()">
+        <ion-icon name="add"></ion-icon>
+        添加型号
+      </button>
+    </ion-buttons>
+  </ion-item>
+</ion-content>

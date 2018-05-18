@@ -4,11 +4,15 @@ import 'rxjs/add/operator/map';
 import {GOODLIST_URL} from "./Constants";
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';;
+import 'rxjs/add/operator/map';
+import {HttpService} from "../pages/Service/HttpService";
+import {HttpClient} from "@angular/common/http";
+
+;
 @Injectable()
 export class GoodsService {
 
-  constructor(public http: Http) {
+  constructor(public http:HttpClient) {
     console.log('Hello GoodsService Provider');
   }
 

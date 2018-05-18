@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import {IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, NavController} from 'ionic-angular';
 import {ProjectPage} from "../Project/project";
 import {HttpService} from "../Service/HttpService";
-import {JLProjectPage} from "../JianLiPZ/JLProject";
 import {TabsPage} from "../tabs/tabs";
 import {Project} from "../../Model/EPProject";
 import {ApiUrl} from "../../providers/Constants";
@@ -23,7 +22,7 @@ export class FriendPage {
   public pro:Project[];
   public items;
   public userId: number = -1 ;
-  constructor(public navCtrl: NavController,public  navparm:NavParams,private http: HttpService,public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController,private http: HttpService) {
     // If we navigated to this page, we will have an item available as a nav param
     this.pro = [];
     //this.url = "http://193.112.12.241/HSWebApi/api/";

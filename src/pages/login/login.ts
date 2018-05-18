@@ -10,6 +10,8 @@ import {BackButtonService} from "../Service/backButtonService";
 import {HttpClient,HttpHeaders} from '@angular/common/http';
 import {User} from "../../Model/User";
 import {ApiUrl} from "../../providers/Constants";
+import {HomePage} from "../home/home";
+import {IndexPage} from "../index";
 /**
  * Generated class for the LoginPage page.
  *
@@ -114,6 +116,9 @@ export class LoginPage {
       loader.dismiss();
       LoginPage.Login = true;
       this.app.getRootNav().setRoot(TabsPage,{UserInfo:this.power});
+      //this.navCtrl.setRoot(TabsPage,{UserInfo:this.power})
+
+     // this.navCtrl.push(HomePage);
     }, error => {
       loader.dismiss();
       this.showAlert("请求UserInfo错误");

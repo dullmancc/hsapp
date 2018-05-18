@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 
 @Injectable()
 export class PzRecord{
-  public PangzhanId;
+  public EPCSID;
   public Employee_EmployeeID;
   public Process;
   public Part;
@@ -21,7 +21,7 @@ export class PzRecord{
   public EPCSParent;
 
   constructor(){
-  this.PangzhanId = '';
+  this.EPCSID = '';
   this.Employee_EmployeeID = '';
   this.Process = '';
   this.Part = '';

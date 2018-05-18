@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import {AlertController, NavController, NavParams} from 'ionic-angular';
 import { ModalController} from 'ionic-angular';
 import {HttpService} from "../../../Service/HttpService";
 import {ProjectPage} from "../../../Project/project";
-import {JLProjectPage} from "../../../JianLiPZ/JLProject";
+import {JLProjectPage, PZBelong} from "../../../JianLiPZ/JLProject";
 import {IonicPage} from "ionic-angular";
 import {EpMateEntryPage} from "../ep-mate-entry";
 import {ApiUrl} from "../../../../providers/Constants";
-import {EPMaterials} from "../../../../Model/EPMaterials";
+import {EPEntryResult, EPMateEntryType, EPMaterials} from "../../../../Model/EPMaterials";
 import {EpMateEntrySeePage} from "../ep-mate-entry-see/ep-mate-entry-see";
+import {Newpz1Page} from "../../../JianLiPZ/newpz1/newpz1";
+import {NormalPzPage} from "../../../JianLiPZ/normal-pz/normal-pz";
 @IonicPage()
 @Component({
   selector: 'page-list',
@@ -27,12 +29,14 @@ export class ListPage {
   public all:EPMaterials[] = [];
   public finished:EPMaterials[]=[];
   public unfinished:EPMaterials[]=[];
+  public ePMateEntryType:EPMateEntryType;
   public titlename:string = "我的工程项目";
-  constructor(public navCtrl: NavController,public  navparm:NavParams,private http: HttpService,public modalCtrl: ModalController) {
+  constructor(public alertCtrl:AlertController,public navCtrl: NavController,public  navparm:NavParams,private http: HttpService,public modalCtrl: ModalController) {
     // If we navigated to this page, we will have an item available as a nav param
     this.EmployeeID = this.navparm.get("EmployeeID");
     this.ePMaterialsCheck = this.navparm.get('EPMaterialsCheck');
     this.EProjectID = this.navparm.get('EProjectID');
+
     this.Load();
   }
   goBack(){
@@ -40,7 +44,33 @@ export class ListPage {
   }
 
   addEPMateEntry(){
-    this.navCtrl.push(EpMateEntryPage,{'EmployeeID':this.EmployeeID,'EPMaterialsCheck':this.ePMaterialsCheck,'Type':0});
+    let alert=this.alertCtrl.create({
+      title:"请选择材料进场类型！",
+      cssClass:'projectList'
+    });
+
+
+    alert.addInput({
+        type: 'radio',
+        label: '材料进场',
+        value: '0',
+        checked: false
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: '设备进场',
+      value: '1',
+      checked: false
+    });
+    alert.addButton('取消');
+    alert.addButton({
+      text: '确定',
+      handler: data => {
+        this.navCtrl.push(EpMateEntryPage,{'EmployeeID':this.EmployeeID,'EPMaterialsCheck':this.ePMaterialsCheck,'Type':0,'EnterType':data});
+      }
+    });
+    alert.present();
   }
 
   goEPMate(item){
@@ -64,6 +94,12 @@ export class ListPage {
   * 4:公共交通项目
   * */
   Load() {
+    this.http.get(ApiUrl+'EPMateEntries/GetMateType').subscribe(res=>{
+      this.ePMateEntryType = res.ePMateEntryTypes;
+      console.log(res);
+    },error=>{
+      alert(error);
+    });
     this.http.get(ApiUrl+"EPMateEntries/GetCheckMates?EPCheckID="+this.ePMaterialsCheck.EPCheckID)
       .subscribe(res => {
         //返回结果，直接是json形式

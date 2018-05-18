@@ -21,18 +21,19 @@
   </ion-buttons>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
     <ion-list>
+      <ion-list-header></ion-list-header>
       <ion-item>
-        <ion-icon name="ios-create-outline" item-start></ion-icon>
-        <textarea type="text" [ngStyle]="{'height':'100px','width':'250px'}" placeholder="请输入复审评估" [(ngModel)]="ePWitSamples.Details"></textarea>
+        <ion-label color="dark">实验报告编号</ion-label>
+        <ion-input placeholder="请输入"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label color="dark">见证取样时间</ion-label>
         <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ePWitSamples.RecordTime"></ion-datetime>
       </ion-item>
       <ion-item>
-        <ion-label>见证取样状态</ion-label>
+        <ion-label color="dark">见证取样状态</ion-label>
         <ion-select [(ngModel)]="curResult" interface="popover" [compareWith]="compare1Fn" item-end>
           <ion-option *ngFor="let option of ResultList;" [value]="option">
           {{option.Desc}}
@@ -40,16 +41,19 @@
         </ion-select>
       </ion-item>
       <ion-item>
+        <textarea type="text" placeholder="请输入实验描述"  [(ngModel)]="ePWitSamples.Details"></textarea>
+      </ion-item>
+      <ion-item (click)="addPhoto()">
+        <ion-icon name="ios-camera-outline" item-start></ion-icon>
+        文件数目({{photoes.length}})
         <ul style="list-style: none;margin:0;padding:0">
           <li *ngFor="let photo of photoes;let i=index" style="margin-right: 5px;position: relative">
-            <img style="width:120px;height:120px;" [src]="photoes[i].src" *ngIf="photoes[i].isPhoto">
             <span *ngIf="!photoes[i].isPhoto">{{photoes[i].src}}</span>
-            <ion-icon name="ios-close-circle-outline" small style="position: absolute;right:0;top:0;" (click)="deletePhoto(i)"></ion-icon>
+          </li>
+          <li *ngFor="let photo1 of photoes;let i=index" style="display: inline-block;margin-right: 5px;position: relative">
+            <img style="width:120px;height:120px;" [src]="photo1.src" *ngIf="photo1.isPhoto">
           </li>
         </ul>
-      </ion-item>
-      <ion-item *ngIf="this.EPCSID">
-        <a [href]="ToUplod">上传</a>
       </ion-item>
     </ion-list>
 </ion-content>
