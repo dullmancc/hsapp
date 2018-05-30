@@ -41,12 +41,7 @@
     </button>
   </ion-item>
   <div *ngFor="let item of ePMateInfoForEntry;let i=index;">
-    <div style="margin-left: 20px">
-      型号{{i+1}}
-      <div class="myDelete" style="display: inline-block" (click)="deleteComponent(i)">
-        删除
-      </div>
-    </div>
+    <ion-list-header></ion-list-header>
     <ion-item>
       <ion-label color="dark">型号</ion-label>
       <button ion-button icon-right clear item-end  (click)="GetMateName(3,i)">
@@ -64,16 +59,14 @@
         <ion-option *ngFor="let j of ePEntryResult;" [value]="j">{{j.Desc}}</ion-option>
       </ion-select>
     </ion-item>
+    <div class="myDelete" (click)="deleteComponent(i)">
+      删除
+    </div>
   </div>
   <!--
   <ng-template  #addContainer></ng-template>
   -->
-  <ion-item no-lines>
-    <ion-buttons style="text-align: center;" >
-      <button ion-button outline icon-left (click)="creatComponent()">
-        <ion-icon name="add"></ion-icon>
-        添加型号
-      </button>
-    </ion-buttons>
-  </ion-item>
+  <div class="mybt" icon-left (click)="creatComponent()">
+    <ion-icon name="add"></ion-icon>添加型号
+  </div>
 </ion-content>

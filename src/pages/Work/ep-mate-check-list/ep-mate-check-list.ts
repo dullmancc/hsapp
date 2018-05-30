@@ -34,7 +34,7 @@ export class EpMateCheckListPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad EpMateCheckListPage');
     this.http.get(ApiUrl+'EPMaterialsChecks/GetEProjectMateChecks?EProjectID='+this.EProjectID.EProjectID).subscribe(res=>{
-      for(var i = 0;i<res.length-1;i++){
+      for(var i = 0;i<res.length;i++){
        let objep = new EPMaterialsCheck(res[i].EPCheckID,res[i].EPCheckParent.EPCheckName,res[i].EPCheckParent.EProjectID,res[i].EntryDate,res[i].EPCheckParent.ECUnit.Name,res[i].EPCheckParent.ECUnit.ECUnitID);
        this.epMaterialsCheck.push(objep);
       }

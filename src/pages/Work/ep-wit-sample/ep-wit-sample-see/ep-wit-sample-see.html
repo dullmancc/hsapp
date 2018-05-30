@@ -16,33 +16,32 @@
   </div>
 </ion-header>
 
-
-
 <ion-content>
   <ion-list>
-    <ion-list-header></ion-list-header>
-    <ion-item>
-      <ion-label color="dark">见证取样时间</ion-label>
-      <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ePWitSamp.RecordTime"></ion-datetime>
-    </ion-item>
-    <ion-item>
-      <ion-label color="dark">见证取样状态</ion-label>
-      <ion-label color="dark" item-end text-right>{{ResultDesc}}</ion-label>
-    </ion-item>
-    <ion-item>
-      <textarea type="text" placeholder="请输入实验描述" [(ngModel)]="ePWitSamp.Details"></textarea>
-    </ion-item>
-    <ion-item>
-      <ion-icon name="ios-camera-outline" item-start></ion-icon>
-      文件数目({{photoes.length}})
-      <ul style="list-style: none;margin:0;padding:0">
-        <li *ngFor="let photo of photoes;let i=index" style="margin-right: 5px;position: relative">
-          <span *ngIf="!photoes[i].isPhoto">{{photoes[i].src}}</span>
-        </li>
-        <li *ngFor="let photo1 of photoes;let i=index" style="display: inline-block;margin-right: 5px;position: relative">
-          <img style="width:120px;height:120px;" [src]="photo1.src" *ngIf="photo1.isPhoto">
-        </li>
-      </ul>
-    </ion-item>
+    <div *ngFor="let i of ePWitRecord;let ii = index;">
+      <ion-list-header></ion-list-header>
+      <ion-label color="dark">{{i.EPMaterialModel.Desc}}</ion-label>
+      <ion-input text-right type="number" [(ngModel)]="i.ReviewNums"></ion-input>
+      <ion-item>
+        <ion-label color="dark">见证取样时间</ion-label>
+        <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="i.RecordTime"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label color="dark">见证取样状态</ion-label>
+        <ion-label color="dark" item-end text-right>{{GetState(i.EPEntryResultID)}}</ion-label>
+      </ion-item>
+      <ion-item>
+        <textarea type="text" placeholder="请输入实验描述" [(ngModel)]="i.Details"></textarea>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="ios-camera-outline" item-start></ion-icon>
+        文件数目({{photoes[ii].length}})
+        <ul style="list-style: none;margin:0;padding:0">
+          <li *ngFor="let photo1 of photoes[ii];let j=index" style="display: inline-block;margin-right: 5px;position: relative">
+            <img style="width:120px;height:120px;" [src]="photo1.src">
+          </li>
+        </ul>
+      </ion-item>
+    </div>
   </ion-list>
 </ion-content>

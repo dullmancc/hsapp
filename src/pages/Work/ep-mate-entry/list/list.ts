@@ -26,9 +26,12 @@ export class ListPage {
   public items;
   public EmployeeID;
   public ePMaterialsCheck;
-  public all:EPMaterials[] = [];
-  public finished:EPMaterials[]=[];
+  public fushi:EPMaterials[]=[];
   public unfinished:EPMaterials[]=[];
+  public jinchang:EPMaterials[]=[];
+  public tuichang:EPMaterials[]=[];
+  public pet = 'unfinished';
+
   public ePMateEntryType:EPMateEntryType;
   public titlename:string = "我的工程项目";
   constructor(public alertCtrl:AlertController,public navCtrl: NavController,public  navparm:NavParams,private http: HttpService,public modalCtrl: ModalController) {
@@ -37,7 +40,7 @@ export class ListPage {
     this.ePMaterialsCheck = this.navparm.get('EPMaterialsCheck');
     this.EProjectID = this.navparm.get('EProjectID');
 
-    this.Load();
+    //this.Load();
   }
   goBack(){
     this.navCtrl.pop();
@@ -48,7 +51,6 @@ export class ListPage {
       title:"请选择材料进场类型！",
       cssClass:'projectList'
     });
-
 
     alert.addInput({
         type: 'radio',
@@ -73,15 +75,15 @@ export class ListPage {
     alert.present();
   }
 
-  goEPMate(item){
+  goEPMate(item,i){
     if(item.State==1){
-      this.navCtrl.push(EpMateEntrySeePage,{'EmployeeID':this.EmployeeID,'EPMaterialsCheck':this.ePMaterialsCheck,'Type':1,'EPMaterials':item});
+      this.navCtrl.push(EpMateEntrySeePage,{'EmployeeID':this.EmployeeID,'EPMaterialsCheck':this.ePMaterialsCheck,'Type':1,'EPMaterials':item,'EntryResult':i});
     }else{
       this.navCtrl.push(EpMateEntryPage,{'EmployeeID':this.EmployeeID,'EPMaterialsCheck':this.ePMaterialsCheck,'Type':1,'EPMaterials':item,'EProjectID':this.EProjectID});
     }
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.Load();
     console.log("list again DIdLoad");
   }
@@ -103,8 +105,9 @@ export class ListPage {
     this.http.get(ApiUrl+"EPMateEntries/GetCheckMates?EPCheckID="+this.ePMaterialsCheck.EPCheckID)
       .subscribe(res => {
         //返回结果，直接是json形式
-        this.all = res.all;
-        this.finished = res.finished;
+        this.fushi = res.fushi;
+        this.tuichang = res.tuichang;
+        this.jinchang = res.jinchang;
         this.unfinished = res.unfinished;
         console.log(res);
       }, error => {
@@ -119,10 +122,15 @@ export class ListPage {
     EPMR03   --  进场后检测
    **/
   GetTuPian(itemResult){
-    switch (itemResult){
-      case 'EPMR01': return './assets/imgs/workicon/jinchang.png';
-      case 'EPMR02': return './assets/imgs/workicon/tuichang.png';
-      case 'EPMR02': return './assets/imgs/workicon/fushi.png';
+    let path;
+    for(let i = 0;i<itemResult.EPMateInfoForEntries.length;i++){
+      if(itemResult.EPMateInfoForEntries[i].EPEntryResultID == "EPMR03"){
+        path = './assets/imgs/workicon/fushi.png';
+      }else if(itemResult.EPMateInfoForEntries[i].EPEntryResultID == "EPMR02"){
+        path = './assets/imgs/workicon/tuichang.png';
+      }else if(itemResult.EPMateInfoForEntries[i].EPEntryResultID == "EPMR01"){
+        path = './assets/imgs/workicon/jinchang.png';
+      }
     }
   }
 

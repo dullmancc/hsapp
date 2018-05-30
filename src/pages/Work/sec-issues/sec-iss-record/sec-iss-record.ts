@@ -153,6 +153,10 @@ export class SecIssRecordPage {
         this.ePSecIssue.EPCSID = res.EPCSParentID;
         this.choosephoto.InitParams(this.ePSecIssue.EPCSID,this.EMPloyeeID);
       }
+      if(IsSubmit==1){
+        this.navCtrl.pop();
+      }
+
     },error=>{
       this.presentToast(error.toString());
     });
@@ -176,6 +180,7 @@ export class SecIssRecordPage {
         p.src = ePfiles[i].FileName;
         p.isPhoto = false;
       }
+      p.isupload = true;
       this.photoes.push(p);
       this.photoes[i].ePfile = ePfiles[i];
     }

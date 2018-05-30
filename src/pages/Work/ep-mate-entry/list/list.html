@@ -14,18 +14,24 @@
   <div padding color="dark">
     <ion-segment [(ngModel)]="pet">
       <ion-segment-button value="unfinished">
-        待审
+        待审中
       </ion-segment-button>
-      <ion-segment-button value="finished">
-        已完成
+      <ion-segment-button value="fushi">
+        复检中
+      </ion-segment-button>
+      <ion-segment-button value="tuichang">
+        退场中
+      </ion-segment-button>
+      <ion-segment-button value="jinchang">
+        进场
       </ion-segment-button>
     </ion-segment>
   </div>
   <div [ngSwitch]="pet">
     <ion-list *ngSwitchCase="'unfinished'">
-      <ion-item *ngFor="let unfinpro of unfinished" (click)="goEPMate(unfinpro)">
+      <ion-item *ngFor="let unfinpro of unfinished" (click)="goEPMate(unfinpro,0)">
         <ion-avatar item-start>
-          <img src="./assets/imgs/workicon/secissues.png">
+        <img src="./assets/imgs/workicon/secissues.png">
         </ion-avatar>
         <h2>{{unfinpro.EPCSID}}<button ion-button color="danger" outline>待审中</button></h2>
         <p [ngStyle]="{'color':'gray'}">负责人:{{unfinpro.Employee.RealName}}</p>
@@ -33,12 +39,30 @@
       </ion-item>
     </ion-list>
 
-    <ion-list *ngSwitchCase="'finished'">
-      <ion-item *ngFor="let finishedpro of finished" (click)="goEPMate(finishedpro)">
-        <img [src]="GetTuPian(finishedpro.EPEntryResultID)"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
-        <h2>{{finishedpro.EPCSID}}<button ion-button color="light" class="myfinishbt" outline>已完成</button></h2>
-        <p [ngStyle]="{'color':'gray'}">负责人:{{finishedpro.Employee.RealName}}</p>
-        <ion-note item-end>{{GetTime(finishedpro.EntryDate)}}</ion-note>
+    <ion-list *ngSwitchCase="'fushi'">
+      <ion-item *ngFor="let fushipro of fushi" (click)="goEPMate(fushipro,1)">
+        <img src="./assets/imgs/workicon/fushi.png"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
+        <h2>{{fushipro.EPCSID}}<button ion-button color="primary" outline>复检中</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:{{fushipro.Employee.RealName}}</p>
+        <ion-note item-end>{{GetTime(fushipro.EntryDate)}}</ion-note>
+      </ion-item>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'tuichang'">
+      <ion-item *ngFor="let tuichangpro of tuichang" (click)="goEPMate(tuichangpro,2)">
+        <img src="./assets/imgs/workicon/tuichang.png"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
+        <h2>{{tuichangpro.EPCSID}}<button ion-button color="danger" outline>退场中</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:{{tuichangpro.Employee.RealName}}</p>
+        <ion-note item-end>{{GetTime(tuichangpro.EntryDate)}}</ion-note>
+      </ion-item>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'jinchang'">
+      <ion-item *ngFor="let jinchangpro of jinchang" (click)="goEPMate(jinchangpro,3)">
+        <img src="./assets/imgs/workicon/jinchang.png"  small style="position: absolute;left:0;top:0;width: 45px;height: 45px">
+        <h2>{{jinchangpro.EPCSID}}<button ion-button color="secondary" class="myfinishbt" outline>进场</button></h2>
+        <p [ngStyle]="{'color':'gray'}">负责人:{{jinchangpro.Employee.RealName}}</p>
+        <ion-note item-end>{{GetTime(jinchangpro.EntryDate)}}</ion-note>
       </ion-item>
     </ion-list>
   </div>

@@ -2,23 +2,22 @@ import {Injectable} from '@angular/core';
 
 @Injectable()
 export class EPWitnSample{
-  public EPCSID ;
+  public EPMateInfoForEntryID ;
   public RecordTime ;
   public Details;
   public State ;
-  public ECUnitID ;
-  public EPCheckID ;
-  public Employee_EmployeeID ;
-  public EPCSParent;
-  public Employee;
+  public ReportID ;
+  public ReviewNums ;
+  public EmployeeID ;
 
   public constructor(){
-    this.EPCSID = '';
+    this.EPMateInfoForEntryID = '';
     this.RecordTime =  '2000-01-01T00:00:00Z';
     this.Details ='';
     this.State = 0;
-    this.ECUnitID = '';
-    this.Employee_EmployeeID = '';
+    this.ReportID = '';
+    this.ReviewNums = '';
+    this.EmployeeID = '';
   }
 
 }

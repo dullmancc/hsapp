@@ -82,25 +82,20 @@
       <ion-label color="dark">是否下发监理通知单</ion-label>
       <ion-toggle [(ngModel)]="ePSecIssue.EPNoticeListstate" checked="false"></ion-toggle>
     </ion-item>
-    <ion-item no-lines>
+    <ion-item no-lines (click)="addPhoto()">
       <ion-icon name="ios-camera-outline" item-start></ion-icon>
       文件({{photoes.length}})
-      <ul style="list-style: none;margin:0;padding:0">
-        <li *ngFor="let photo of photoes;let i=index" style="margin-right: 5px;position: relative">
-          <span *ngIf="!photoes[i].isPhoto">{{photoes[i].src}}</span>
-          <ion-icon *ngIf="ePSecIssue.State==0&&!photoes[i].isPhoto" name="close" small style="position: absolute;right:0;top:0;" (click)="deletePhoto(i)"></ion-icon>
-        </li>
-        <li *ngFor="let photo1 of photoes;let i=index" style="display: inline-block;margin-right: 5px;position: relative">
-          <img style="width:120px;height:120px;" [src]="photo1.src" *ngIf="photo1.isPhoto">
-          <ion-icon *ngIf="ePSecIssue.State==0&&photo1.isPhoto" name="close" small style="position: absolute;right:0;top:0;" (click)="deletePhoto(i)"></ion-icon>
-        </li>
-      </ul>
-    </ion-item>
-    <ion-list-header>
-    </ion-list-header>
-    <ion-item *ngIf="this.EPCSID">
-      <ion-icon name="camera" item-start></ion-icon>
-      <a (click)="addPhoto()">上传</a>
-    </ion-item>
+     </ion-item>
+    <ul style="list-style: none;margin:0;padding:0">
+      <li *ngFor="let photo1 of photoes;let i=index" style="display: inline-block;margin-right: 5px;position: relative">
+        <img style="width:120px;height:120px;" [src]="photo1.src">
+        <ion-icon  name="close" small style="position: absolute;right:0;top:0;" (click)="deletePhoto(i)"></ion-icon>
+      </li>
+    </ul>
+ <!--    <ion-list-header>
+       </ion-list-heade <!--    <ion-item *ngIf="this.EPCSID">
+         <ion-icon name="camera" item-start></ion-icon>
+         <a (click)="addPhoto()">上传</a>
+  </ion-item>-->
   </ion-list>
 </ion-content>

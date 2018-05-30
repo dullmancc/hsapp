@@ -6,12 +6,29 @@ page-ep-add-mate {
     height: 10px;
     background-color: #f7f3f3;
   }
+  has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner, .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner {
+    border-bottom-color: #dedede;
+    -webkit-box-shadow: inset 0 -1px 0 0 #dedede;
+    box-shadow: inset 0 -1px 0 0 #dedede;
+  }
+  .mybt{
+    position:fixed ;
+    bottom:0px;
+    padding-top: 10px;
+    width:100%;
+    height:40px;
+    text-align:center;
+    font-size: 17px;
+    color: white;
+    background-color: #007aff;
+  }
   .button-clear-md {
     color: #222222;
   }
   .myDelete{
-    position:absolute;
-    left:90%;
+    width: 100%;
+    padding-left: 90%;
+    background-color: white;
   }
   .item-md [item-left], .item-md [item-right], .item-md [item-start], .item-md [item-end] {
     margin: 0px;

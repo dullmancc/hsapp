@@ -64,7 +64,9 @@ export class EpAddMatePage implements OnDestroy{
           this.curMaterialBrand = v;
         }
       });
-      this.curMaterialUnits = this.ePMateInfoForEntry[0].MaterialUnit;
+      if(typeof this.ePMateInfoForEntry[0].MaterialUnit !== 'undefined'){
+        this.curMaterialUnits = this.ePMateInfoForEntry[0].MaterialUnit;
+      }
     }
 
     this.http.get(ApiUrl+'EPMateEntries/GetMateType').subscribe(res=>{
@@ -207,7 +209,11 @@ export class EpAddMatePage implements OnDestroy{
     this.navCtrl.pop();
   }
 
+  ionViewWillLeave(){
+
+  }
   goBack(){
+
     if(this.curMaterialInfo.MaterialInfoID==""){
       this.ePMateInfoForEntry =[];
     }
@@ -220,8 +226,5 @@ export class EpAddMatePage implements OnDestroy{
     this.callback(data);
     this.leavetype = false;
     this.navCtrl.pop();
-  }
-  ionViewWillLeave(){
-
   }
 }

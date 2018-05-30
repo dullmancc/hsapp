@@ -31,12 +31,12 @@ export class SecIssuesPage {
   unfinished:any[]=[];
   EProject;
   EMPloyeeID;
+  public pet = 'all';
 
   constructor(public pltaform:Platform,public navCtrl: NavController, public navParams: NavParams,public http:HttpService) {
   }
 
-
-  ionViewDidLoad() {
+  ionViewWillEnter() {
     this.EProject = this.navParams.get('EProject');
     this.EMPloyeeID = TabsPage.UserInfo.employees.EmployeeID;
 
@@ -107,16 +107,5 @@ export class SecIssuesPage {
     this.navCtrl.push(SecIssRecordPage,{'EProject':this.EProject.EProjectID,'EMPloyeeID':this.EMPloyeeID,'Type':0});
   }
 
-  ionViewWillEnter(){
-    let navP = {'EmployeeId':this.EMPloyeeID,'EProjectId':this.EProject.EProjectID};
 
-    var data = Utils.ParamsToString(navP);
-    this.http.get(ApiUrl+"EPSecIssues/GetEPSecIssueForEM?"+data).subscribe(res=>{
-      this.unfinished = res.unfinished;
-      this.finished = res.finished;
-    },error=>{
-      alert("请求安全隐患列表出错！");
-    });
-    //    console.log(this.listSecIssus);
-  }
 }

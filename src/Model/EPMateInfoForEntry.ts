@@ -23,10 +23,11 @@ export class EPMateInfoForEntry{
   this.MaterialBrandID='';
   this.EPMaterialModelID='';
   this.MaterialUnitID='';
-  this.EPMaterialNums=0;
+  this.EPMaterialNums='';
   this.EPMaterialModel = new EPMaterialModel();
   }
 }
+
 export class MaterialUnit
 {
   public MaterialUnitID;

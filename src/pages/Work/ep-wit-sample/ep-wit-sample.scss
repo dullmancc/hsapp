@@ -7,6 +7,11 @@ page-ep-wit-sample {
     overflow-x:hidden;
     overflow-y:auto;
   }
+  .header-right{
+    padding-top: 15px;
+    padding-right: 10px;
+    font-size: 15px;
+  }
   a{
     color: #222222;
     text-decoration: none;
@@ -25,7 +30,7 @@ page-ep-wit-sample {
     padding-left: 0px;
     margin-bottom: 0px;
     min-height: 0.1rem;
-    height: 10px;
+    height: 25px;
     background-color: #f7f3f3;
   }
 }

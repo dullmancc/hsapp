@@ -1,5 +1,5 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
+import {IonicPage, LoadingController, NavController, NavParams, Platform} from 'ionic-angular';
 import * as Swiper from 'swiper';
 import {ObservationPage} from "../Work/observation/observation";
 import {LoginPage} from "../login/login";
@@ -19,7 +19,12 @@ import {AndroidPermissions} from "@ionic-native/android-permissions";
 })
 export class IndexPage {
   IsLogin:boolean;
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  now :number=0;
+  loader;
+  timer1;
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              private loadingCtrl: LoadingController,
               private androidPermissions: AndroidPermissions,
               private platform:Platform) {
     this.IsLogin = LoginPage.Login;
@@ -46,6 +51,7 @@ export class IndexPage {
   }
 
   ionViewDidLoad() {
+
     console.log('ionViewDidLoad IndexPage');
   }
   ngOnInit(){

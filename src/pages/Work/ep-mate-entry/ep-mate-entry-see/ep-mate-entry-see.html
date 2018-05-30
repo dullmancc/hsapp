@@ -14,17 +14,20 @@
 </ion-header>
 
 <ion-content>
+  <div class="historydata">
+    <div>
+      <p>历史数据总和</p>
+    </div>
+    <div class="historytx">
+      本次进场：<ul>
+                <li *ngFor="let pro of ePMaterials.EPMateInfoForEntries">{{pro.EPMaterialModel.Desc}} {{pro.EPMaterialNums+pro.MaterialUnit.UnitName}} {{GetResult(pro.EPEntryResultID)}}</li>
+                </ul>
+      累计进场: {{sums+ePMaterials.EPMateInfoForEntries[0].MaterialUnit.UnitName}}
+    </div>
+  </div>
   <ion-list>
     <ion-item >
       基本信息
-    </ion-item>
-    <ion-item>
-      <img item-left src="assets/imgs/workicon/mateinfo.png">
-      <ion-label color="dark">材料信息</ion-label>
-      <button ion-button icon-right clear item-end>
-        {{curMaterialInfo.MaterialInfoName}}
-        <ion-icon name="ios-arrow-forward"></ion-icon>
-      </button>
     </ion-item>
     <ion-item>
       <ion-icon name="time" item-start></ion-icon>
@@ -35,11 +38,6 @@
       <ion-icon name="ios-construct-outline" style="margin: 0px;" item-start></ion-icon>
       <ion-label color="dark">使用部位</ion-label>
       <ion-input item-end type="text" [(ngModel)]="ePMaterials.UsePlace" placeholder="请输入请用部位" text-right></ion-input>
-    </ion-item>
-    <ion-list-header></ion-list-header>
-    <ion-item no-lines>
-      <ion-label>进场结果</ion-label>
-      <ion-label item-end text-right>{{GetResult(ePMaterials.EPEntryResultID)}}</ion-label>
     </ion-item>
     <ion-list-header></ion-list-header>
     <textarea type="text"  [(ngModel)]="ePMaterials.Details" placeholder="请输入现场进场情况"></textarea>
@@ -56,4 +54,7 @@
       </ul>
     </ion-item>
   </ion-list>
+  <div class="mybt" (click)="AddWitnSample()" *ngIf="type==1">
+    {{addwitntext}}
+  </div>
 </ion-content>

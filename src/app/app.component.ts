@@ -8,6 +8,8 @@ import {BackButtonService} from "../pages/Service/backButtonService";
 import { Nav, ToastController} from 'ionic-angular';
 import {SecIssRecordPage} from "../pages/Work/sec-issues/sec-iss-record/sec-iss-record";
 import {EpAddMatePage} from "../pages/Work/ep-mate-entry/ep-add-mate/ep-add-mate";
+import {HttpService} from "../pages/Service/HttpService";
+import {AppUpdateService} from "../providers/AppUpdateService";
 @Component({
   templateUrl: 'app.html'
 })
@@ -19,7 +21,13 @@ export class MyApp {
   backButtonPressed: boolean = false;  //用于判断返回键是否触发
   @ViewChild(Nav) nav: Nav;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen,bg:BackgroundMode,private backbtService:BackButtonService,toast: ToastController) {
+  constructor(platform: Platform,
+              statusBar: StatusBar,
+              splashScreen: SplashScreen,
+              bg:BackgroundMode,
+              private backbtService:BackButtonService,
+              private appUpdateService:AppUpdateService,
+              toast: ToastController) {
     this.platform = platform;
     this.toast = toast;
     platform.ready().then(() => {
@@ -29,8 +37,15 @@ export class MyApp {
       statusBar.styleDefault();
       splashScreen.hide();
       this.initializeApp();
+      if(this.platform.is('android')){
+        this.appUpdateService.UpdateCheck();
+        console.log('android');
+      }
     });
   }
+
+
+
   initializeApp() {
     this.platform.ready().then(() => {
       //注册返回按键事件

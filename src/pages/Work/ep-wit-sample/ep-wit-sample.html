@@ -11,49 +11,46 @@
   <div class="header-center">
     <span>见证取样任务</span>
   </div>
-  <ion-buttons end>
-    <button ion-button clear color="dark" (click)="newSecIssues()">
-      保存
-    </button>
-    <button ion-button clear color="royal"  (click)="newSecIssues()">
-      提交
-    </button>
-  </ion-buttons>
+  <div class="header-right" (click)="newSecIssues()">
+    <span style="color: #007aff">完成</span>
+  </div>
 </ion-header>
 
 <ion-content>
     <ion-list>
-      <ion-list-header></ion-list-header>
-      <ion-item>
-        <ion-label color="dark">实验报告编号</ion-label>
-        <ion-input placeholder="请输入"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label color="dark">见证取样时间</ion-label>
-        <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ePWitSamples.RecordTime"></ion-datetime>
-      </ion-item>
-      <ion-item>
-        <ion-label color="dark">见证取样状态</ion-label>
-        <ion-select [(ngModel)]="curResult" interface="popover" [compareWith]="compare1Fn" item-end>
-          <ion-option *ngFor="let option of ResultList;" [value]="option">
-          {{option.Desc}}
-          </ion-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <textarea type="text" placeholder="请输入实验描述"  [(ngModel)]="ePWitSamples.Details"></textarea>
-      </ion-item>
-      <ion-item (click)="addPhoto()">
-        <ion-icon name="ios-camera-outline" item-start></ion-icon>
-        文件数目({{photoes.length}})
+      <div *ngFor="let i of ePWitRecord;let ii = index;">
+        <ion-list-header>
+          {{EPMaterials[ePWitRecordList[ii]].EPMaterialModel.Desc}}
+        </ion-list-header>
+        <ion-item>
+          <ion-label color="dark">实验报告编号</ion-label>
+          <ion-input placeholder="请输入" [(ngModel)]="i.ReportID"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label color="dark">见证取样时间</ion-label>
+          <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="i.RecordTime"></ion-datetime>
+        </ion-item>
+        <ion-item>证明
+          <ion-label color="dark">见证取样状态</ion-label>
+          <ion-select [(ngModel)]="i.State" interface="popover" [compareWith]="compare1Fn" item-end>
+            <ion-option *ngFor="let option of curResult;" [value]="option">
+              {{option.Desc}}
+            </ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <textarea type="text" placeholder="请输入实验描述"  [(ngModel)]="i.Details"></textarea>
+        </ion-item>
+        <ion-item (click)="addPhoto(ii)">
+          <ion-icon name="ios-camera-outline" item-start></ion-icon>
+          证明材料
+        </ion-item>
         <ul style="list-style: none;margin:0;padding:0">
-          <li *ngFor="let photo of photoes;let i=index" style="margin-right: 5px;position: relative">
-            <span *ngIf="!photoes[i].isPhoto">{{photoes[i].src}}</span>
-          </li>
-          <li *ngFor="let photo1 of photoes;let i=index" style="display: inline-block;margin-right: 5px;position: relative">
-            <img style="width:120px;height:120px;" [src]="photo1.src" *ngIf="photo1.isPhoto">
+          <li *ngFor="let photo1 of photoes[ii];let j=index" style="display: inline-block;margin-right: 5px;position: relative">
+            <img style="width:120px;height:120px;" [src]="photo1.src">
+            <ion-icon name="close" small style="position: absolute;right:0;top:0;" (click)="deletePhoto(ii,j)"></ion-icon>
           </li>
         </ul>
-      </ion-item>
+      </div>
     </ion-list>
 </ion-content>

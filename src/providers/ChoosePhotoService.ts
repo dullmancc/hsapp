@@ -23,7 +23,10 @@ export class ChoosePhotoService{
   private loader;
   public EPCSID:string;
   public EmployeeID:string;
-
+  public url='Pangzhan';
+  public params = 'EPCSID';
+  now :number = 0;
+  timer1;
   constructor(private camera: Camera,
               private actionsheetCtrl:ActionSheetController,
               private actionSheet:ActionSheet,
@@ -57,6 +60,11 @@ export class ChoosePhotoService{
     alert.present();
   }
 
+  setUrl(url,par){
+    this.url = url;
+    this.params = par;
+  }
+
   //提示气泡
   presentToast(msg) {
     let toast = this.toastCtrl.create({
@@ -75,10 +83,13 @@ export class ChoosePhotoService{
   //一张图片上传   递归实现多张图片上传
   upFile(i) {
     //上传了跳过
-    if(this.photoes[i].isupload){
-      return this.upFile(i+1);
+    if(i < this.photoes.length){
+      if(this.photoes[i].isupload){
+        return this.upFile(i+1);
+      }
     }
 
+    console.log("i: "+i+",length: "+this.photoes.length);
     if (i < this.photoes.length) {
       var fileTransfer: FileTransferObject = this.transfer.create();
       //fileName->在服务端保持唯一性 不唯一会被覆盖
@@ -90,11 +101,42 @@ export class ChoosePhotoService{
         headers: {}
       }
 
-      let data = {'FileUpPerson':this.EmployeeID,'EPCSID':this.EPCSID};
-      var datastr = Utils.ParamsToString(data);
+      fileTransfer.onProgress(progressEvent => {
+        console.log('已经在上传');
+        if (progressEvent.lengthComputable) {
+          this.now = progressEvent.loaded / progressEvent.total;
+          // 下载过程会一直打印，完成的时候会显示 1
+          console.log(this.loader);
+          console.log(progressEvent.loaded / progressEvent.total);
+        } else {
 
-      fileTransfer.upload(this.photoes[i].src, ApiUrl+'Pangzhan/PostFile?'+datastr, options)
+        }
+      });
+
+      this.timer1 = setInterval(() => {
+        this.loader.data.content = "图片上传中 进度: "+Math.floor(this.now*100)+"%";
+
+        console.log(this.loader);
+        if(this.now>99){
+          clearInterval(this.timer1)
+        }
+
+      }, 300);
+
+      let data;
+      var datastr;
+      if(this.params=='EPCSID'){
+        data = {'FileUpPerson':this.EmployeeID,'EPCSID':this.EPCSID};
+        datastr = Utils.ParamsToString(data);
+      }else{
+        data = {'FileUpPerson':this.EmployeeID,'EPMateInfoForEntryID':this.EPCSID};
+        datastr = Utils.ParamsToString(data);
+      }
+
+      fileTransfer.upload(this.photoes[i].src, ApiUrl+this.url+'/PostFile?'+datastr, options)
         .then((data) => {
+          if(this.timer1) clearInterval(this.timer1);
+
           //标记已上传
           this.photoes[i].isupload = true;
           //赋值EPSecFileID
@@ -104,10 +146,15 @@ export class ChoosePhotoService{
           this.upFile(i);
         }, (err) => {
           console.log(err);
-          this.loader.dismiss();
+          this.photoes.slice(i,1);
           this.presentToast(err);
+          i++;
+          console.log('Error: '+i+",photo length: "+this.photoes.length);
+          //递归 上传下一张图片
+          this.upFile(i);
         });
     }else{
+      console.log('DIsmiss End');
       this.loader.dismiss();
       this.presentToast("图片上传成功！");
     }
@@ -118,7 +165,7 @@ export class ChoosePhotoService{
       return;
     }
     this.loader = this.loadingCtrl.create({
-      content: "图片上传中..."
+      content: "图片上传中 进度: "+Math.floor(this.now)+"%"
     });
     this.loader.present();
     this.upFile(0);
@@ -138,6 +185,7 @@ export class ChoosePhotoService{
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
       sourceType: this.camera.PictureSourceType.CAMERA,
+      correctOrientation : true,
       saveToPhotoAlbum:true
     };
     // 设置选项
@@ -157,14 +205,13 @@ export class ChoosePhotoService{
               //每一张图片创建Photo类
               for (var i = 0; i < results.length; i++) {
                 let p=new Photo();
+                console.log(results[i]);
                 p.ePfile = new EPCSFile(this.EPCSID,this.EmployeeID);
                 p.src=results[i];
                 p.isupload = false;
                 this.photoes.push(p);
               }
-              if(i==this.photoes.length){
                 this.uploadFile();
-              }
               //选择完毕即上传
               //this.uploadFile();
             }, (err) => {
@@ -179,16 +226,15 @@ export class ChoosePhotoService{
             this.camera.getPicture(options0).then((imageData) => {
               let i = this.photoes.length;
               let base64Image = 'data:image/jpeg;base64,' + imageData;
+              console.log(base64Image);
               let p=new Photo();
               p.ePfile = new EPCSFile(this.EPCSID,this.EmployeeID);
               p.src=base64Image;
               p.isupload = false;
               this.photoes.push(p);
-              if(i==this.photoes.length){
-                this.uploadFile();
-              }
+              this.uploadFile();
               }, (err) => {
-              console.log(err);
+              console.log(err+'is error');
             });
           }
         },
@@ -207,7 +253,7 @@ export class ChoosePhotoService{
   }
 
   deletePhoto(i:number){
-    this.http.post(ApiUrl+'Pangzhan/DeleteFile?FileID='+this.photoes[i].ePfile.EPSecFileID,{}).subscribe(res=>{
+    this.http.post(ApiUrl+this.url+'/DeleteFile?FileID='+this.photoes[i].ePfile.EPSecFileID,{}).subscribe(res=>{
       console.log(res);
       if(0<=i&&i<=this.photoes.length-1)
       {

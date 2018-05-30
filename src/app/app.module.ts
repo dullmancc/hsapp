@@ -38,6 +38,8 @@ import {SecIssRecordPageModule} from "../pages/Work/sec-issues/sec-iss-record/se
 import {EpAddMatePage} from "../pages/Work/ep-mate-entry/ep-add-mate/ep-add-mate";
 import {EpAddMatePageModule} from "../pages/Work/ep-mate-entry/ep-add-mate/ep-add-mate.module";
 import {ChoosePhotoService} from "../providers/ChoosePhotoService";
+import {AppUpdateService} from "../providers/AppUpdateService";
+import {FileOpener} from "@ionic-native/file-opener";
 
 @NgModule({
   declarations: [
@@ -80,6 +82,7 @@ import {ChoosePhotoService} from "../providers/ChoosePhotoService";
     SplashScreen,
     FileTransfer,
     FileTransferObject,
+    FileOpener,
     File,
     ActionSheet,
     ImagePicker,
@@ -90,7 +93,8 @@ import {ChoosePhotoService} from "../providers/ChoosePhotoService";
     AndroidPermissions,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     GoodsService,
-    ChoosePhotoService
+    ChoosePhotoService,
+    AppUpdateService,
   ]
 })
 export class AppModule {}

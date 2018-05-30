@@ -178,7 +178,8 @@ export class Utils {
     let epParams = '';
 
     for(let x in Params){
-      if(x=='EPCSParent'||x=='Employee'||x==''||x=='EPMaterialModel'||x=='EPMateInfoForEntries'||x=='EPEntryResult'||x=='MaterialUnit'){
+      if(x=='EPCSParent'||x=='Employee'||x==''||x=='EPMaterialModel'||x=='EPMateInfoForEntries'||x=='EPEntryResult'||x=='MaterialUnit'||x=='MaterialBrand'||x=='MaterialInfo'
+        ||x=='EPWitnSample'||x=='EPCSWitFiles'){
         continue;
       }
       epParams = epParams + x +'='+ Params[x]+'&';
