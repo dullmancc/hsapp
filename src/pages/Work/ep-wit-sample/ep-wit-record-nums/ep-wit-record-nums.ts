@@ -77,6 +77,10 @@ export class EpWitRecordNumsPage {
       });
     });
 
+    for(let i = 0;i<this.ePWitRecord.length;i++){
+        this.ePWitRecord[i].State = 1;
+    }
+
     this.callback(this.ePMaterials);
     this.navCtrl.pop();
   }

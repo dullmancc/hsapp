@@ -24,8 +24,12 @@ import {EpWitSamplePage} from "../../ep-wit-sample/ep-wit-sample";
 export class EpMateEntrySeePage {
 
   addwitntext ="录入取样信息";
+  //是从哪个tabs进来的 （未完成，复检中，退场，进场）
   type;
+  //见证取样的状态
   state = 0;
+  //是否显示mybt
+  mybtShow:boolean=true;
   sums = 0;
   public ePMaterials;
   curMaterialInfo :MaterialInfo = new MaterialInfo();
@@ -49,20 +53,7 @@ export class EpMateEntrySeePage {
 
     }
 
-    if(this.ePMaterials.EPMateInfoForEntries.length!=0){
-      this.curMaterialInfo = this.ePMaterials.EPMateInfoForEntries[0].MaterialInfo;
-      for(let i =0;i< this.ePMaterials.EPMateInfoForEntries.length;i++){
-        if(this.ePMaterials.EPMateInfoForEntries[i].EPWitnSample!=null){
-          this.addwitntext = "请输入复试评估";
-          this.state = 1;
-          if(this.ePMaterials.EPMateInfoForEntries[i].EPWitnSample.State>=3){
-            this.state = 2;
-            this.addwitntext = "查看复试评估";
-          }
-          break;
-        }
-      }
-    }
+    this.initAddWitn();
 
     this.ePMaterials.EPMateInfoForEntries.forEach(V=>{
       this.sums = this.sums+V.EPMaterialNums;
@@ -83,6 +74,38 @@ export class EpMateEntrySeePage {
     console.log('ionViewDidLoad EpMateEntrySeePage');
   }
 
+  initAddWitn(){
+    if(this.ePMaterials.EPMateInfoForEntries.length!=0){
+      this.curMaterialInfo = this.ePMaterials.EPMateInfoForEntries[0].MaterialInfo;
+      for(let i =0;i< this.ePMaterials.EPMateInfoForEntries.length;i++){
+
+        //Mybt 默认显示 type == 1 复检页面
+        //type >=2  state <3 不显示 ，即有些进场有些复检的页面，在进场或退场中显示
+        //
+        if(this.type==1){
+          if(this.ePMaterials.EPMateInfoForEntries[i].EPWitnSample!=null){
+            this.addwitntext = "请输入复试评估";
+            this.state = 1;
+            this.mybtShow = true;
+            //判断mybt显示
+            break;
+          }
+        }else{
+          if(this.ePMaterials.EPMateInfoForEntries[i].EPWitnSample!=null){
+            if(this.ePMaterials.EPMateInfoForEntries[i].EPWitnSample.State>=3){
+              this.state = 2;
+              this.addwitntext = "查看复试评估";
+              this.mybtShow = true;
+            }
+            //判断mybt显示
+            break;
+          }else{
+            this.mybtShow = false;
+          }
+        }
+      }
+    }
+  }
 
     goBack(){
       this.navCtrl.pop();
@@ -97,9 +120,11 @@ export class EpMateEntrySeePage {
     if(itemResult=='EPMR01'){
       return '进场';
     }else if(itemResult=='EPMR02'){
-      return '退场';
+      return '正在退场';
     }else if(itemResult=='EPMR03'){
       return '进场后检测';
+    }else if(itemResult=='EPMR04'){
+      return '已退场';
     }
   }
 
@@ -107,11 +132,17 @@ export class EpMateEntrySeePage {
       if(this.state==0){
         this.navCtrl.push(EpWitRecordNumsPage,{"EPMaterials":this.ePMaterials,callback:data=>{
             this.ePMaterials = data;
+            console.log(this.ePMaterials);
+            //回调页面刷新
+            this.initAddWitn();
           }});
       }else if(this.state==1){
         this.navCtrl.push(EpWitSamplePage,{"EPMaterials":this.ePMaterials.EPMateInfoForEntries,callback:data=>{
             this.ePMaterials.EPMateInfoForEntries = data;
-          }});
+            console.log(this.ePMaterials.EPMateInfoForEntries);
+            this.initAddWitn();
+          }}
+          );
       }else if(this.state==2){
         this.navCtrl.push(EpWitSampleSeePage,{"EPMaterials":this.ePMaterials.EPMateInfoForEntries});
       }

@@ -22,18 +22,22 @@ export class EpWitSampleSeePage {
   ResultDesc;
   public photoes:Photo[][]=[];
   public ePWitRecord:any[] = [];
+  public ePMaterialsIndex=[];
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.EPMaterials = this.navParams.get('EPMaterials');
 
+    let indexi = 0;
     this.EPMaterials.forEach(V=>{
-      if(V.EPEntryResultID=="EPMR03"){
-        V.EPWitnSample.ReportID = '';
+      if(V.EPWitnSample!=null){
         this.ePWitRecord.push(V.EPWitnSample);
+        this.ePMaterialsIndex.push(indexi);
       }
+      indexi++;
     });
 
     for(let j = 0;j<this.ePWitRecord.length;j++){
-      let ePfiles = this.ePWitRecord[j].EPCSParent.EPCSFiles;
+      let ePfiles = this.ePWitRecord[j].EPCSWitFiles;
+      this.photoes[j] = [];
       for (let i = 0; i < ePfiles.length; i++) {
         var p = new Photo();
         var tupian = ePfiles[i].FileName.substr(ePfiles[i].FileName.lastIndexOf('.'));
@@ -44,8 +48,8 @@ export class EpWitSampleSeePage {
           p.src = ePfiles[i].FileName;
           p.isPhoto = false;
         }
+        p.ePfile = ePfiles[i];
         this.photoes[j].push(p);
-        this.photoes[j][i].ePfile = ePfiles[i];
       }
     }
   }

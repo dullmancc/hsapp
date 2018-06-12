@@ -1,0 +1,28 @@
+<!--
+  Generated template for the PzSelectPeoplePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header id="header">
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>请选择交班人</span>
+  </div>
+  <ion-buttons end>
+    <button ion-button clear color="dark" (click)="save()">
+      完成
+    </button>
+  </ion-buttons>
+</ion-header>
+
+<ion-content>
+  <ion-list radio-group  [(ngModel)]="curemployee">
+    <ion-item *ngFor="let i of employees;">
+      <ion-label>{{i.RealName}}</ion-label>
+      <ion-radio [value]="i.EmployeeID"></ion-radio>
+    </ion-item>
+  </ion-list>
+</ion-content>

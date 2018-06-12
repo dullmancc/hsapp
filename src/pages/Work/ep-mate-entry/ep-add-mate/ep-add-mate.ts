@@ -86,13 +86,24 @@ export class EpAddMatePage implements OnDestroy{
     this.http.get(ApiUrl+'MaterialInfoes/GetMaterialInfoes').subscribe(res=>{
       this.materialInfo = res.materialInfos;
       this.materialUnits = res.materialUnits;
-    },error=>{
+
+     },error=>{
       console.log(error);
     });
 
   }
 
-  ionViewDidLoad() {
+  ionViewWillEnter() {
+    this.http.get(ApiUrl+'MaterialInfoes/GetMaterialInfoes').subscribe(res=>{
+      this.materialInfo = res.materialInfos;
+      this.materialUnits = res.materialUnits;
+      if(this.ePMateInfoForEntry.length!=0){
+
+      }
+    },error=>{
+      console.log(error);
+    });
+
     console.log('ionViewDidLoad EpAddMatePage');
   }
 
@@ -142,7 +153,11 @@ export class EpAddMatePage implements OnDestroy{
     };
     switch (i){
       case 0:   data.callback = data=>{
-                    this.curMaterialInfo = data;
+                    this.curMaterialInfo = data.data;
+                    if(data.new==1){
+                      this.materialInfo.push(data.data);
+                    }
+                    console.log(data);
                 };
                 this.navCtrl.push(EpMateinfoSelectPage,data);
                 break;
@@ -151,14 +166,27 @@ export class EpAddMatePage implements OnDestroy{
                   return;
                 }
                 data.callback = data=>{
-                  this.curMaterialBrand = data;
+                  this.curMaterialBrand = data.data;
+                  if(data.new==1){
+                    this.materialInfo.forEach(V=>{
+                      if(V.MaterialInfoID==this.curMaterialInfo.MaterialInfoID){
+                        V. MaterialBrands.push(data.data);
+                      }
+                    });
+                    this.curMaterialInfo.MaterialBrands.push(data.data);
+                  }
+                  console.log(data);
                 };
                 data.materialInfos = this.curMaterialInfo.MaterialBrands;
                 this.navCtrl.push(EpMateinfoSelectPage,data);
                 break;
       case 2:
                 data.callback = data=>{
-                  this.curMaterialUnits = data;
+                  this.curMaterialUnits = data.data;
+                  if(data.new==1){
+                    this.materialUnits.push(data.data);
+                  }
+                  console.log(data);
                 };
                 data.materialInfos = this.materialUnits;
                 this.navCtrl.push(EpMateinfoSelectPage,data);
@@ -169,6 +197,15 @@ export class EpAddMatePage implements OnDestroy{
               }
               data.callback = data=>{
                   this.ePMateInfoForEntry[index].EPMaterialModel = data;
+                  if(data.new==1){
+                  this.materialInfo.forEach(V=>{
+                    if(V.MaterialInfoID==this.curMaterialInfo.MaterialInfoID){
+                      V. EPMaterialModels.push(data.data);
+                    }
+                  });
+                  this.curMaterialInfo.EPMaterialModels.push(data.data);
+                  }
+                  console.log(data);
               }
               data.materialInfos = this.curMaterialInfo.EPMaterialModels;
               this.navCtrl.push(EpMateinfoSelectPage,data);

@@ -57,7 +57,7 @@ export class EpMateinfoSelectPage {
                         };
                         var datastr = Utils.ParamsToString(data);
                         this.http.post(ApiUrl+'MaterialInfoes/PostMaterialInfo',datastr).subscribe(res=>{
-                          this.callback(res);
+                          this.callback({data:res,new:1});
                           this.navCtrl.pop();
                         },error=>{
                           alert(error);
@@ -69,7 +69,7 @@ export class EpMateinfoSelectPage {
                         };
                         var datastr = Utils.ParamsToString(data1);
                         this.http.post(ApiUrl+'MaterialInfoes/PostMaterialBrand',datastr).subscribe(res=>{
-                          this.callback(res);
+                          this.callback({data:res,new:1});
                           this.navCtrl.pop();
                         },error=>{
                           alert(error);
@@ -80,7 +80,7 @@ export class EpMateinfoSelectPage {
                         };
                         var datastr = Utils.ParamsToString(data2);
                         this.http.post(ApiUrl+'MaterialInfoes/PostMaterialUnit',datastr).subscribe(res=>{
-                          this.callback(res);
+                          this.callback({data:res,new:1});
                           this.navCtrl.pop();
                         },error=>{
                           alert(error);
@@ -92,7 +92,7 @@ export class EpMateinfoSelectPage {
                         };
                         var datastr = Utils.ParamsToString(data3);
                         this.http.post(ApiUrl+'MaterialInfoes/PostMaterialModel',datastr).subscribe(res=>{
-                            this.callback(res);
+                            this.callback({data:res,new:1});
                             this.navCtrl.pop();
                         },error=>{
                             alert(error);
@@ -161,7 +161,7 @@ export class EpMateinfoSelectPage {
   }
   Seleted(i){
     this.data = i
-    this.callback(this.data);
+    this.callback({data:this.data,new:0});
     this.navCtrl.pop();
   }
 }

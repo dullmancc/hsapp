@@ -1,41 +1,47 @@
 import {Injectable} from '@angular/core';
+import {EPCSParent} from "./EPCSParent";
+import {PZBelong} from "./EPPZBelong";
+import {PZCheckRecord} from "./PZConcreteSlumpRecord";
 
 @Injectable()
-export class PzRecord{
-  public EPCSID;
-  public Employee_EmployeeID;
-  public Process;
-  public Part;
-  public ConStructUnit;
-  public BeginTime;
-  public SchBeginTime;
-  public EndTime;
-  public SchEndTime;
+export class Pangzhan{
+
+  public EmployeeTransferID;
   public ConstructionCase;
   public SupervisorCase;
   public FindPromble;
   public Suggestion;
-  public Remark;
-  public State;
   public PZBelongId;
-  public EPCSParent;
+  public EPCSID;
+  public ConstructionNums;
+  public CheckNums;
+  public EPZState;//1:已完成 0：已交班
+  public State;
+  public EndTime;
+
+  public EPCSParent:EPCSParent;
+  public PZBelong:PZBelong;
+  public PZCheckRecords:PZCheckRecord[] = [];
 
   constructor(){
+  var datetime = new Date();
+
   this.EPCSID = '';
-  this.Employee_EmployeeID = '';
-  this.Process = '';
-  this.Part = '';
-  this.ConStructUnit = '';
-  this.BeginTime = '2000-01-01T00:00:00Z';
-  this.SchBeginTime = '2000-01-01T00:00:00Z';
-  this.EndTime = '2000-01-01T00:00:00Z';
-  this.SchEndTime = '2000-01-01T00:00:00Z';
+  this.EmployeeTransferID = '';
+  this.ConstructionNums = '';
+  this.CheckNums = '';
+  this.EPZState = 0;
+
+  this.EndTime = datetime.getFullYear()+'/'+datetime.getMonth()+'/'+datetime.getDay()+' '+datetime.getHours()+':'+datetime.getMinutes();
   this.ConstructionCase = '';
   this.SupervisorCase = '';
   this.FindPromble = '';
   this.Suggestion = '';
-  this.Remark = '';
+
   this.State = 0;
   this.PZBelongId = '';
+
+  this.PZBelong = new PZBelong();
+  this.EPCSParent = new EPCSParent();
   }
 }

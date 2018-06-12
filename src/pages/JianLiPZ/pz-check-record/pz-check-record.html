@@ -1,0 +1,91 @@
+<!--
+  Generated template for the PzCheckRecordPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header id="header">
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>检查项</span>
+  </div>
+  <ion-buttons *ngIf="Type==0" end>
+    <button ion-button clear color="dark" (click)="save()">
+      完成
+    </button>
+  </ion-buttons>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item no-lines>
+      <ion-label color="dark" item-start>
+        主控项目
+      </ion-label>
+      <button ion-button icon-only (click)="addNewCheck(1)" item-end *ngIf="Type==0">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-item>
+    <div *ngFor="let i of PZCheckRecords;let ii = index">
+      <div *ngIf="i.PZCheckType==1">
+        <ion-item-sliding>
+          <ion-item>
+            <ion-label color="dark">{{i.Desc}}</ion-label>
+            <p item-end>{{(!PZCheckShow[ii])? '合格':'不合格'}}</p>
+            <ion-toggle [(ngModel)]="PZCheckShow[ii]"style="margin-top: 2px;margin-right: 5px"  [checked]="PZCheckShow[ii]">{{(PZCheckShow[ii])? '合格':'不合格'}}</ion-toggle>
+          </ion-item>
+          <ion-item-options>
+            <button ion-button color="primary" (click)="DeleteItem(ii)" style="color: red;">
+              <ion-icon name="trash"></ion-icon>
+              删除
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+        <div *ngIf="PZCheckShow[ii]">
+          <textarea type="text" [(ngModel)]="PZCheckRecords[ii].Problem"  placeholder="请输入问题情况"></textarea>
+          <textarea type="text" [(ngModel)]="PZCheckRecords[ii].Suggestion"  placeholder="请输入处理建议"></textarea>
+          <!--
+          <ion-icon name="ios-camera-outline" (click)="addPhoto()" class="pzicon"></ion-icon>证明照片
+          -->
+        </div>
+      </div>
+    </div>
+    <ion-list-header></ion-list-header>
+
+    <ion-item no-lines>
+      <ion-label color="dark" item-start>
+        一般项目
+      </ion-label>
+      <button ion-button icon-only (click)="addNewCheck(0)" *ngIf="Type==0" item-end>
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-item>
+
+    <div *ngFor="let j of PZCheckRecords;let jj = index">
+      <div *ngIf="j.PZCheckType==0">
+        <ion-item-sliding>
+          <ion-item>
+            <ion-label color="dark">{{j.Desc}}</ion-label>
+            <p item-end>{{(!PZCheckShow[jj])? '合格':'不合格'}}</p>
+            <ion-toggle [(ngModel)]="PZCheckShow[jj]"style="margin-top: 2px;margin-right: 5px"  [checked]="PZCheckShow[jj]"></ion-toggle>
+          </ion-item>
+          <ion-item-options>
+            <button ion-button color="primary" (click)="DeleteItem(jj)" style="color: red;">
+              <ion-icon name="trash"></ion-icon>
+              删除
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+        <div *ngIf="PZCheckShow[jj]">
+          <textarea type="text"  [(ngModel)]="PZCheckRecords[jj].Problem"   placeholder="请输入问题情况"></textarea>
+          <textarea type="text"  [(ngModel)]="PZCheckRecords[jj].Suggestion"   placeholder="请输入处理建议"></textarea>
+        </div>
+      </div>
+    </div>
+    <ion-list-header></ion-list-header>
+    <textarea type="text"  [(ngModel)]="Pangzhan.FindPromble" placeholder="请输入问题情况"></textarea>
+    <textarea type="text"  [(ngModel)]="curText" placeholder="请输入处理建议"></textarea>
+  </ion-list>
+</ion-content>

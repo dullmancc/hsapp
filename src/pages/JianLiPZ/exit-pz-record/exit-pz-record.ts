@@ -1,15 +1,20 @@
 import { Component} from '@angular/core';
 import {
+  AlertController,
   IonicPage, LoadingController, NavController, NavParams,
   ToastController
 } from 'ionic-angular';
 import {HttpService} from "../../Service/HttpService";
 import {FileTransfer} from "@ionic-native/file-transfer";
 import {File} from "@ionic-native/file";
-import {PzRecord} from "../../../Model/EPPangzhan";
+import {Pangzhan} from "../../../Model/EPPangzhan";
 import {Utils} from "../../../providers/Utils";
 import {ApiUrl} from "../../../providers/Constants";
 import {ChoosePhotoService, Photo} from "../../../providers/ChoosePhotoService";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import { PzCheckRecordPage} from "../pz-check-record/pz-check-record";
+import {PzShiGongPage} from "../pz-shi-gong/pz-shi-gong";
+import {PzSelectPeoplePage} from "../pz-select-people/pz-select-people";
 /**
  * Generated class for the ExitPzRecordPage page.
  *
@@ -25,147 +30,142 @@ import {ChoosePhotoService, Photo} from "../../../providers/ChoosePhotoService";
 })
 
 export class ExitPzRecordPage {
+  shigong = '查看';
+  jiancha = '查看';
+  curPZState={id:0,desc:'交班'};
+  PZState = [{id:0,desc:'交班'},{id:1,desc:'完成'}];
+
+
+  //当前交班人
+  curEmployee:any={RealName:'请选择'};
+  employees;
+
   photoes:Photo[]=[];
-  startTime:any;
-  endTime:any;
-  planStartTime:any;
-  planEndTime :any;
-  PZrecord:PzRecord;
-  //页面类型
-  PZtype:number;
-  //按钮样式
-  btcs:string;
-  btcs1;
-  //文件传输
-  Trans
+  PZrecord:Pangzhan;
+  PZtype;
+  Type;
+  EmployeeID;
+  EProjectID;
+
+  curECUnit;
+  ECUnit;
+
+  BeginTime ;
+  EndTime;
+  PZBelong;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
+              private alertCtrl:AlertController,
               private http: HttpService,
-              private transfer: FileTransfer,
-              private file: File ,
-              public loadingCtrl: LoadingController,
+              public httpc:HttpClient,
               public toastCtrl: ToastController,
               private choosephoto:ChoosePhotoService) {
 
-    this.PZrecord = this.navParams.get('record');
-    this.PZtype = this.navParams.get('type');
-    //判断该页面为查看页面 or 保存页面
-    if(this.PZtype>0){
-      this.btcs = 'none';
+    this.PZBelong = this.navParams.get('PZBelong');
+    this.PZrecord = this.navParams.get('Pangzhan');
+    this.EProjectID = this.navParams.get('EProjectId');
 
-    }else {
-      this.btcs1 = 'none';
-    }
+    this.BeginTime = this.PZBelong.BeginTime.replace('T',' ');
+    this.EndTime = this.PZrecord.EndTime.replace('T',' ');
 
-    if(this.PZrecord!=null){
-      let ePfiles = this.PZrecord.EPCSParent.EPCSFiles;
-      for(var i = 0;i<ePfiles.length;i++){
-        var p = new  Photo();
-        p.src = ApiUrl.slice(0,ApiUrl.length-4)+ ePfiles[i].FilePath.substring(2);
-        this.photoes.push(p);
-        this.photoes[i].ePfile = ePfiles[i];
-      }
-    }
-
-    this.choosephoto.InitPhoto(this.photoes);
-    this.choosephoto.InitParams(this.PZrecord.EPCSID,this.PZrecord.Employee_EmployeeID);
-    this.Trans = this.transfer.create();
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ExitPzRecordPage');
-  }
-
-  save(IsSubmit){
-    this.checkTime();
-    this.PZrecord.State = IsSubmit;
-    var data = Utils.ParamsToString(this.PZrecord);
-
-    this.http.post(ApiUrl+'Pangzhan/PostPangzhan',data).subscribe(res=>{
-      this.presentToast(res.ErrorMs);
+    this.http.get(ApiUrl+'Project/GetECUnit').subscribe(res=>{
+      this.ECUnit = res;
+      this.ECUnit.forEach(v=>{
+        if(v.ECUnitID==this.PZBelong.ECUnitID){
+          this.curECUnit = v;
+        }
+      });
     },error=>{
-      this.presentToast(error.toString());
+      alert(error);
     });
+
+    //获得与这个项目关联的Employees
+    this.http.get(ApiUrl+'Project/getEmployees?EProjectId='+this.EProjectID).subscribe(res=>{
+      this.employees = res;
+      this.employees.forEach(v=>{
+        if(this.PZrecord.EmployeeTransferID==v.EmployeeID){
+          this.curEmployee = v;
+        }
+      });
+    },error=>{
+      alert(error);
+    });
+
+    //初始化
+    this.initPhoto();
+
+    if(this.PZrecord.EPCSID!=''){
+      this.choosephoto.InitParams(this.PZrecord.EPCSID,this.EmployeeID);
+    }
   }
 
-  checkTime(){
-    if(typeof (this.PZrecord.SchBeginTime)=='undefined'){
-      this.PZrecord.SchBeginTime = '2000-01-01';
+  initPhoto(){
+    let ePfiles = this.PZrecord.EPCSParent.EPCSFiles;
+    this.photoes = [];
+    for(var i = 0;i<ePfiles.length;i++){
+      var p = new  Photo();
+      var tupian = ePfiles[i].FileName.substr(ePfiles[i].FileName.lastIndexOf('.'));
+      if(tupian=='.png'||tupian=='.jpg'||tupian=='.gif'||tupian=='.tiff'||tupian=='.svg'){
+        p.src = ApiUrl.slice(0,ApiUrl.length-4)+ ePfiles[i].FilePath.substring(2);
+        p.isPhoto = true;
+      }else{
+        p.src = ePfiles[i].FileName;
+        p.isPhoto = false;
+      }
+      p.isupload = true;
+      this.photoes.push(p);
+      this.photoes[i].ePfile = ePfiles[i];
     }
-    if(typeof (this.PZrecord.BeginTime)=='undefined'){
-      this.PZrecord.BeginTime = '2000-01-01';
-    }
-    if(typeof (this.PZrecord.SchEndTime)=='undefined'){
-      this.PZrecord.SchEndTime = '2000-01-01';
-    }
-    if(typeof (this.PZrecord.EndTime)=='undefined'){
-      this.PZrecord.EndTime = '2000-01-01';
-    }
-  }
-
-  presentToast(msg) {
-    let toast = this.toastCtrl.create({
-      message: msg,
-      duration: 3000,
-      position: 'bottom'
-    });
-
-    toast.onDidDismiss(() => {
-      console.log('Dismissed toast');
-    });
-
-    toast.present();
+    this.choosephoto.InitPhoto(this.photoes);
   }
 
   goBack(){
     this.navCtrl.pop();
   }
-  
-  Download(){
-    let loader = this.loadingCtrl.create({
-      content: "文档导出中..."
-    });
-    loader.present();
 
-      const url1 = ApiUrl+'Pangzhan/Get?id='+this.PZrecord.EPCSID;
-      this.Trans.download(url1, this.file.externalApplicationStorageDirectory  + 'Out1.doc').then((entry) => {
-        console.log('download complete: ' + entry.toURL());
-        loader.dismiss();
-        this.presentToast("文档导出完成，存储路径为:"+entry.toURL());
-      }, (error) => {
-        // handle error
-        loader.dismiss();
-        alert(error);
-        console.log(error);
-      });
+  updateCucumber(e1:any, e2: any): boolean {
+    return e1 && e2 ? e1.id === e2.id : e1 === e2;
   }
 
-  changeDate():void{
-    let startTime=this.startTime.toString();
-    let endTime=this.endTime.toString();
-    if(startTime>endTime)
-    {
-      alert("开始时间不能大于结束时间，请重新输入");
-      this.endTime=this.startTime;
-    }
+  compare2Fn(e1: any,e2:any): boolean {
+    return e1 && e2 ? e1.EmployeeID === e2.EmployeeID : e1 === e2;
   }
 
-  changePlanDate():void {
-    let planEndTime=this.planEndTime.toString();
-    let planStartTime=this.planStartTime.toString();
-    if(planStartTime>planEndTime){
-      alert("计划开始时间不能大于计划结束时间,请重新输入");
-      this.planEndTime=this.planStartTime;
-    }
+  compare3Fn(e1:any, e2: any): boolean {
+    return e1 && e2 ? e1.ECUnitID === e2.ECUnitID : e1 === e2;
   }
 
-  addPhoto():void{
-    this.photoes = this.choosephoto.addPhoto();
+  addShiGong(){
+    var data={
+      'Pangzhan':this.PZrecord,
+      'PZType':this.PZBelong.PZTypeID,
+      'Type':1,
+      callback:data=>{
+        this.PZrecord = data;
+        console.log(data);
+        this.shigong = '查看';
+      }
+    };
+    this.navCtrl.push(PzShiGongPage,data);
   }
 
-  deletePhoto(i:number){
-    this.photoes = this.choosephoto.deletePhoto(i);
+  addJianCha(){
+    var data={
+      'Pangzhan':this.PZrecord,
+      'Type':1,
+      callback:data=>{
+        this.PZrecord = data.Pangzhan;
+        console.log(data);
+        this.jiancha = '查看';
+      }
+    };
+    this.navCtrl.push(PzCheckRecordPage,data);
   }
+
+  ionViewDidLoad() {
+    //console.log('ionViewDidLoad NormalPzPage');
+  }
+
 }
 

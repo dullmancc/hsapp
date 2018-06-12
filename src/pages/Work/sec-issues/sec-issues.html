@@ -26,7 +26,6 @@
     </ion-segment>
   </div>
   <div [ngSwitch]="pet">
-
     <ion-list *ngSwitchCase="'all'">
       <ion-item *ngFor="let i of unfinished;" (click)="GoToExitRecord(i,0)">
         <ion-avatar item-start>
@@ -36,56 +35,6 @@
         <p [ngStyle]="{'color':'gray'}">追踪人:{{i.Employee.RealName}}</p>
         <ion-note item-end>{{GetTime(i.EPSecIssueTime)}}</ion-note>
       </ion-item>
-      <!--
-      <ion-item>
-        <ion-avatar item-start>
-          <img src="./assets/imgs/workicon/secissues.png">
-        </ion-avatar>
-        <h2>安全隐患一<button ion-button color="light" outline>整改中</button></h2>
-        <p [ngStyle]="{'color':'gray'}">追踪人:向辉</p>
-        <ion-note item-end>7:45 pm</ion-note>
-      </ion-item>
-      <ion-item>
-        <ion-avatar item-start>
-          <img src="./assets/imgs/workicon/secissues.png">
-        </ion-avatar>
-        <h2>安全隐患二<button ion-button color="light" outline>整改中</button></h2>
-        <p [ngStyle]="{'color':'gray'}">追踪人:向辉</p>
-        <ion-note item-end>7:45 pm</ion-note>
-      </ion-item>
-      <ion-item>
-        <ion-avatar item-start>
-          <img src="./assets/imgs/workicon/secissues.png">
-        </ion-avatar>
-        <h2>安全隐患三<button ion-button color="light" outline>整改中</button></h2>
-        <p [ngStyle]="{'color':'gray'}">追踪人:向辉</p>
-        <ion-note item-end>7:45 pm</ion-note>
-      </ion-item>
-      <ion-item>
-        <ion-avatar item-start>
-          <img src="./assets/imgs/workicon/secissues.png">
-        </ion-avatar>
-        <h2>安全隐患四<button ion-button color="danger" outline>已完成</button></h2>
-        <p [ngStyle]="{'color':'gray'}">追踪人:向辉</p>
-        <ion-note item-end>7:45 pm</ion-note>
-      </ion-item>
-      <ion-item>
-        <ion-avatar item-start>
-          <img src="./assets/imgs/workicon/secissues.png">
-        </ion-avatar>
-        <h2>安全隐患五<button ion-button color="danger" outline>已完成</button></h2>
-        <p [ngStyle]="{'color':'gray'}">追踪人:向辉</p>
-        <ion-note item-end>7:45 pm</ion-note>
-      </ion-item>
-      <ion-item>
-        <ion-avatar item-start>
-          <img src="./assets/imgs/workicon/secissues.png">
-        </ion-avatar>
-        <h2>安全隐患六<button ion-button color="danger" outline>已完成</button></h2>
-        <p [ngStyle]="{'color':'gray'}">追踪人:向辉</p>
-        <ion-note item-end>7:45 pm</ion-note>
-      </ion-item>
-      -->
     </ion-list>
 
     <ion-list *ngSwitchCase="'finished'">
@@ -97,42 +46,8 @@
         <p [ngStyle]="{'color':'gray'}">追踪人:{{i.Employee.RealName}}</p>
         <ion-note item-end>{{GetTime(i.EPSecIssueTime)}}</ion-note>
       </ion-item>
-        <!--
-        <ion-item>
-          <ion-avatar item-start>
-            <img src="./assets/imgs/workicon/secissues.png">
-          </ion-avatar>
-          <h2>安全隐患四<button ion-button color="danger" outline>已完成</button></h2>
-          <p [ngStyle]="{'color':'gray'}">追踪人:向辉</p>
-          <ion-note item-end>7:45 pm</ion-note>
-        </ion-item>
-        <ion-item>
-          <ion-avatar item-start>
-            <img src="./assets/imgs/workicon/secissues.png">
-          </ion-avatar>
-          <h2>安全隐患五<button ion-button color="danger" outline>已完成</button></h2>
-          <p [ngStyle]="{'color':'gray'}">追踪人:向辉</p>
-          <ion-note item-end>7:45 pm</ion-note>
-        </ion-item>
-        <ion-item>
-          <ion-avatar item-start>
-            <img src="./assets/imgs/workicon/secissues.png">
-          </ion-avatar>
-          <h2>安全隐患六<button ion-button color="danger" outline>已完成</button></h2>
-          <p [ngStyle]="{'color':'gray'}">追踪人:向辉</p>
-          <ion-note item-end>7:45 pm</ion-note>
-        </ion-item>
-        -->
     </ion-list>
   </div>
-  <!--
-  <super-tabs>
-    <super-tab [root]="tab1Root" title="全部"></super-tab>
-    <super-tab [root]="tab2Root" title="待我处理"></super-tab>
-    <super-tab [root]="tab3Root" title="统计"></super-tab>
-  </super-tabs>
-
-  -->
   <ion-fab right bottom>
     <button ion-fab color="light" (click)="addSecurityIssues()"><ion-icon name="add"></ion-icon></button>
   </ion-fab>

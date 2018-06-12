@@ -13,6 +13,7 @@ export class EPMateInfoForEntry{
   public EPEntryResultID ;
   public EPEntryResult:EPEntryResult;
   public MaterialUnit;
+  public EPMateProperties;
 
   public EPMaterialModel:EPMaterialModel;
   constructor(){
@@ -25,6 +26,22 @@ export class EPMateInfoForEntry{
   this.MaterialUnitID='';
   this.EPMaterialNums='';
   this.EPMaterialModel = new EPMaterialModel();
+  }
+}
+
+export class EPMateProperty{
+  public EPMatePropertyID ;
+  public PropertyName ;
+  public PropertyNums ;
+  public StandardNums ;
+  public EPMateInfoForEntryID ;
+
+  public constructor(){
+    this.EPMateInfoForEntryID = 0;
+    this.EPMatePropertyID = 0;
+    this.PropertyName = '';
+    this.PropertyNums = 0;
+    this.StandardNums = 0;
   }
 }
 

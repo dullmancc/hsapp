@@ -1,4 +1,4 @@
-page-newpz1 {
+page-pz-shi-gong {
   textarea{
     height:150px;
     width:100%;
@@ -7,9 +7,23 @@ page-newpz1 {
     overflow-x:hidden;
     overflow-y:auto;
   }
-  .pzicon{
-    font-size: 30px;
+  .pzfenge{
+    padding-top: 5px;
+    height: 30px;
     margin-left: 15px;
+
+  }
+  .pztitle{
+    color: #007aff;
+    display: inline-block;
+  }
+  .pzdelete{
+    display: inline-block;
+    position: absolute;
+    left: 85%;
+    color:red;
+  }
+  .pzaddbt{
   }
   a{
     text-decoration: none;

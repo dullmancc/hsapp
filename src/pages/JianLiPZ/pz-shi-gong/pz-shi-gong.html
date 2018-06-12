@@ -1,0 +1,110 @@
+<!--
+  Generated template for the PzShiGongPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header id="header">
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>普通旁站监理</span>
+  </div>
+  <ion-buttons *ngIf="Type==0" end>
+    <button ion-button clear color="dark" (click)="save()">
+      完成
+    </button>
+  </ion-buttons>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label color="dark">现场施工员人数</ion-label>
+      <ion-input  item-end type="number" text-right [(ngModel)]="Pangzhan.ConstructionNums"></ion-input>
+    </ion-item>
+    <ion-item no-lines>
+      <ion-label color="dark">现场质检员人数</ion-label>
+      <ion-input  item-end type="number" text-right [(ngModel)]="Pangzhan.CheckNums"></ion-input>
+    </ion-item>
+    <div *ngIf="PZType=='PZConcrete'">
+      <ion-list-header></ion-list-header>
+      <ion-item >
+        浇筑试块测试记录
+      </ion-item>
+      <div *ngFor="let i of PZTongRecords;let ii = index;">
+        <div class="pzfenge">
+          <div (click)="onToggle(ii)" class="pztitle">
+            试块测试{{ii+1}}
+            <ion-icon [name]="TongiconName[ii]"></ion-icon>
+          </div>
+          <div (click)="deleteTong(ii)" class="pzdelete">删除</div>
+        </div>
+        <div *ngIf="PZTongShow[ii]">
+          <ion-item>
+            <ion-label color="dark">砼标号</ion-label>
+            <ion-input  item-end type="text" [(ngModel)]="i.PZTongRecordID" text-right placeholder="请输入砼标号"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label color="dark" >数量</ion-label>
+            <ion-input  item-end type="number" [(ngModel)]="i.TongNums" text-right placeholder="请输入砼数量"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label color="dark">标养数</ion-label>
+            <ion-input  item-end type="number" [(ngModel)]="i.Standard" text-right placeholder="请输入标养数"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label color="dark">同条件数</ion-label>
+            <ion-input  item-end type="number" [(ngModel)]="i.SameConditions" text-right placeholder="请输入同条件数"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label color="dark">抗渗试块数</ion-label>
+            <ion-input  item-end type="number" [(ngModel)]="i.AntiSeepage" text-right placeholder="请输入抗渗试块数"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label color="dark">拆模试块数</ion-label>
+            <ion-input  item-end type="number" [(ngModel)]="i.MouldSplitting" text-right placeholder="请输入拆模试块数"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label color="dark">使用部位</ion-label>
+            <ion-input  item-end type="text" [(ngModel)]="i.UsePlace" text-right placeholder="请输入使用部位"></ion-input>
+          </ion-item>
+        </div>
+      </div>
+      <div style="height: 60px;width: 100%">
+        <button ion-button block outline (click)="addTong()" class="pzaddbt">添加砼试块测试</button>
+      </div>
+    </div>
+    <div *ngIf="PZType=='PZConcrete'">
+      <ion-list-header></ion-list-header>
+      <ion-item >
+        坍落度测试记录
+      </ion-item>
+      <div *ngFor="let i of PZSlumpRecord;let ii = index;">
+        <div class="pzfenge">
+          <div (click)="onSlumpToggle(ii)" class="pztitle">
+            坍落度测试{{ii+1}}
+            <ion-icon [name]="SlumpiconName[ii]"></ion-icon>
+          </div>
+          <div (click)="deleteSlump(ii)" class="pzdelete">删除</div>
+        </div>
+        <div *ngIf="PZSlumpShow[ii]">
+          <ion-item>
+            <ion-label color="dark">设计坍落度</ion-label>
+            <ion-input  item-end type="text" [(ngModel)]="i.SlumpNums" text-right placeholder="请输入砼标号"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label color="dark" >实际坍落度</ion-label>
+            <ion-input  item-end type="number" [(ngModel)]="i.ActSlumpNums" text-right placeholder="请输入砼数量"></ion-input>
+          </ion-item>
+        </div>
+      </div>
+      <div style="height: 60px;width: 100%">
+        <button ion-button block outline (click)="addSlump()" class="pzaddbt">添加坍落度测试</button>
+      </div>
+    </div>
+    <textarea  type="text" placeholder="请输入现场施工描述" [(ngModel)]="Pangzhan.ConstructionCase"></textarea>
+    <textarea  type="text" placeholder="请输入现场监理情况" [(ngModel)]="Pangzhan.SupervisorCase"></textarea>
+  </ion-list>
+</ion-content>
