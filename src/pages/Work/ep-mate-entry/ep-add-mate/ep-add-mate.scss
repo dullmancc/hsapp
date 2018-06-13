@@ -11,6 +11,24 @@ page-ep-add-mate {
     -webkit-box-shadow: inset 0 -1px 0 0 #dedede;
     box-shadow: inset 0 -1px 0 0 #dedede;
   }
+  .content{
+    background-color: white;
+  }
+  .pzceshi{
+    font-size: 1.5rem;
+    margin-left: 10px;
+  }
+  .pzinput {
+    width: 20%;
+    display: inline-block;
+
+  }
+  .pzlabel{
+    width: 20%;
+    display: inline-block;
+
+  }
+
   .mybt{
     position:fixed ;
     bottom:0px;

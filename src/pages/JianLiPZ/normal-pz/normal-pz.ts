@@ -79,18 +79,10 @@ export class NormalPzPage {
     //console.log(this.EProjectID);
     this.PZtype = this.navParams.get('PZType');
     this.Type = this.navParams.get('Type');
-    this.UserInfo = TabsPage.UserInfo.employees;;
+    this.UserInfo = TabsPage.UserInfo.employees;
 
-    switch (this.PZtype){
-      case 'PZConcrete':
 
-        break;
-      case 'PZGeneral':
-        this.InitPangzhan();
-        break;
-      default:
-        break;
-    }
+    this.InitPangzhan();
 
     this.http.get(ApiUrl+'Project/GetECUnit').subscribe(res=>{
       this.ECUnit = res;
@@ -153,6 +145,9 @@ export class NormalPzPage {
           this.Flag = false;
         }
       });
+
+      this.PZtype = this.PZBelong.PZTypeID;
+
       //如无则新建
       if(this.Flag){
         this.PZrecord = new Pangzhan();
@@ -175,6 +170,7 @@ export class NormalPzPage {
       }
     }else if(this.Type==2){
       this.PZBelong = this.navParams.get('Pangzhan');
+      this.PZtype = this.PZBelong.PZTypeID;
     }
 
   }

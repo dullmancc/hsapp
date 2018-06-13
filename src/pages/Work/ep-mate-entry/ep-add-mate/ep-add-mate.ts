@@ -12,6 +12,7 @@ import {
   MaterialUnit
 } from "../../../../Model/EPMateInfoForEntry";
 import {EPEntryResult} from "../../../../Model/EPMaterials";
+import {QualityGJService} from "../../../../providers/GangJinQualityService";
 
 /**
  * Generated class for the EpAddMatePage page.
@@ -32,12 +33,17 @@ export class EpAddMatePage implements OnDestroy{
   callback;
   EPCSID;
   leavetype:boolean = false;
+
+  qualityGJService=[];
+  public MateStandard;
+
   curMaterialBrand:MaterialBrand = new MaterialBrand();
   curMaterialUnits:MaterialUnit = new MaterialUnit();
   curMaterialInfo :MaterialInfo = new MaterialInfo();
   MaterModel:EPMaterialModel;
   ePInfo:EPMateInfoForEntry = new EPMateInfoForEntry();
   ePMateInfoForEntry:EPMateInfoForEntry[]=[];
+
   ngOnDestroy(): void {
     for(var s = 0;s<this.componentRef.length;s++){
       this.componentRef[s].destroy();
@@ -45,17 +51,20 @@ export class EpAddMatePage implements OnDestroy{
   }
   componentRef: ComponentRef<AddMateComponent>[] =[];
   @ViewChild("addContainer",{read:ViewContainerRef}) container:ViewContainerRef;
-  constructor(public navCtrl: NavController, public navParams: NavParams,private resolver:ComponentFactoryResolver,public http:HttpService) {
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              private resolver:ComponentFactoryResolver,
+              public http:HttpService) {
     this.callback = this.navParams.get('callback');
     this.EPCSID = this.navParams.get('EPCSID');
     this.ePMateInfoForEntry = this.navParams.get('ePMateInfoForEntry');
     this.curMaterialInfo = this.navParams.get('curMateInfo');
-
     console.log(this.ePMateInfoForEntry);
     console.log(this.curMaterialInfo)
 
     if(this.ePMateInfoForEntry.length==0){
       this.MaterModel = new EPMaterialModel();
+      this.qualityGJService.push(true);
       this.ePMateInfoForEntry.push(this.ePInfo);
     }else {
 
@@ -91,6 +100,7 @@ export class EpAddMatePage implements OnDestroy{
       console.log(error);
     });
 
+    this.http.get('')
   }
 
   ionViewWillEnter() {
@@ -116,6 +126,7 @@ export class EpAddMatePage implements OnDestroy{
     let ePInf:EPMateInfoForEntry = new EPMateInfoForEntry();
     ePInf.EPMaterialModelID ='';
     this.ePMateInfoForEntry.push(ePInf);
+    this.qualityGJService.push(true);
   }
   /*
   creatComponent(){
@@ -139,6 +150,10 @@ export class EpAddMatePage implements OnDestroy{
       });
     }
     this.ePMateInfoForEntry.splice(index,1);
+    this.qualityGJService.splice(index,1);
+  }
+
+  DimaterChang(){
 
   }
 
@@ -205,6 +220,8 @@ export class EpAddMatePage implements OnDestroy{
                   });
                   this.curMaterialInfo.EPMaterialModels.push(data.data);
                   }
+
+
                   console.log(data);
               }
               data.materialInfos = this.curMaterialInfo.EPMaterialModels;
