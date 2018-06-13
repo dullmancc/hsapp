@@ -1,3 +1,10 @@
+<!--
+  Generated template for the SecIssuesPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
 <ion-header  id="header">
   <div class="header-left" (click)="goBack()">
     <img src="assets/imgs/common/back.png"/>
@@ -5,30 +12,57 @@
   <div class="header-center">
     <span>旁站项目</span>
   </div>
-  <div class="header-right">
-    <button ion-button clear icon-only (click)="newPZBL()">
-      <ion-icon name="add"></ion-icon>
-    </button>
-  </div>
 </ion-header>
 
-<ion-content>
-   <ion-list>
-     <ion-item>
-       <ion-label>
-         旁站ID
-       </ion-label>
-       <ion-label >
-         旁站描述
-       </ion-label>
-     </ion-item>
-     <ion-item  *ngFor="let pro of mypzbl;" (click)="ToMyPZJL(pro)">
-       <ion-label>
-         {{pro.PZBelongId}}
-       </ion-label>
-       <ion-label>
-         {{pro.PZBelongName}}
-       </ion-label>
-     </ion-item>
-   </ion-list>
+<ion-content padding>
+  <div padding color="dark">
+    <ion-segment [(ngModel)]="pet">
+      <ion-segment-button value="all">
+        未完成
+      </ion-segment-button>
+      <ion-segment-button value="jiaoban">
+        已交班
+      </ion-segment-button>
+      <ion-segment-button value="finished">
+        已完成
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+  <div [ngSwitch]="pet">
+    <ion-list *ngSwitchCase="'all'">
+      <ion-item *ngFor="let i of unSumbitPz;" (click)="GoToExitRecord(i,0)">
+        <ion-avatar item-start>
+          <img src="./assets/imgs/workicon/secissues.png">
+        </ion-avatar>
+        <h2>{{i.PZBelongName}}<button ion-button color="light" outline>未完成</button></h2>
+        <p [ngStyle]="{'color':'red'}">旁站类型:{{i.PZType.Desc}}</p>
+        <ion-note item-end>{{GetTime(i.BeginTime)}}</ion-note>
+      </ion-item>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'jiaoban'">
+      <ion-item *ngFor="let i of PassPz;" (click)="GoToExitRecord(i,1)">
+        <ion-avatar item-start>
+          <img src="./assets/imgs/workicon/secissues.png">
+        </ion-avatar>
+        <h2>{{i.PZBelongName}}<button ion-button color="light" outline>已交班</button></h2>
+        <p [ngStyle]="{'color':'red'}">旁站类型:{{i.PZType.Desc}}</p>
+        <ion-note item-end>{{GetTime(i.BeginTime)}}</ion-note>
+      </ion-item>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'finished'">
+      <ion-item *ngFor="let i of SumbitPz;" (click)="GoToExitRecord(i,2)">
+        <ion-avatar item-start>
+          <img src="./assets/imgs/workicon/secissues.png">
+        </ion-avatar>
+        <h2>{{i.PZBelongName}}<button ion-button color="danger" outline>已完成</button></h2>
+        <p [ngStyle]="{'color':'red'}">旁站类型:{{i.PZType.Desc}}</p>
+        <ion-note item-end>{{GetTime(i.BeginTime)}}</ion-note>
+      </ion-item>
+    </ion-list>
+  </div>
+  <ion-fab right bottom>
+    <button ion-fab color="light" (click)="newPZBL()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
 </ion-content>

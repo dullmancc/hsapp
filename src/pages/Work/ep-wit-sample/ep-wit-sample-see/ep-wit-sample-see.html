@@ -20,8 +20,10 @@
   <ion-list>
     <div *ngFor="let i of ePWitRecord;let ii = index;">
       <ion-list-header></ion-list-header>
-      <ion-label color="dark">{{i.EPMaterialModel.Desc}}</ion-label>
-      <ion-input text-right type="number" [(ngModel)]="i.ReviewNums"></ion-input>
+      <ion-item>
+        <ion-label color="dark">{{EPMaterials[ePMaterialsIndex[ii]].EPMaterialModel.Desc}}</ion-label>
+        <ion-label text-right >{{i.ReviewNums}}</ion-label>
+      </ion-item>
       <ion-item>
         <ion-label color="dark">见证取样时间</ion-label>
         <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="i.RecordTime"></ion-datetime>

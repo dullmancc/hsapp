@@ -119,13 +119,13 @@ export class MyworkComponent {
           'NavParm':{}
         }
         ],
-      [
+      [/*
         {
           'name':'见证取样',
           'src':'assets/imgs/workicon/quyang.png',
           'alt':EpMateCheckListPage,
           'NavParm':{'type':2,'EProjectID':this.MyProject,'EmployeeID':TabsPage.UserInfo.employees.EmployeeID}
-        },
+        },*/
       ]
     ]
   }
@@ -165,12 +165,13 @@ export class MyworkComponent {
                   'NavParm':{'type':1,'EProjectID':this.MyProject,'EmployeeID':TabsPage.UserInfo.employees.EmployeeID}
                 },
                 //quyang.png
+                /*
                 {
                   'name':'见证取样',
                   'src':'assets/imgs/workicon/quyang.png',
                   'alt':EpMateCheckListPage,
                   'NavParm':{'type':2,'EProjectID':this.MyProject,'EmployeeID':TabsPage.UserInfo.employees.EmployeeID}
-                },
+                },*/
                 {'name':'工作记录',
                   'src':'assets/imgs/workicon/workrecord.png',
                   'alt':ErrorPage,
@@ -231,12 +232,13 @@ export class MyworkComponent {
                   'alt':EpMateCheckListPage,
                   'NavParm':{'type':1,'EProjectID':this.MyProject,'EmployeeID':TabsPage.UserInfo.employees.EmployeeID}
                 },
+                /*
                 {
                   'name':'见证取样',
                   'src':'assets/imgs/workicon/quyang.png',
                   'alt':EpMateCheckListPage,
                   'NavParm':{'type':2,'EProjectID':this.MyProject,'EmployeeID':TabsPage.UserInfo.employees.EmployeeID}
-                },
+                },*/
                 {'name':'工作记录',
                   'src':'assets/imgs/workicon/workrecord.png',
                   'alt':ErrorPage,

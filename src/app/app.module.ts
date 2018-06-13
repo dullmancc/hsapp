@@ -40,6 +40,7 @@ import {EpAddMatePageModule} from "../pages/Work/ep-mate-entry/ep-add-mate/ep-ad
 import {ChoosePhotoService} from "../providers/ChoosePhotoService";
 import {AppUpdateService} from "../providers/AppUpdateService";
 import {FileOpener} from "@ionic-native/file-opener";
+import {QualityGJService} from "../providers/GangJinQualityService";
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import {FileOpener} from "@ionic-native/file-opener";
     GoodsService,
     ChoosePhotoService,
     AppUpdateService,
+    QualityGJService,
   ]
 })
 export class AppModule {}

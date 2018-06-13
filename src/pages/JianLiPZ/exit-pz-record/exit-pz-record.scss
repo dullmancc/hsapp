@@ -1,4 +1,23 @@
 page-exit-pz-record {
+  a{
+    text-decoration: none;
+    color: #222222;
+  }
+  .item-md .item-button {
+  }
+  .button-clear-md {
+    color: #222222;
+  }
+  .list-header-md{
+    padding-left: 0px;
+    margin-bottom: 0px;
+    min-height: 0.1rem;
+    height: 10px;
+    background-color: #f7f3f3;
+  }
+  .content{
+    background-color: white;
+  }
   textarea{
     margin: 7px;
     height:150px;
@@ -9,9 +28,6 @@ page-exit-pz-record {
     overflow-y:auto;
     border-radius:10px;
     padding: 7px;
-  }
-  .content{
-    background-color: white;
   }
 
 }

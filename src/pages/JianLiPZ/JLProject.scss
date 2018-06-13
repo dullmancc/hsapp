@@ -1,5 +1,17 @@
 page-JLProject {
+  ion-note{
+    font-size: 12px;
+    height: 13px;
+    overflow: hidden;
+    display: inline-block;
+    position: absolute;
+    top:40px;
+    left:210px;
+  }
   .content{
     background-color: white;
+  }
+  element.style{
+    margin-top: 40px;
   }
 }

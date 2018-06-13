@@ -3,7 +3,7 @@ import {AlertController, NavController, NavParams} from 'ionic-angular';
 import { ModalController} from 'ionic-angular';
 import {HttpService} from "../../../Service/HttpService";
 import {ProjectPage} from "../../../Project/project";
-import {JLProjectPage, PZBelong} from "../../../JianLiPZ/JLProject";
+import {JLProjectPage} from "../../../JianLiPZ/JLProject";
 import {IonicPage} from "ionic-angular";
 import {EpMateEntryPage} from "../ep-mate-entry";
 import {ApiUrl} from "../../../../providers/Constants";
@@ -75,6 +75,7 @@ export class ListPage {
     alert.present();
   }
 
+  //Type 用户页面复用，保存和未保存都在ep-mate-entry.html中显示
   goEPMate(item,i){
     if(item.State==1){
       this.navCtrl.push(EpMateEntrySeePage,{'EmployeeID':this.EmployeeID,'EPMaterialsCheck':this.ePMaterialsCheck,'Type':1,'EPMaterials':item,'EntryResult':i});

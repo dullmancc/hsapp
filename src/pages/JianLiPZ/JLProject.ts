@@ -4,6 +4,10 @@ import {HttpService} from "../Service/HttpService";
 import {PZJLPage} from "./PZlist/PZJL";
 import { AlertController ,ToastController } from 'ionic-angular';
 import {ApiUrl} from "../../providers/Constants";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {EpMateEntryPage} from "../Work/ep-mate-entry/ep-mate-entry";
+import {NormalPzPage} from "./normal-pz/normal-pz";
+import {Newpz1Page} from "./newpz1/newpz1";
 @IonicPage()
 @Component({
   selector: 'page-JLProject',
@@ -12,27 +16,93 @@ import {ApiUrl} from "../../providers/Constants";
 export class JLProjectPage {
 
   public mypro;
-  public mypzbl;
+  public SumbitPz;
+  public PassPz;
+  public unSumbitPz;
+  public pet = 'all';
   public me;
-  constructor(public navCtrl: NavController,private http: HttpService
-              ,private navp:NavParams,private alertC:AlertController
-              ,public toastCtrl: ToastController,private cd:ChangeDetectorRef){
+  public PZType;
+
+  constructor(public navCtrl: NavController,
+              private http: HttpService,
+              private navp:NavParams,
+              private alertCtrl:AlertController,
+              public toastCtrl: ToastController,
+              public httpc:HttpClient,
+              private cd:ChangeDetectorRef){
     this.mypro = this.navp.get('charNum');
     this.me = this.navp.get('userId');
+  }
+  ionViewWillEnter(){
     this.Load();
   }
-  ionViewDidEnter(){
-    this.Load();
+
+  GoToExitRecord(item , type){
+    switch (item.PZTypeID) {
+      case 'PZConcrete':
+    /**
+        if (type < 2) {
+          this.navCtrl.push(NormalPzPage, {'Pangzhan': item,'Type':1,'EmployeeID':this.me,'EProjectID':this.mypro.EProjectID,});
+        } else {
+          this.navCtrl.push(NormalPzPage, {'Pangzhan': item,'Type':2,'EmployeeID':this.me,'EProjectID':this.mypro.EProjectID,});
+        }**/
+        break;
+      case 'PZGeneral':
+        if (type < 2) {
+          this.navCtrl.push(NormalPzPage, {'Pangzhan': item,'Type':1,'EmployeeID':this.me,'EProjectID':this.mypro.EProjectID,});
+        } else {
+          this.navCtrl.push(NormalPzPage, {'Pangzhan': item,'Type':2,'EmployeeID':this.me,'EProjectID':this.mypro.EProjectID,});
+        }
+        break;
+      default:
+        break;
+    }
   }
 //Project/getPZBlong?EProjectId=6'
   Load(){
-    this.http.get(ApiUrl+'Project/getPZBlong?EProjectId='+this.mypro.EProjectID).subscribe(res => {
-      this.mypzbl = res;
-      console.log(this.mypzbl);
+    this.http.get(ApiUrl+'pangzhan/GetPZType').subscribe(res=>{
+      this.PZType =res;
+    },error=>{
+      console.log(error);
+    });
+
+    this.http.get(ApiUrl+'Project/getPZBlong?EProjectId='+this.mypro.EProjectID+'&EmployeeID='+this.me).subscribe(res => {
+      this.SumbitPz = res.SumbitPz;
+      this.unSumbitPz = res.unSumbitPz;
+      this.PassPz = res.PassPz;
+      console.log(res);
     }, error => {
       //错误信息
       alert(error);
     });
+  }
+  GetTime(itemtime){
+    let dateitem;
+    dateitem = itemtime.substring(0,itemtime.indexOf('-'))+'年'+itemtime.substring(itemtime.indexOf('-')+1,itemtime.indexOf('T'))+itemtime.substring(itemtime.indexOf('T')+1);
+    let year =itemtime.slice(0,4);
+    let nowyear = new Date().getFullYear().toString();
+    let month = dateitem.slice(5,7);
+    let nowmonth = (new Date().getMonth()+1).toString();
+    if(nowmonth.length==1){
+      nowmonth = '0'+nowmonth;
+    }
+    let day  = dateitem.slice(8,10);
+    let nowday = new  Date().getDate();
+    // 08:00
+    let hourmintes = dateitem.substr(dateitem.length-8,5);
+    //04-27 08:00
+    let monthhour =  dateitem.substr(5,dateitem.length-8).slice(0,5)+' '+hourmintes;
+    //2018年04-27
+    let YearMonth = dateitem.substr(0,10);
+    if(year==nowyear){
+      if(month==nowmonth&&day == nowday){
+        return hourmintes;
+      }else {
+        return monthhour;
+      }
+    }else {
+      return YearMonth;
+    }
   }
 
   goBack(){
@@ -43,58 +113,75 @@ export class JLProjectPage {
       this.navCtrl.push(PZJLPage,{PZBL:pro,UserId:this.me});
   }
   newPZBL(){
-      let prompt = this.alertC.create({
-        title: '创建旁站部位或工序',
-        message: '请认真填写能识别该部位或工序的名称',
-        inputs: [
-          {
-            name: '旁站描述',
-            placeholder: 'X层的剪力墙',
-            id:'pzmc',
-          },
-        ],
-        buttons: [
-          {
-            text: '取消',
-            handler: data => {
-              console.log('Cancel clicked');
-            }
-          },
-          {
-            text: '确定',
-            handler: data => {
-              console.log(data);
-              let pzbl =new PZBelong();
-              pzbl.PZBelongName = data.旁站描述;
-              pzbl.EProjectID = this.mypro.EProjectID;
-              pzbl.EPZState = 0;
-              pzbl.PZBelongId = '';
-              let res = 'PZBelongId='+pzbl.PZBelongId+'&PZBelongName='+pzbl.PZBelongName+'&EProjectID='+pzbl.EProjectID+'&EPZState='+ pzbl.EPZState;
-              this.http.post(ApiUrl+'Pangzhan/PostPZbelong',res).subscribe(resp=>{
-                let toast = this.toastCtrl.create({
-                  message: '创建成功!',
-                  duration: 3000
-                });
-                this.mypzbl.push(resp.pZBelong);
-                this.cd.detectChanges();
-                toast.present();
-              },error=>{
-                let toast = this.toastCtrl.create({
-                  message: '创建失败!',
-                  duration: 3000
-                });
-                toast.present();
-              });
-            }
-          }
-        ]
+    let alert=this.alertCtrl.create({
+      title:"请选择旁站类型！",
+      cssClass:'projectList'
+    });
+
+    for(let i = 0;i<this.PZType.length;i++){
+      alert.addInput({
+        type: 'radio',
+        label: this.PZType[i].Desc,
+        value: this.PZType[i].PZTypeID,
+        checked: false
       });
-      prompt.present();
+    }
+    alert.addButton({
+      text: '确定',
+      handler: data => {
+        switch (data){
+          case 'PZConcrete':
+            this.navCtrl.push(NormalPzPage,{'EmployeeID':this.me,'EProjectID':this.mypro.EProjectID,'PZType':data,'Type':0});
+            break;
+          case 'PZGeneral':
+            this.navCtrl.push(NormalPzPage,{'EmployeeID':this.me,'EProjectID':this.mypro.EProjectID,'PZType':data,'Type':0});
+            break;
+          default:
+        }
+      }
+    });    alert.present();
   }
-}
-export class PZBelong{
-  public PZBelongId:any;
-  public PZBelongName:string;
-  public EProjectID:string;
-  public EPZState:number;
+
+  Test(){
+    /*
+    var httphead = new HttpHeaders({"Content-Type":'application/json',"Authorization":'Bearer '+sessionStorage.getItem('accessToken')});
+    var data ={
+
+      Pangzhan:{
+        EndTime:'2018-06-06 10:36:20.000',
+        EmployeeTransferID:null,
+        ConstructionCase:'我是交班的第三个人',
+        SupervisorCase:'我是交班的第三个人',
+        FindPromble:'我是交班的第三个人',
+        Suggestion:'我是交班的第三个人',
+        PZBelongId:13,
+        EPCSID:'',
+        State:1,
+        ConstructionNums:4,
+        CheckNums:5,
+        EPZState:1,
+        EPCSParent:{
+          EPCSID:'',
+          EProjectID:'20180108-test1',
+          EmployeeID:'E000001'
+        },
+        PZBelong:{
+          PZBelongId:13,
+          EProjectID:'20180108-test1',
+          PZBelongName:'第二层混凝土浇筑',
+          Process:'第二层墙',
+          Part:'混凝土浇筑',
+          ECUnitID:'ECUnit01',
+          BeginTime:'2018-01-01 16:00:00.000',
+          PZTypeID:'PZGeneral'
+        }
+      }
+    };
+    this.httpc.post('http://localhost:1857/api/pangzhan/PostPangzhan',data,{headers:httphead}).subscribe(res=>{
+      console.log(res);
+    },error=>{
+      console.log(error);
+    });*/
+   }
+
 }

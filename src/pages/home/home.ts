@@ -1,5 +1,5 @@
 import { Component,ChangeDetectorRef } from '@angular/core';
-import {AlertController, NavController, Platform} from 'ionic-angular';
+import {AlertController, NavController, NavParams, Platform} from 'ionic-angular';
 import { Project} from "../Work/ep-mate-entry/list/list";
 import {TabsPage} from "../tabs/tabs";
 import {ObservationPage} from "../Work/observation/observation";
@@ -35,6 +35,7 @@ export class HomePage {
   private _city;                 //城市
 
   constructor(public navCtrl: NavController,
+              public navParams:NavParams,
               private http:HttpService,
               private cd:ChangeDetectorRef,
               public alertCtrl:AlertController,
@@ -59,7 +60,6 @@ export class HomePage {
     };
 
     this.nowtime =  formatDate( new Date().getTime() ); // 当前时间
-    this.LoadPosition();
 
   }
 
@@ -112,44 +112,6 @@ export class HomePage {
       });
   }
 
-  //加载职位及对应页面
-  LoadPosition(){
-    //如果不是管理人员
-    if(typeof TabsPage.UserInfo.userroles.ManangerRole === 'undefined'){
-
-    }else{
-      this.IsShow2='none';
-      this.IsShow='none';
-      this.IsShow3='block';
-    }
-
-    if(typeof TabsPage.UserInfo.userroles.ProjectRole === 'undefined'){
-      this.IsShow2='none';
-      this.IsShow='none';
-      this.IsShow3='none';
-    }else{
-      switch(TabsPage.UserInfo.userroles.ProjectRole){
-        case 'JSE':
-          this.IsShow='none';
-          this.IsShow2='block';
-          this.IsShow3='none';
-          break;
-        case 'SE':
-          this.IsShow2='none';
-          this.IsShow='block';
-          this.IsShow3='none';
-          break;
-        case 'ChiefSE':
-          this.IsShow2='none';
-          this.IsShow='none';
-          this.IsShow3='block';
-          break;
-        default:
-          break;
-      }
-    }
-    console.log('IShow:'+this.IsShow+'2:'+this.IsShow2+'3:'+this.IsShow3);
-  }
   //加载定位和天气
   LoadLocation(){
     var __this = this;

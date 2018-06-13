@@ -8,6 +8,7 @@ import {ExitPzRecordPage} from "../exit-pz-record/exit-pz-record";
 import {NormalPzPage} from "../normal-pz/normal-pz";
 import {IonicPage} from "ionic-angular";
 import {ApiUrl} from "../../../providers/Constants";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @IonicPage()
 @Component({
@@ -28,8 +29,11 @@ export class PZJLPage {
   public PassPz
   public unSumbitPz;
   public isLoad: boolean = true;
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-              public modalCtrl:ModalController,public alertCtrl:AlertController,private  http:HttpService) {
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              public modalCtrl:ModalController,
+              public alertCtrl:AlertController,
+              private  http:HttpService) {
     this.userid = this.navParams.get('UserId');
     this.pzbl = this.navParams.get('PZBL');
     this.Load();
@@ -123,6 +127,7 @@ export class PZJLPage {
       return YearMonth;
     }
   }
+
 
   newRecord(){
     let alert=this.alertCtrl.create({

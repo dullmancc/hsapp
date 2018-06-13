@@ -107,12 +107,12 @@ export class EpWitSamplePage {
               index++;
             }
           });
-          this.callback(this.EPMaterials);
           },error=>{
           this.presentToast(error.toString());
         });
       });
 
+      this.callback(this.EPMaterials);
       this.navCtrl.pop();
     }
 

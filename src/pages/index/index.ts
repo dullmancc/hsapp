@@ -57,6 +57,7 @@ export class IndexPage {
   ngOnInit(){
 
   }
+
   toMyWork(){
     if(LoginPage.Login){
       this.navCtrl.push(HomePage);

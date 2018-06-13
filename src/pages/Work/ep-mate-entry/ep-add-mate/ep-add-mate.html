@@ -53,6 +53,23 @@
       <ion-label color="dark">数量</ion-label>
       <ion-input text-right icon-end [(ngModel)]="item.EPMaterialNums"  placeholder="请输入"></ion-input>
     </ion-item>
+    <!--
+    GJ00000 钢筋
+    -->
+    <div class="pzceshi" *ngIf="curMaterialInfo.MaterialInfoID=='GJ00000'">
+      <ion-col>
+        <p class="pzlabel">公称直径</p>
+      </ion-col>
+      <ion-col>
+        <ion-input type="number" text-right class="pzinput" (ionChange)="DimaterChang()"></ion-input>
+      </ion-col>
+      <ion-col>
+        <p class="pzlabel">实测直径</p>
+      </ion-col>
+      <ion-col>
+        <ion-input type="number" text-right class="pzinput" (ionChange)="DimaterChang()"></ion-input>
+      </ion-col>
+    </div>
     <ion-item no-lines>
       <ion-label color="dark">进场结果</ion-label>
       <ion-select [(ngModel)]="item.EPEntryResult"  interface="popover" [compareWith]="compare1Fn" item-end>
