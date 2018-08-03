@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {IonicPage, LoadingController, NavController, NavParams} from 'ionic-angular';
 import {ListPage} from "../ep-mate-entry/list/list";
 import {EpWitSamplePage} from "../ep-wit-sample/ep-wit-sample";
 import {EpWitListPage} from "../ep-wit-sample/ep-wit-list/ep-wit-list";
@@ -24,7 +24,10 @@ export class EpMateCheckListPage {
   public EmployeeID;
   public EProjectID;
   public epMaterialsCheck:EPMaterialsCheck[]=[];
-  constructor(public navCtrl: NavController, public navParams: NavParams,public http:HttpService) {
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              public loadingCtrl: LoadingController,
+              public http:HttpService) {
     this.enter = 1;
     this.enter = this.navParams.get("type");
     this.EmployeeID = this.navParams.get('EmployeeID');
@@ -32,13 +35,18 @@ export class EpMateCheckListPage {
   }
 
   ionViewDidLoad() {
+    let loader=this.loadingCtrl.create();
+    loader.present();
+
     console.log('ionViewDidLoad EpMateCheckListPage');
     this.http.get(ApiUrl+'EPMaterialsChecks/GetEProjectMateChecks?EProjectID='+this.EProjectID.EProjectID).subscribe(res=>{
       for(var i = 0;i<res.length;i++){
        let objep = new EPMaterialsCheck(res[i].EPCheckID,res[i].EPCheckParent.EPCheckName,res[i].EPCheckParent.EProjectID,res[i].EntryDate,res[i].EPCheckParent.ECUnit.Name,res[i].EPCheckParent.ECUnit.ECUnitID);
        this.epMaterialsCheck.push(objep);
       }
+      loader.dismiss();
     },error=>{
+      loader.dismiss();
       alert('请求失败');
     });
   }

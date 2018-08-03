@@ -11,11 +11,11 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-item>
+  <ion-item *ngIf="currentProject">
     <ion-icon name="ios-briefcase-outline" item-start></ion-icon>
     <ion-label>项目:{{currentProject.Name}}</ion-label>
-    <ion-select [(ngModel)]="currentProject" interface="popover"  [compareWith]="compareFn" item-end>
-      <ion-option *ngFor="let i of pro;" [value]="i">{{i.Name}}</ion-option>
+    <ion-select [(ngModel)]="currentProject" interface="popover" [compareWith]="compareFn" item-end>
+      <ion-option *ngFor="let i of pro;" [value]="i" (ionSelect)="LoadRole()">{{i.Name}}</ion-option>
     </ion-select>
   </ion-item>
   <div>
@@ -28,5 +28,5 @@
       <p>{{_weather+'|'+_tempture+'℃'}}</p>
     </ion-item>
   </div>
-  <mywork [MyProject]="currentProject"></mywork>
+  <mywork [MyProject]="currentProject" #work1></mywork>
 </ion-content>

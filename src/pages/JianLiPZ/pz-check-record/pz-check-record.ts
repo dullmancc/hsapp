@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {PZCheckRecord} from "../../../Model/PZConcreteSlumpRecord";
+//import {HttpService} from "../../../providers/HttpService";
+import {HttpService} from "../../Service/HttpService";
+import {EPMateInfoForEntry} from "../../../Model/EPMateInfoForEntry";
+import {Utils} from "../../../providers/Utils";
+import {ApiUrl} from "../../../providers/Constants";
 
 /**
  * Generated class for the PzCheckRecordPage page.
@@ -27,7 +32,8 @@ export class PzCheckRecordPage {
   Type;
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
-              private alertCtrl: AlertController) {
+              private alertCtrl: AlertController,
+              public http:HttpService) {
     this.Pangzhan = this.navParams.get('Pangzhan');
     this.PZCheckRecords = this.Pangzhan.PZCheckRecords;
     this.callback = this.navParams.get('callback');
@@ -35,7 +41,7 @@ export class PzCheckRecordPage {
     //this.PZCheckRecordStr = this.navParams.get('CheckRecordStr');
 
     let i = 0;
-    this.curText = this.Pangzhan.Suggestion.replace('@','');
+    // this.curText = this.Pangzhan.Suggestion.replace('@','');
     if(this.Pangzhan.PZCheckRecords!=null){
       this.PZCheckRecords.forEach(V=>{
         if(V.PZCheckState == 0){
@@ -54,8 +60,15 @@ export class PzCheckRecordPage {
   }
 
   DeleteItem(index){
-    this.PZCheckRecords.splice(index,1);
-    this.PZCheckShow.splice(index,1);
+    if(this.PZCheckRecords[index].PZCheckRecordID) {
+      let tempObj=new PZCheckRecord();
+      tempObj.PZCheckRecordID=this.PZCheckRecords[index].PZCheckRecordID;
+      let data=Utils.ParamsToString(tempObj);
+      this.http.post(ApiUrl+'Pangzhan/DeletePZCheckRecord',data).subscribe(res=> {
+        this.PZCheckRecords.splice(index, 1);
+        this.PZCheckShow.splice(index, 1);
+      });
+    }
   }
 
 

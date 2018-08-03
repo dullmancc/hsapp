@@ -13,6 +13,7 @@ import {
 } from "../../../../Model/EPMateInfoForEntry";
 import {EPEntryResult} from "../../../../Model/EPMaterials";
 import {QualityGJService} from "../../../../providers/GangJinQualityService";
+import {Utils} from "../../../../providers/Utils";
 
 /**
  * Generated class for the EpAddMatePage page.
@@ -60,7 +61,7 @@ export class EpAddMatePage implements OnDestroy{
     this.ePMateInfoForEntry = this.navParams.get('ePMateInfoForEntry');
     this.curMaterialInfo = this.navParams.get('curMateInfo');
     console.log(this.ePMateInfoForEntry);
-    console.log(this.curMaterialInfo)
+    console.log(this.curMaterialInfo);
 
     if(this.ePMateInfoForEntry.length==0){
       this.MaterModel = new EPMaterialModel();
@@ -143,14 +144,18 @@ export class EpAddMatePage implements OnDestroy{
   }*/
   deleteComponent(index){
     if(this.ePMateInfoForEntry[index].EPMaterialModelID!=''){
-      this.http.post(ApiUrl+'EPMateInfoForEntries/DeleteEPMateInfoForEntry',{'id':this.ePMateInfoForEntry[index].EPMateInfoForEntryID}).subscribe(res=>{
+      let tempObj=new EPMateInfoForEntry();
+      tempObj.EPMateInfoForEntryID=this.ePMateInfoForEntry[index].EPMateInfoForEntryID;
+      let data=Utils.ParamsToString(tempObj);
+      this.http.post(ApiUrl+'EPMateInfoForEntries/DeleteEPMateInfoForEntry',data).subscribe(res=>{
         console.log(res);
+        this.ePMateInfoForEntry.splice(index,1);
+        this.qualityGJService.splice(index,1);
       },error=>{
         console.log(error);
       });
     }
-    this.ePMateInfoForEntry.splice(index,1);
-    this.qualityGJService.splice(index,1);
+
   }
 
   DimaterChang(){
@@ -211,7 +216,8 @@ export class EpAddMatePage implements OnDestroy{
                 return;
               }
               data.callback = data=>{
-                  this.ePMateInfoForEntry[index].EPMaterialModel = data;
+
+                  this.ePMateInfoForEntry[index].EPMaterialModel = data.data;
                   if(data.new==1){
                   this.materialInfo.forEach(V=>{
                     if(V.MaterialInfoID==this.curMaterialInfo.MaterialInfoID){
@@ -221,8 +227,9 @@ export class EpAddMatePage implements OnDestroy{
                   this.curMaterialInfo.EPMaterialModels.push(data.data);
                   }
 
-
+                  console.log(this.curMaterialInfo);
                   console.log(data);
+
               }
               data.materialInfos = this.curMaterialInfo.EPMaterialModels;
               this.navCtrl.push(EpMateinfoSelectPage,data);
@@ -243,7 +250,12 @@ export class EpAddMatePage implements OnDestroy{
       this.ePMateInfoForEntry[s].MaterialUnitID = this.curMaterialUnits.MaterialUnitID;
       this.ePMateInfoForEntry[s].MaterialBrandID = this.curMaterialBrand.MaterialBrandID;
       this.ePMateInfoForEntry[s].MaterialInfoID = this.curMaterialInfo.MaterialInfoID;
-      this.ePMateInfoForEntry[s].EPMateInfoForEntryID = '';
+      if(this.ePMateInfoForEntry[s].EPMateInfoForEntryID){
+        console.log(this.ePMateInfoForEntry[s].EPMateInfoForEntryID);
+      }
+      else{
+        this.ePMateInfoForEntry[s].EPMateInfoForEntryID = '';
+      }
       this.ePMateInfoForEntry[s].EPEntryResultID = this.ePMateInfoForEntry[s].EPEntryResult.EPEntryResultID;
       this.ePMateInfoForEntry[s].EPMaterialModelID = this.ePMateInfoForEntry[s].EPMaterialModel.EPMaterialModelID;
       if(this.ePMateInfoForEntry[s].EPMaterialModelID == ''){

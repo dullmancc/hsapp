@@ -30,38 +30,41 @@
   </div>
   <div [ngSwitch]="pet">
     <ion-list *ngSwitchCase="'all'">
-      <ion-item *ngFor="let i of unSumbitPz;" (click)="GoToExitRecord(i,0)">
+      <ion-item *ngFor="let i of unSumbitPz;" (click)="GoToExitRecord(i,1)">
         <ion-avatar item-start>
           <img src="./assets/imgs/workicon/secissues.png">
         </ion-avatar>
-        <h2>{{i.PZBelongName}}<button ion-button color="light" outline>未完成</button></h2>
-        <p [ngStyle]="{'color':'red'}">旁站类型:{{i.PZType.Desc}}</p>
+        <h2>{{i.PZBelong.PZBelongName}}<button ion-button color="light" outline>未完成</button></h2>
+        <p [ngStyle]="{'color':'red'}">旁站类型:{{i.PZBelong.PZType.Desc}}</p>
         <ion-note item-end>{{GetTime(i.BeginTime)}}</ion-note>
       </ion-item>
     </ion-list>
 
     <ion-list *ngSwitchCase="'jiaoban'">
-      <ion-item *ngFor="let i of PassPz;" (click)="GoToExitRecord(i,1)">
+      <ion-item *ngFor="let i of PassPz;" (click)="GoToExitRecord(i,2)">
         <ion-avatar item-start>
           <img src="./assets/imgs/workicon/secissues.png">
         </ion-avatar>
-        <h2>{{i.PZBelongName}}<button ion-button color="light" outline>已交班</button></h2>
-        <p [ngStyle]="{'color':'red'}">旁站类型:{{i.PZType.Desc}}</p>
+        <h2>{{i.PZBelong.PZBelongName}}<button ion-button color="light" outline>已交班</button></h2>
+        <p [ngStyle]="{'color':'red'}">旁站类型:{{i.PZBelong.PZType.Desc}}</p>
         <ion-note item-end>{{GetTime(i.BeginTime)}}</ion-note>
       </ion-item>
     </ion-list>
 
     <ion-list *ngSwitchCase="'finished'">
-      <ion-item *ngFor="let i of SumbitPz;" (click)="GoToExitRecord(i,2)">
+      <ion-item *ngFor="let i of SumbitPz;" (click)="GoToExitRecord(i,3)">
         <ion-avatar item-start>
           <img src="./assets/imgs/workicon/secissues.png">
         </ion-avatar>
-        <h2>{{i.PZBelongName}}<button ion-button color="danger" outline>已完成</button></h2>
-        <p [ngStyle]="{'color':'red'}">旁站类型:{{i.PZType.Desc}}</p>
+        <h2>{{i.PZBelong.PZBelongName}}<button ion-button color="danger" outline>已完成</button></h2>
+        <p [ngStyle]="{'color':'red'}">旁站类型:{{i.PZBelong.PZType.Desc}}</p>
         <ion-note item-end>{{GetTime(i.BeginTime)}}</ion-note>
       </ion-item>
     </ion-list>
   </div>
+  <ion-fab right bottom style="bottom: 70px;">
+    <button ion-fab color="light" (click)="Load()"><ion-icon name="refresh"></ion-icon></button>
+  </ion-fab>
   <ion-fab right bottom>
     <button ion-fab color="light" (click)="newPZBL()"><ion-icon name="add"></ion-icon></button>
   </ion-fab>

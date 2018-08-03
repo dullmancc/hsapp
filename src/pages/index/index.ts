@@ -1,3 +1,4 @@
+///<reference path="../Service/jquery.d.ts"/>
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {IonicPage, LoadingController, NavController, NavParams, Platform} from 'ionic-angular';
 import * as Swiper from 'swiper';
@@ -48,6 +49,7 @@ export class IndexPage {
       );
       this.androidPermissions.requestPermissions(list);
     }
+    $(".flipster").flipster({ style: 'carousel', start: 0 });
   }
 
   ionViewDidLoad() {

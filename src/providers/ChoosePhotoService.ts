@@ -271,4 +271,7 @@ export class ChoosePhotoService{
     return this.photoes || [];
   }
 
+  downloadPhoto(){
+
+  }
 }

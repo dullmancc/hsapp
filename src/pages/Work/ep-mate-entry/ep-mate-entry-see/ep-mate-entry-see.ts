@@ -36,22 +36,26 @@ export class EpMateEntrySeePage {
   photoes:Photo[]=[];
   constructor(public navCtrl: NavController, public navParams: NavParams,public http:HttpService) {
     this.ePMaterials = this.navParams.get('EPMaterials');
-    let ePfiles = this.ePMaterials.EPCSParent.EPCSFiles;
-    this.type = this.navParams.get('EntryResult');
-    for (var i = 0; i < ePfiles.length; i++) {
-      var p = new Photo();
-      var tupian = ePfiles[i].FileName.substr(ePfiles[i].FileName.lastIndexOf('.'));
-      if (tupian == '.png' || tupian == '.jpg' || tupian == '.gif' || tupian == '.tiff' || tupian == '.svg') {
-        p.src = ApiUrl.slice(0, ApiUrl.length - 4) + ePfiles[i].FilePath.substring(2);
-        p.isPhoto = true;
-      } else {
-        p.src = ePfiles[i].FileName;
-        p.isPhoto = false;
-      }
-      this.photoes.push(p);
-      this.photoes[i].ePfile = ePfiles[i];
 
-    }
+    http.get(ApiUrl+"Pangzhan/GetEPCSFile?EPCSID="+this.ePMaterials.EPCSID).subscribe(data=>{
+      let ePfiles = data;
+      this.type = this.navParams.get('EntryResult');
+      if(ePfiles) {
+        for (var i = 0; i < ePfiles.length; i++) {
+          var p = new Photo();
+          var tupian = ePfiles[i].FileName.substr(ePfiles[i].FileName.lastIndexOf('.'));
+          if (tupian == '.png' || tupian == '.jpg' || tupian == '.gif' || tupian == '.tiff' || tupian == '.svg') {
+            p.src = ApiUrl.slice(0, ApiUrl.length - 4) + ePfiles[i].FilePath.substring(2);
+            p.isPhoto = true;
+          } else {
+            p.src = ePfiles[i].FileName;
+            p.isPhoto = false;
+          }
+          this.photoes.push(p);
+          this.photoes[i].ePfile = ePfiles[i];
+        }
+      }
+    });
 
     this.initAddWitn();
 

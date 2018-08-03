@@ -1,16 +1,18 @@
-import { Component,ChangeDetectorRef } from '@angular/core';
-import {AlertController, NavController, NavParams, Platform} from 'ionic-angular';
+import {Component, ChangeDetectorRef, ViewChild} from '@angular/core';
+import {AlertController, LoadingController, NavController, NavParams, Platform} from 'ionic-angular';
 import { Project} from "../Work/ep-mate-entry/list/list";
 import {TabsPage} from "../tabs/tabs";
 import {ObservationPage} from "../Work/observation/observation";
 import {HttpService} from "../Service/HttpService";
 import { AndroidPermissions } from '@ionic-native/android-permissions';
+
 declare var AMap;
 
 import {IonicPage} from "ionic-angular";
 import {ProjectPage} from "../Project/project";
 import {JLProjectPage} from "../JianLiPZ/JLProject";
 import {ApiUrl} from "../../providers/Constants";
+import {MyworkComponent} from "../../components/mywork/mywork";
 @IonicPage()
 @Component({
   selector: 'page-home',
@@ -20,6 +22,8 @@ import {ApiUrl} from "../../providers/Constants";
 export class HomePage {
   public pro:Project[];
   public  currentProject:Project;
+  public position:number;
+
   public items;
   public nowtime;                //现在时间
   public nowweather:WeatherCode; //天气接口
@@ -33,12 +37,15 @@ export class HomePage {
   private IsShow;                //监理员页面
   private IsShow3;               //总监及以上页面
   private _city;                 //城市
+  @ViewChild('work1')
+  public mywork:MyworkComponent;
 
   constructor(public navCtrl: NavController,
               public navParams:NavParams,
               private http:HttpService,
               private cd:ChangeDetectorRef,
               public alertCtrl:AlertController,
+              public loadingCtrl: LoadingController,
               private androidPermissions: AndroidPermissions,
               private platform:Platform) {
 
@@ -79,7 +86,25 @@ export class HomePage {
     this.navCtrl.pop();
   }
 
+  LoadRole(){
+    this.http.get(ApiUrl+"UserInfo/GetRole?UserID="+TabsPage.UserInfo.employees.EmployeeID+"&EProjectID="+this.currentProject.EProjectID).subscribe(res=>{
+      TabsPage.UserInfo.userroles.Role=res;
+      this.mywork.LoadPosition();
+      console.log(this.mywork.position);
+      //loader.dismiss();
+    }, error => {
+      //错误信息
+      alert("无法获取角色信息");
+
+    });
+  }
+
   Load() {
+    let loader=this.loadingCtrl.create({
+      content: ""
+    });
+    loader.present();
+
     this.http.get(ApiUrl+"Project/GetMyEProjects?EmployeeId="+TabsPage.UserInfo.employees.EmployeeID)
       .subscribe(res => {
         //返回结果，直接是json形式
@@ -105,12 +130,17 @@ export class HomePage {
           this.pro.push(proj);
         }
         this.currentProject = this.pro[0];
-        console.log(this.pro);
+
+        this.LoadRole();
+        loader.dismiss();
       }, error => {
         //错误信息
+        loader.dismiss();
         alert(error);
       });
+
   }
+
 
   //加载定位和天气
   LoadLocation(){

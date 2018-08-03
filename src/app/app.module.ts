@@ -23,7 +23,6 @@ import {HomePageModule} from "../pages/home/home.module";
 import {JLProjectPageModule} from "../pages/JianLiPZ/JLProject.module";
 import {ListPageModule} from "../pages/Work/ep-mate-entry/list/list.module";
 import {LoginPageModule} from "../pages/login/login.module";
-import {Newpz1PageModule} from "../pages/JianLiPZ/newpz1/newpz1.module";
 import {NormalPzPageModule} from "../pages/JianLiPZ/normal-pz/normal-pz.module";
 import {ObservationPageModule} from "../pages/Work/observation/observation.module";
 import {ProjectPageModule} from "../pages/Project/project.module";
@@ -35,12 +34,13 @@ import {IndexPageModule} from "../pages/index/index.module";
 import {GoodsService} from "../providers/goods-service";
 import {SecIssuesPageModule} from "../pages/Work/sec-issues/sec-issues.module";
 import {SecIssRecordPageModule} from "../pages/Work/sec-issues/sec-iss-record/sec-iss-record.module";
-import {EpAddMatePage} from "../pages/Work/ep-mate-entry/ep-add-mate/ep-add-mate";
 import {EpAddMatePageModule} from "../pages/Work/ep-mate-entry/ep-add-mate/ep-add-mate.module";
 import {ChoosePhotoService} from "../providers/ChoosePhotoService";
 import {AppUpdateService} from "../providers/AppUpdateService";
 import {FileOpener} from "@ionic-native/file-opener";
 import {QualityGJService} from "../providers/GangJinQualityService";
+import {SecRiskRecordPageModule} from "../pages/Work/sec-issues/sec-risk-record/sec-risk-record.module";
+import {EpMateCheckListPageModule} from "../pages/Work/ep-mate-check-list/ep-mate-check-list.module";
 
 @NgModule({
   declarations: [
@@ -57,6 +57,7 @@ import {QualityGJService} from "../providers/GangJinQualityService";
       preloadModules:true
     }),
     EpAddMatePageModule,
+    EpMateCheckListPageModule,
     IndexPageModule,
     AboutPageModule,
     ContactPageModule,
@@ -65,13 +66,13 @@ import {QualityGJService} from "../providers/GangJinQualityService";
     JLProjectPageModule,
     ListPageModule,
     LoginPageModule,
-    Newpz1PageModule,
     NormalPzPageModule,
     ObservationPageModule,
     ProjectPageModule,
     PZJLPageModule,
     TabsPageModule,
     SecIssuesPageModule,
+    SecRiskRecordPageModule,
     HttpModule,
   ],
   bootstrap: [IonicApp],

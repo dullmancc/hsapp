@@ -21,10 +21,10 @@
   </ion-item>
   <ion-label  color="primary" style="font-size: 1.0em;margin-left:10px">主要内容</ion-label>
   <div *ngFor="let key of keys;let i=index">
-  <div  class="xiahuaxian" (click)="showDiv(i)" style="position: relative">
-    <span style="display: inline-block;width: 80%">{{key.content}}</span>
-    <ion-icon [name]="iconName[i]" style="display: inline-block;width: 10%;position: absolute;right:0;top:35%"></ion-icon>
-  </div>
+    <div  class="xiahuaxian" (click)="showDiv(i)" style="position: relative">
+      <span style="display: inline-block;width: 80%">{{key.content}}</span>
+      <ion-icon [name]="iconName[i]" style="display: inline-block;width: 10%;position: absolute;right:0;top:35%"></ion-icon>
+    </div>
     <div [hidden]="hideList[i]" >
       <ion-item>
         <ion-label color="primary" stacked>巡视意见</ion-label>

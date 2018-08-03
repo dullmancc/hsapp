@@ -9,7 +9,6 @@ export class PZBelong{
   public Process;
   public Part;
   public ECUnitID;
-  public BeginTime;
   public PZTypeID;
 
   public Pangzhans:Pangzhan[]=[];
@@ -23,7 +22,6 @@ export class PZBelong{
     this.Part = '';
     this.ECUnitID = '';
     this.PZTypeID = '';
-    this.BeginTime = datetime.getFullYear()+'/'+datetime.getMonth()+'/'+datetime.getDay()+' '+datetime.getHours()+':'+datetime.getMinutes();;
     this.Pangzhans = [];
   }
 

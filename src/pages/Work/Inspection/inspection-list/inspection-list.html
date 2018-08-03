@@ -1,0 +1,30 @@
+<!--
+  Generated template for the AccepetanceListPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>质量验收</span>
+  </div>
+  <ion-buttons end>
+    <button ion-button clear end style="width: 0px;" >
+    </button>
+  </ion-buttons>
+</ion-header>
+
+
+<ion-content padding>
+
+
+  <ion-fab right bottom style="bottom: 70px;">
+    <button ion-fab color="light" (click)="Load()"><ion-icon name="refresh"></ion-icon></button>
+  </ion-fab>
+  <ion-fab right bottom>
+    <button ion-fab color="light" (click)="newInspection()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+</ion-content>

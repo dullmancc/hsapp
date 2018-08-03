@@ -4,6 +4,8 @@ import {LoginPage} from "../../pages/login/login";
 import {ListPage, Project} from "../../pages/Work/ep-mate-entry/list/list";
 import {ObservationPage} from "../../pages/Work/observation/observation";
 import {ErrorPage} from "../../pages/error/error";
+import {HttpService} from "../Service/HttpService";
+import {HttpClient,HttpHeaders} from '@angular/common/http';
 import {NavController, NavParams} from "ionic-angular";
 import {SecIssuesPage} from "../../pages/Work/sec-issues/sec-issues";
 import {ProjectPage} from "../../pages/Project/project";
@@ -13,6 +15,8 @@ import {EpMateEntryPageModule} from "../../pages/Work/ep-mate-entry/ep-mate-entr
 import {EpMateEntryPage} from "../../pages/Work/ep-mate-entry/ep-mate-entry";
 import {EpWitSamplePage} from "../../pages/Work/ep-wit-sample/ep-wit-sample";
 import {EpMateCheckListPage} from "../../pages/Work/ep-mate-check-list/ep-mate-check-list";
+import {ApiUrl} from "../../providers/Constants";
+import {InspectionListPage} from "../../pages/Work/Inspection/inspection-list/inspection-list";
 
 /**
  * Generated class for the MyworkComponent component.
@@ -30,11 +34,12 @@ export class MyworkComponent {
   JianliShi = [];
   ZongJian = [];
   text: string;
-  postion:number;
+  role: string;
+  position:number;
   @Input() MyProject:Project;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-    console.log('Hello MyworkComponent Component');
+    console.log('mywork');
     this.text = 'Hello World';
     this.JianliShi = this.getJianliShi();
     this.JianliYuan = this.getJianliYuan();
@@ -44,25 +49,26 @@ export class MyworkComponent {
   LoadPosition(){
     //如果是管理人员
     if(TabsPage.UserInfo.userroles.Type =='Management'){
-      this.postion = 3;
+      this.position = 3;
     }else if(TabsPage.UserInfo.userroles.Type =='Project'){
       if(typeof TabsPage.UserInfo.userroles.Role === 'undefined'){
-        this.postion = -1;
+        this.position = -1;
       }else{
         switch(TabsPage.UserInfo.userroles.Role){
           case 'JSE':
-            this.postion = 2;
+            this.position = 2;
             break;
           case 'SE':
-            this.postion = 1;
+            this.position = 1;
             break;
           case 'ChiefSE':
-            this.postion = 3;
+            this.position = 3;
             break;
           default:
             break;
         }
       }
+
     }
 
 
@@ -145,9 +151,9 @@ export class MyworkComponent {
                   'NavParm':{'charNum':this.MyProject,'userId':TabsPage.UserInfo.employees.EmployeeID}
                 },
                 //rizhi.png
-                {'name':'监理日志',
-                  'src':'assets/imgs/workicon/rizhi.png',
-                  'alt':ErrorPage,
+                {'name':'质量验收',
+                  'src':'assets/imgs/workicon/zhiliangyanshou.png',
+                  'alt': InspectionListPage,
                   'NavParm':{}
                 },
                 //原材料进场审核
@@ -213,9 +219,9 @@ export class MyworkComponent {
                   'alt': JLProjectPage,
                   'NavParm':{'charNum':this.MyProject,'userId':TabsPage.UserInfo.employees.EmployeeID}
                 },
-                {'name':'监理日志',
-                  'src':'assets/imgs/workicon/rizhi.png',
-                  'alt':ErrorPage,
+                {'name':'质量验收',
+                  'src':'assets/imgs/workicon/zhiliangyanshou.png',
+                  'alt': InspectionListPage,
                   'NavParm':{}
                 },
                 //原材料进场审核
@@ -275,6 +281,7 @@ export class MyworkComponent {
   SetClick(xi,yj,num){
    this.UpdateInfo();
    console.log(xi+" ,"+yj+" ,"+num);
+   console.log(this.MyProject.Name);
    switch (num){
      case 1:
        this.navCtrl.push(this.JianliYuan[xi][yj].alt,this.JianliYuan[xi][yj].NavParm);

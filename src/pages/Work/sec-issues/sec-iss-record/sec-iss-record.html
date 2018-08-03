@@ -5,6 +5,7 @@
   Ionic pages and navigation.
 -->
 
+<!--
 <ion-header  id="header">
   <div class="header-left" (click)="goBack()">
     <img src="assets/imgs/common/back.png"/>
@@ -29,6 +30,11 @@
       <img item-left src="assets/imgs/workicon/unitroject.png">
       <ion-label color="dark">发生工程阶段</ion-label>
       <ion-input item-end type="text" [(ngModel)]="ePSecIssue.UnitPart" placeholder="单元工程"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="ios-warning-outline" item-start></ion-icon>
+      <ion-label color="dark">危大工程</ion-label>
+      <ion-toggle [(ngModel)]="isRiskProject" style="display: inline-block; margin-right: 5px"  [checked]="isRiskProject"></ion-toggle>
     </ion-item>
     <ion-item>
       <ion-icon name="ios-construct-outline" item-start></ion-icon>
@@ -92,10 +98,131 @@
         <ion-icon  name="close" small style="position: absolute;right:0;top:0;" (click)="deletePhoto(i)"></ion-icon>
       </li>
     </ul>
- <!--    <ion-list-header>
-       </ion-list-heade <!--    <ion-item *ngIf="this.EPCSID">
-         <ion-icon name="camera" item-start></ion-icon>
-         <a (click)="addPhoto()">上传</a>
-  </ion-item>-->
+  </ion-list>
+</ion-content>
+-->
+
+<ion-header>
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>问题清单</span>
+  </div>
+  <ion-buttons end>
+    <button ion-button clear color="dark" (click)="newSecIssues(0)">
+      保存
+    </button>
+    <button ion-button clear color="royal"  (click)="newSecIssues(1)">
+      提交
+    </button>
+  </ion-buttons>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label color="dark">问题类型</ion-label>
+      <ion-select [(ngModel)]="checkType" interface="popover">
+        <ion-option *ngFor="let type of checkType" [value]="type.value">{{type.option}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">施工单位</ion-label>
+      <ion-select interface="popover">
+        <ion-option ></ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">部位</ion-label>
+      <ion-input color="dark" type="text" placeholder="检查部位" item-end text-end></ion-input>
+    </ion-item>
+    <ion-item>
+      <!--<img item-left src="assets/imgs/workicon/unitroject.png">-->
+      <ion-label color="dark">工程阶段</ion-label>
+      <ion-input item-end type="text" [(ngModel)]="ePSecIssue.UnitPart" placeholder="单元工程" text-end></ion-input>
+    </ion-item>
+    <!--<ion-item>
+      <ion-icon name="ios-construct-outline" item-start></ion-icon>
+      <ion-label color="dark">问题类型</ion-label>
+      <ion-select [(ngModel)]="curProblems" interface="popover" [compareWith]="compareFn"  item-end>
+        <ion-option *ngFor="let epproblems of ePSecProblems;" [value]="epproblems">{{epproblems.Desc}}</ion-option>
+      </ion-select>
+    </ion-item>-->
+    <ion-item>
+      <ion-label color="dark">状态</ion-label>
+      <p item-end>{{isClear?'通过':'不通过'}}</p>
+      <ion-toggle [(ngModel)]="isClear" style="display: inline-block; margin-right: 5px"  [checked]="isClear"></ion-toggle>
+    </ion-item>
+    <ion-item no-lines>
+      <!--<ion-icon name="ios-nuclear-outline" item-start></ion-icon>-->
+      <ion-label color="dark">危险评估</ion-label>
+      <ion-select [(ngModel)]="curRisks"  interface="popover"  [compareWith]="compare1Fn"  item-end>
+        <ion-option *ngFor="let epsecrisks of ePSecRisks;"  [value]="epsecrisks">{{epsecrisks.Desc}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-list-header>
+    </ion-list-header>
+    <ion-item>
+      <textarea type="text" placeholder="问题描述"  [(ngModel)]="ePSecIssue.Details"></textarea>
+    </ion-item>
+    <ion-item>
+      <textarea type="text" placeholder="整改要求"  [(ngModel)]="ePSecIssue.ModifyRequirement"></textarea>
+    </ion-item>
+    <ion-item no-lines (click)="addPhoto()">
+      <ion-icon name="ios-camera-outline" item-start></ion-icon>
+      文件({{photoes.length}})
+    </ion-item>
+    <ul style="list-style: none;margin:0;padding:0">
+      <li *ngFor="let photo1 of photoes;let i=index" style="display: inline-block;margin-right: 5px;position: relative">
+        <img style="width:120px;height:120px;" [src]="photo1.src">
+        <ion-icon  name="close" small style="position: absolute;right:0;top:0;" (click)="deletePhoto(i)"></ion-icon>
+      </li>
+    </ul>
+    <ion-list-header>
+    </ion-list-header>
+    <!-- 整改项 -->
+    <ion-item>
+      <ion-label color="dark">整改单位</ion-label>
+      <ion-select interface="popover">
+        <ion-option></ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <!--<ion-icon name="person" item-start></ion-icon>-->
+      <ion-label color="dark">整改负责人</ion-label>
+      <ion-input text-right item-end type="text" placeholder="请输入" [(ngModel)]="ePSecIssue.HandleEmployee"></ion-input>
+    </ion-item>
+    <!--<ion-item>
+      <ion-icon name="person" item-start></ion-icon>-
+      <ion-label color="dark">问题跟踪人</ion-label>
+      <ion-select [(ngModel)]="curEmployee"  interface="popover"  [compareWith]="compare2Fn"  item-end>
+        <ion-option *ngFor="let emp of employees;"  [value]="emp">{{emp.RealName}}</ion-option>
+      </ion-select>
+    </ion-item>-->
+    <ion-item>
+      <!--<ion-icon name="time" item-start></ion-icon>-->
+      <ion-label color="dark">限期完成时间</ion-label>
+      <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ePSecIssue.Deadline"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <!--<ion-icon name="time" item-start></ion-icon>-->
+      <ion-label color="dark">实际整改时间</ion-label>
+      <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ePSecIssue.Deadline"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">状态</ion-label>
+      <p item-end>{{isClear?'通过':'不通过'}}</p>
+      <ion-toggle [(ngModel)]="isClear" style="display: inline-block; margin-right: 5px"  [checked]="isClear"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">是否下发监理通知单</ion-label>
+      <p item-end>{{ePSecIssue.EPNoticeListstate?'是':'否'}}</p>
+      <ion-toggle [(ngModel)]="ePSecIssue.EPNoticeListstate" checked="false"></ion-toggle>
+    </ion-item>
+    <ion-item no-lines>
+      <ion-label color="dark">安全隐患记录时间</ion-label>
+      <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ePSecIssue.EPSecIssueTime"></ion-datetime>
+    </ion-item>
   </ion-list>
 </ion-content>

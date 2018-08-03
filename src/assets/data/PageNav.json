@@ -1,0 +1,105 @@
+[
+  {
+    "ArrangeCategory": [
+      {
+        "ID": 1,
+        "Name": ""
+      },
+      {
+        "ID": 2,
+        "Name": ""
+      },
+      {
+        "ID": 3,
+        "Name": ""
+      },
+      {
+        "ID": 4,
+        "Name": ""
+      },
+      {
+        "ID": 5,
+        "Name": ""
+      },
+      {
+        "ID": 6,
+        "Name": ""
+      },
+      {
+        "ID": 7,
+        "Name": ""
+      },
+      {
+        "ID": 8,
+        "Name": ""
+      },
+      {
+        "ID": 9,
+        "Name": ""
+      }
+    ]
+  },
+  {
+    "StructCategory":[
+      {
+        "ID":1,
+        "AID":,
+        "Name":""
+      },
+      {
+        "ID":2,
+        "AID":,
+        "Name":""
+      },
+      {
+        "ID":3,
+        "AID":,
+        "Name":""
+      },
+      {
+        "ID":4,
+        "AID":,
+        "Name":""
+      },
+      {
+        "ID":5,
+        "AID":,
+        "Name":""
+      },
+      {
+        "ID":6,
+        "AID":,
+        "Name":""
+      },
+      {
+        "ID":7,
+        "AID":,
+        "Name":""
+      }
+    ]
+  },
+  {
+    "AnchorageCategory":[
+      {
+        "ID":1,
+        "SID":,
+        "Name":""
+      },
+      {
+        "ID":2,
+        "SID":,
+        "Name":""
+      },
+      {
+        "ID":3,
+        "SID":,
+        "Name":""
+      },
+      {
+        "ID":4,
+        "SID":,
+        "Name":""
+      }
+    ]
+  }
+]

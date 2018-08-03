@@ -11,7 +11,7 @@
   <div class="header-center">
     <span>普通旁站监理</span>
   </div>
-  <div *ngIf="Type==0">
+  <div *ngIf="Type==0||Type==1">
     <ion-buttons end>
       <button ion-button clear color="dark" (click)="save(0)">
         保存
@@ -28,46 +28,43 @@
     <ion-item>
       <ion-icon name="ios-construct-outline" style="margin: 0px;" item-start></ion-icon>
       <ion-label color="dark">旁站名称</ion-label>
-      <ion-input item-end type="text" [(ngModel)]="PZBelong.PZBelongName" placeholder="请输入旁站名称" text-right></ion-input>
+      <ion-input item-end type="text" [(ngModel)]="PZBelong.PZBelongName" placeholder="请输入旁站名称" text-right [disabled]="isCheckOnly||!isRootPZ"></ion-input>
     </ion-item>
     <ion-item>
       <ion-icon name="ios-construct-outline" style="margin: 0px;" item-start></ion-icon>
       <ion-label color="dark">工序</ion-label>
-      <ion-input item-end type="text" [(ngModel)]="PZBelong.Process" placeholder="请输入工序" text-right></ion-input>
+      <ion-input item-end type="text" [(ngModel)]="PZBelong.Process" placeholder="请输入工序" text-right [disabled]="isCheckOnly||!isRootPZ"></ion-input>
     </ion-item>
     <ion-item>
       <ion-icon name="ios-construct-outline" style="margin: 0px;" item-start></ion-icon>
       <ion-label color="dark">部位</ion-label>
-      <ion-input item-end type="text" [(ngModel)]="PZBelong.Part" placeholder="请输入部位" text-right></ion-input>
+      <ion-input item-end type="text" [(ngModel)]="PZBelong.Part" placeholder="请输入部位" text-right [disabled]="isCheckOnly||!isRootPZ"></ion-input>
     </ion-item>
 
-    <ion-item>
+    <ion-item *ngIf="isRootPZ&&!isCheckOnly">
       <ion-icon name="podium" item-start></ion-icon>
       <ion-label color="dark">施工单位</ion-label>
       <ion-select [(ngModel)]="curECUnit"  interface="popover" (ionChange)="updateECUnit()" [compareWith]="compare3Fn" item-end>
         <ion-option *ngFor="let ecunit of ECUnit;" [value]="ecunit">{{ecunit.Name}}</ion-option>
       </ion-select>
     </ion-item>
-
-    <ion-item no-lines="">
-      <ion-icon name="time" item-start></ion-icon>
-      <ion-label color="dark">开始时间</ion-label>
-      <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="PZBelong.BeginTime"></ion-datetime>
+    <ion-item *ngIf="curECUnit&&isCheckOnly||!isRootPZ">
+      <ion-icon name="ios-construct-outline" style="margin: 0px;" item-start></ion-icon>
+      <ion-label color="dark">施工单位</ion-label>
+      <ion-input item-end type="text" [(ngModel)]="curECUnit.Name" text-right disabled></ion-input>
     </ion-item>
+
     <ion-list-header></ion-list-header>
-    <div *ngIf="Type>=1">
-      <ion-item *ngFor="let i of PZBelong.Pangzhans;let ii = index">
-        <div class="pzparents" *ngIf="i.State==1">
+
+    <div *ngIf="Type>1">
+      <ion-item *ngFor="let i of Pangzhans;let ii = index">
+        <div class="pzparents">
           <h2 (click)="goItem(i,ii)">旁站人:{{i.EPCSParent.Employee.RealName}} {{(i.State==1)?'已交班':'进行中'}}</h2>
-          <div class="pzcontent" style="color: #bfbfbf;">持续时间:{{GetWorkTime(ii)}}</div>
-        </div>
-        <div class="pzparents" *ngIf="i.State==0">
-          <h2 (click)="goItem(i,ii)">旁站人:{{UserInfo.RealName}} {{(i.State==1)?'已交班':'进行中'}}</h2>
           <div class="pzcontent" style="color: #bfbfbf;">持续时间:{{GetWorkTime(ii)}}</div>
         </div>
       </ion-item>
     </div>
-    <div *ngIf="Type==0">
+    <div>
       <ion-item>
         <ion-label color="dark">施工情况</ion-label>
         <button ion-button icon-right clear item-end (click)="addShiGong()">
@@ -82,10 +79,12 @@
           <ion-icon name="ios-arrow-forward"></ion-icon>
         </button>
       </ion-item>
+
       <ion-list-header></ion-list-header>
+
       <ion-item (click)="addPhoto()">
         <ion-icon name="ios-camera-outline" item-start></ion-icon>
-        记录上传文件数量
+        <ion-label id="fileLabel">记录上传文件数量</ion-label>
       </ion-item>
       <ul style="list-style: none;margin:0;padding:0">
         <li *ngFor="let photo1 of photoes;let i=index" style="display: inline-block;margin-right: 5px;position: relative">
@@ -96,24 +95,30 @@
       <ion-item>
         <ion-icon name="podium" item-start></ion-icon>
         <ion-label color="dark">旁站结果</ion-label>
-        <ion-select [(ngModel)]="curPZState"  interface="popover" [compareWith]="updateCucumber" item-end>
+        <ion-select [(ngModel)]="curPZState"  interface="popover" [compareWith]="updateCucumber" item-end [disabled]="isCheckOnly">
           <ion-option *ngFor="let pZ of PZState;" [value]="pZ">{{pZ.desc}}</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item *ngIf="curPZState.id!=1">
         <ion-icon name="person" item-start></ion-icon>
-        <ion-label color="dark">交班人</ion-label>
-        <button ion-button icon-right clear item-end (click)="addPeople()">
-          {{curEmployee.RealName}}
+        <ion-label id="passOne" color="dark">交班人</ion-label>
+        <button ion-button icon-right clear item-end (click)="addPeople()" [disabled]="isCheckOnly">
+          {{transEmployee.RealName}}
           <ion-icon name="ios-arrow-forward"></ion-icon>
         </button>
+      </ion-item>
+      <ion-item no-lines="">
+        <ion-icon name="time" item-start></ion-icon>
+        <ion-label color="dark">开始时间</ion-label>
+        <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="PZrecord.BeginTime" [disabled]="isCheckOnly"></ion-datetime>
       </ion-item>
       <ion-item>
         <ion-icon name="time" item-start></ion-icon>
         <ion-label color="dark">结束时间</ion-label>
-        <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="PZrecord.EndTime"></ion-datetime>
+        <ion-datetime displayFormat="YYYY年MM月DD日 HH：mm" cancelText="取消" doneText="确定" placeholder="日期" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="PZrecord.EndTime" [disabled]="isCheckOnly"></ion-datetime>
       </ion-item>
     </div>
   </ion-list>
 </ion-content>
+

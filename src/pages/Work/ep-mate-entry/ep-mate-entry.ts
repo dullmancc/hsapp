@@ -42,6 +42,7 @@ export class EpMateEntryPage {
   //材料进场审批
   public epmatecheck;
   public EmployeeID;
+  //材料进场
   //页面类型 type
   public type;
   //进场类型
@@ -67,15 +68,21 @@ export class EpMateEntryPage {
               public http:HttpService,
               private choosephoto:ChoosePhotoService,
               public toastCtrl: ToastController) {
+
     this.epmatecheck = this.navParams.get('EPMaterialsCheck');
+    console.log(this.epmatecheck);
     this.EmployeeID = this.navParams.get('EmployeeID');
+    console.log(this.EmployeeID);
     this.type = this.navParams.get('Type');
+    console.log(this.type);
     this.EProjectID = this.navParams.get('EProjectID');
     console.log(this.EProjectID);
+
+
     if(this.type==1){
       this.ePMaterials = this.navParams.get('EPMaterials');
       console.log(this.ePMaterials);
-      this.initPhoto();
+      this.initPhoto();//
       if(this.ePMaterials.EPMateInfoForEntries.length>0){
         this.curMateInfo = this.ePMaterials.EPMateInfoForEntries[0].MaterialInfo;
       }else{
@@ -106,7 +113,13 @@ export class EpMateEntryPage {
   }
 
   newSecIssues(IsSubmit){
+
+    console.log(this.ePMaterials);
+
     this.ePMaterials.State = IsSubmit;
+
+    let a=1;
+
     if(typeof this.curECUnit !=='undefined'){
       this.ePMaterials.ECUnitID = this.curECUnit.ECUnitID;
     }
@@ -138,22 +151,24 @@ export class EpMateEntryPage {
 
   initPhoto(){
     let ePfiles = this.ePMaterials.EPCSParent.EPCSFiles;
-    this.photoes = [];
-    for(var i = 0;i<ePfiles.length;i++){
-      var p = new  Photo();
-      var tupian = ePfiles[i].FileName.substr(ePfiles[i].FileName.lastIndexOf('.'));
-      if(tupian=='.png'||tupian=='.jpg'||tupian=='.gif'||tupian=='.tiff'||tupian=='.svg'){
-        p.src = ApiUrl.slice(0,ApiUrl.length-4)+ ePfiles[i].FilePath.substring(2);
-        p.isPhoto = true;
-      }else{
-        p.src = ePfiles[i].FileName;
-        p.isPhoto = false;
+    if(ePfiles) {
+      this.photoes = [];
+      for (var i = 0; i < ePfiles.length; i++) {
+        var p = new Photo();
+        var tupian = ePfiles[i].FileName.substr(ePfiles[i].FileName.lastIndexOf('.'));
+        if (tupian == '.png' || tupian == '.jpg' || tupian == '.gif' || tupian == '.tiff' || tupian == '.svg') {
+          p.src = ApiUrl.slice(0, ApiUrl.length - 4) + ePfiles[i].FilePath.substring(2);
+          p.isPhoto = true;
+        } else {
+          p.src = ePfiles[i].FileName;
+          p.isPhoto = false;
+        }
+        p.isupload = true;
+        this.photoes.push(p);
+        this.photoes[i].ePfile = ePfiles[i];
       }
-      p.isupload = true;
-      this.photoes.push(p);
-      this.photoes[i].ePfile = ePfiles[i];
+      this.choosephoto.InitPhoto(this.photoes)
     }
-    this.choosephoto.InitPhoto(this.photoes);
   }
 
   ionViewDidLoad(){

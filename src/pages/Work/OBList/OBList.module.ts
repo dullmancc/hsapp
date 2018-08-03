@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
-import { PzJiaoBanPage } from './pz-jiao-ban';
+import { ObListPage } from './OBList';
 
 @NgModule({
   declarations: [
-    PzJiaoBanPage,
+    ObListPage,
   ],
   imports: [
-    IonicPageModule.forChild(PzJiaoBanPage),
+    IonicPageModule.forChild(ObListPage),
   ],
 })
-export class PzJiaoBanPageModule {}
+export class ObListPageModule {}

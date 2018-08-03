@@ -8,6 +8,8 @@ import {ApiUrl} from "../../../../providers/Constants";
 import {Utils} from "../../../../providers/Utils";
 import {EPSecIssue, EPSecProblem, EPSecRisk} from "../../../../Model/EPSecIssue";
 import {ChoosePhotoService, Photo} from "../../../../providers/ChoosePhotoService";
+import {SecRiskRecordPage} from "../sec-risk-record/sec-risk-record";
+import {TabsPage} from "../../../tabs/tabs";
 
 /**
  * Generated class for the SecIssRecordPage page.
@@ -36,6 +38,11 @@ export class SecIssRecordPage {
   curProblems:EPSecProblem = new EPSecProblem();
   //当前选择风险评估
   curRisks:EPSecRisk = new EPSecRisk();
+  //是否为危大工程
+  isRiskProject=false;
+  isClear=false;
+
+  checkType=[{'option':'目测','value':0},{'option':'尺量','value':1},{'option':'检测','value':2}];
 
   init(){
     alert("this work!");
@@ -133,6 +140,10 @@ export class SecIssRecordPage {
 
   ionViewDidLoad() {
 
+  }
+
+  riskRecord(){
+    this.navCtrl.push(SecRiskRecordPage,{'EProject':this.EProject,'EmployeeID':this.EMPloyeeID});
   }
 
   newSecIssues(IsSubmit){

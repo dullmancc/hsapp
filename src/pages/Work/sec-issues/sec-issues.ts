@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
+import {AlertController, IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
 import {ContactPage} from "../../contact/contact";
 import {FriendPage} from "../../friend/friend";
 import {AboutPage} from "../../about/about";
@@ -10,6 +10,8 @@ import {HttpService} from "../../Service/HttpService";
 import {ApiUrl} from "../../../providers/Constants";
 import {TabsPage} from "../../tabs/tabs";
 import {Utils} from "../../../providers/Utils";
+import {NormalPzPage} from "../../JianLiPZ/normal-pz/normal-pz";
+import {SecRiskRecordPage} from "./sec-risk-record/sec-risk-record";
 
 /**
  * Generated class for the SecIssuesPage page.
@@ -33,7 +35,7 @@ export class SecIssuesPage {
   EMPloyeeID;
   public pet = 'all';
 
-  constructor(public pltaform:Platform,public navCtrl: NavController, public navParams: NavParams,public http:HttpService) {
+  constructor(public pltaform:Platform,public navCtrl: NavController, public navParams: NavParams,public http:HttpService,private alertCtrl:AlertController,) {
   }
 
   ionViewWillEnter() {
@@ -104,7 +106,35 @@ export class SecIssuesPage {
   }
 
   addSecurityIssues(){
-    this.navCtrl.push(SecIssRecordPage,{'EProject':this.EProject.EProjectID,'EMPloyeeID':this.EMPloyeeID,'Type':0});
+    //this.navCtrl.push(SecIssRecordPage,{'EProject':this.EProject.EProjectID,'EMPloyeeID':this.EMPloyeeID,'Type':0});
+    let alert=this.alertCtrl.create({
+      title:"选择类型",
+      cssClass:'projectList'
+    });
+    let secType=[{'Desc':'一般工程','ID':'0'},{'Desc':'危大工程','ID':'1'}];
+    for(let i = 0;i<secType.length;i++){
+      alert.addInput({
+        type: 'radio',
+        label: secType[i].Desc,
+        value: secType[i].ID,
+        checked: false
+      });
+    }
+    alert.addButton({
+      text: '确定',
+      handler: data => {
+        switch (data){
+          case '0':
+            this.navCtrl.push(SecIssRecordPage,{'EProject':this.EProject.EProjectID,'EMPloyeeID':this.EMPloyeeID,'Type':0});
+            break;
+          case '1':
+            this.navCtrl.push(SecRiskRecordPage);
+            break;
+          default:
+        }
+      }
+    });
+    alert.present();
   }
 
 

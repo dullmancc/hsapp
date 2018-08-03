@@ -8,10 +8,12 @@ export class EPCSFile{
   public  FileUpDateTime ;
   public  FileUpPerson ;
   public  EPCSID ;
-  constructor(EPCSid,Fileupperson){
+  constructor(EPCSid,Fileupperson,EPSecFileid?,Filepath?){
     this.EPCSID = EPCSid;
-    this.EPSecFileID = "";
-    this.FilePath = "";
+    if(EPSecFileid) this.EPSecFileID = EPSecFileid;
+    else this.EPSecFileID = "";
+    if(Filepath) this.FilePath = Filepath;
+    else this.FilePath = "";
     this.FileUpDateTime = "";
     this.FileUpPerson = Fileupperson;
     this.FileName = "";

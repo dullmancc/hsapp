@@ -112,6 +112,7 @@ export class LoginPage {
       "Authorization":"Bearer 28_Hvu3lriGy23eakmA-GgIqewb-ayhicxD1bACyXeiDoiZt05y8qQjvOD3jDvQTjYAo5oeIx0djj-fYUSUJGCCfCJ2RFXMY_FsjBjKf3Uyobm0e_-u2BIxTKqk5VQvuAeAGbDIoL5iP-qk4BXtVNl_C_fyllnft9z5DDn__cB3HTTgd8ydSX7e-nlzvXUW8RPLnadz5wQ6rfs6kCp81De7wRfzoJ5eZCOfZKYBZeyWwi9YaUOs3qDMfIA4xPylA51la7kwDf7Z2g-KDxUg5pNb9gRC0VCEPP3SHK6pd_ojatuHCmb9_I14wCv3Onowp8sqE709I8TDpfxcAQmpHy8Su1A2awrdwUXmXYoviWYkxmRlmWiCYQcOrxMsomZs2VNHmpwy3LvD2fn0T_eXcnku6B3VLkQIfHCzSR07E6rOUIiKD_bZNjpSzTQhm9N78A3eeymKPLe9sZu23NaaOEnL_NkJLLCozJaoCBsCx47oyQKKvlGJglaO9ECZ3D82T"});
       //this.httpc.get(url+'api/UserInfo/GetInfo?UserName='+Sno,{headers}).subscribe( res=>{
     this.http.get(ApiUrl+'UserInfo/GetInfo?UserName='+Sno,).subscribe( res=>{
+      console.log(res);
       this.power = res;
       loader.dismiss();
       LoginPage.Login = true;

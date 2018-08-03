@@ -34,6 +34,6 @@ export class TabsPage {
     }else {
       this.tab4Root = LoginPage;
     }
-    console.log(TabsPage.UserInfo);
+    console.log("UserInfo"+TabsPage.UserInfo);
   }
 }

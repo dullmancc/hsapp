@@ -1,0 +1,114 @@
+
+<ion-header  id="header">
+  <div class="header-left" (click)="goBack()" *ngIf="!xunchaShow">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>危大工程</span>
+  </div>
+  <ion-buttons end *ngIf="!xunchaShow">
+    <button ion-button clear color="dark" >
+      保存
+    </button>
+    <button ion-button clear color="royal" >
+      提交
+    </button>
+  </ion-buttons>
+  <ion-buttons end *ngIf="xunchaShow">
+    <button ion-button clear color="royal" (click)="xuncha()">完成</button>
+  </ion-buttons>
+</ion-header>
+
+
+<ion-content>
+  <ion-list *ngIf="!xunchaShow">
+    <ion-item>
+      <ion-label color="dark">危大工程名称</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">部位</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">建设单位</ion-label>
+      <ion-select interface="popover" text-end>
+        <ion-option></ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">施工单位</ion-label>
+      <ion-select interface="popover" text-end>
+        <ion-option></ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">项目监理机构</ion-label>
+      <ion-select interface="popover" text-end>
+        <ion-option></ion-option>
+      </ion-select>
+    </ion-item>
+
+    <div style="height: 2rem"></div>
+
+    <ion-item>
+      <ion-label color="dark">时间段</ion-label>
+      <ion-select interface="popover" text-end>
+        <ion-option value="0">上午</ion-option>
+        <ion-option value="1">下午</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">气象</ion-label>
+      <ion-select interface="popover" text-end>
+        <ion-option value="0">晴</ion-option>
+        <ion-option value="1">阴</ion-option>
+        <ion-option value="2">雨</ion-option>
+        <ion-option value="3">雪</ion-option>
+        <ion-option value="4">冰冻</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">气温(最高/最低)℃</ion-label>
+      <ion-input placeholder="25/20" text-end></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">湿度%</ion-label>
+      <ion-input text-end></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">风向</ion-label>
+      <ion-input text-end></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">风力</ion-label>
+      <ion-input text-end></ion-input>
+    </ion-item>
+
+    <div style="height: 2rem"></div>
+
+    <ion-item>
+      <ion-label color="dark">专项巡视检查</ion-label>
+      <button ion-button icon-right clear item-end (click)="xuncha()">
+        查看
+        <ion-icon name="ios-arrow-forward"></ion-icon>
+      </button>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">发现问题</ion-label>
+      <ion-input type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">处理情况</ion-label>
+      <ion-input type="text"></ion-input>
+    </ion-item>
+
+  </ion-list>
+  <ion-list *ngIf="xunchaShow">
+    <ion-item *ngFor="let item of secItems">
+      <ion-label color="dark">{{item.content}}</ion-label>
+      <p item-end>{{item.qualified?'合格':'不合格'}}</p>
+      <ion-toggle [(ngModel)]="item.qualified" style="display: inline-block; margin-right: 5px"  [checked]="item.qualified"></ion-toggle>
+    </ion-item>
+  </ion-list>
+</ion-content>

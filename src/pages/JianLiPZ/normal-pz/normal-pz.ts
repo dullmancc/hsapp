@@ -6,18 +6,18 @@ import {
 import {HttpService} from "../../Service/HttpService";
 import {Pangzhan} from "../../../Model/EPPangzhan";
 import {Utils} from "../../../providers/Utils";
-import {ApiUrl} from "../../../providers/Constants";
+import {ApiUrl, ImgUrl} from "../../../providers/Constants";
 import {ChoosePhotoService, Photo} from "../../../providers/ChoosePhotoService";
 import {PzShiGongPage} from "../pz-shi-gong/pz-shi-gong";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {PzSelectPeoplePage} from "../pz-select-people/pz-select-people";
 import { PzCheckRecordPage} from "../pz-check-record/pz-check-record";
 import {PZBelong} from "../../../Model/EPPZBelong";
-import {PzJiaoBanPage} from "../pz-jiao-ban/pz-jiao-ban";
 import {ExitPzRecordPage} from "../exit-pz-record/exit-pz-record";
 import {TabsPage} from "../../tabs/tabs";
 import {PZConcrete} from "../../../Model/PZConcrete";
-import {Newpz1Page} from "../newpz1/newpz1";
+import {EPCSFile} from "../../../Model/EPCSFile";
+import {ECUnit} from "../../../Model/ECUnit";
 
 /**
  * Generated class for the NormalPzPage page.
@@ -45,10 +45,11 @@ export class NormalPzPage {
   jiancha = '待检查';
   curPZState={id:0,desc:'交班'};
   PZState = [{id:0,desc:'交班'},{id:1,desc:'完成'}];
-
+  isRootPZ;
+  isCheckOnly;
 
   //当前交班人
-  curEmployee:any={RealName:'请选择'};
+  transEmployee:{RealName:String,EmployeeID:String};
   employees;
 
 
@@ -61,10 +62,11 @@ export class NormalPzPage {
   EmployeeID;
   EProjectID;
 
-  curECUnit;
+  curECUnit:ECUnit;
   ECUnit;
 
   PZBelong;
+  Pangzhans;
   Flag = true;
   UserInfo ;
 
@@ -77,50 +79,41 @@ export class NormalPzPage {
     this.EmployeeID = this.navParams.get('EmployeeID');
     this.EProjectID = this.navParams.get('EProjectID');
     //console.log(this.EProjectID);
-    this.PZtype = this.navParams.get('PZType');
     this.Type = this.navParams.get('Type');
+    this.PZtype=this.navParams.get('PZType');
     this.UserInfo = TabsPage.UserInfo.employees;
+    this.curECUnit=new ECUnit();
 
+    this.transEmployee = {RealName:"请选择", EmployeeID:""};
 
     this.InitPangzhan();
-
-    this.http.get(ApiUrl+'Project/GetECUnit').subscribe(res=>{
-      this.ECUnit = res;
-      this.ECUnit.forEach(v=>{
-        if(v.ECUnitID==this.PZBelong.ECUnitID){
-          this.curECUnit = v;
-        }
-      });
-    },error=>{
-      alert(error);
-    });
-
-    //获得与这个项目关联的Employees
-    this.http.get(ApiUrl+'Project/getEmployees?EProjectId='+this.EProjectID).subscribe(res=>{
-      this.employees = res;
-      this.employees.forEach(v=>{
-        if(this.Type!=2){
-          if(this.PZrecord.EmployeeTransferID==v.EmployeeID){
-            this.curEmployee = v;
-          }
-        }
-       });
-    },error=>{
-      alert(error);
-    });
-
     //初始化
-    this.choosephoto.InitPhoto(this.photoes);
 
-    console.log(this.PZBelong);
-    console.log(this.PZrecord);
+
   }
+
+  ionViewDidEnter(){
+    // var t=document.getElementById('passOne');
+    // var f=document.getElementById('fileLabel');
+    // if(t!=null) t.style.color='#999999';
+    // if(f!=null) f.style.color='#999999';
+  }
+
+
 
   InitPangzhan(){
     //如果是新建
+    console.log("Type:"+this.Type)
     if(this.Type==0){
-
+      this.isRootPZ=true;
+      this.isCheckOnly=false;
+      this.http.get(ApiUrl+'Project/GetECUnit').subscribe(res=>{
+        this.ECUnit = res;
+      },error=>{
+        alert(error);
+      });
       this.PZrecord = new Pangzhan();
+      this.PZrecord.PZRoot=0;
       //新建PZBelong.Push 防止逻辑错误，实则并不Post ,POST pangzhan
       this.PZBelong = new PZBelong();
       this.PZBelong.Pangzhans.push(this.PZrecord);
@@ -133,60 +126,83 @@ export class NormalPzPage {
       this.PZrecord.EPCSParent.EmployeeID = this.EmployeeID;
       this.PZrecord.EPCSParent.EProjectID = this.EProjectID;
 
-    }else if(this.Type==1) {
+      this.GetEmployees();
+    }
+    else if(this.Type==1) {
       //如果不是新建
-      this.PZBelong = this.navParams.get('Pangzhan');
-      //Flag是否新建Pangzhan
-      //this.Flag = true;
-      //如果已经填过 有保存的Pangzhan表单则不用新建
-      this.PZBelong.Pangzhans.forEach(V=>{
-        if(V.State==0){
-          this.PZrecord = V;
-          this.Flag = false;
+      this.isCheckOnly=false;
+      this.PZrecord = this.navParams.get('Pangzhan');
+      this.choosephoto.InitParams(this.PZrecord.EPCSID,this.EmployeeID);
+
+      if(this.PZrecord.PZRoot==0){
+        this.isRootPZ=true;
+      }
+      else{
+        this.isRootPZ=false;
+      }
+
+      if(this.PZrecord.PZCheckRecords.length>0){
+        this.jiancha="查看";
+      }
+      if(this.PZrecord.FindPromble && this.PZrecord.Suggestion){
+        this.shigong="查看";
+      }
+      this.GetEmployees();
+
+      this.http.get(ApiUrl+"Pangzhan/GetEPCSFile?EPCSID="+this.PZrecord.EPCSID).subscribe(data=>{
+        if(data.length>0) {
+          data.forEach(v2 => {
+            let p: Photo = new Photo();
+            p.ePfile = new EPCSFile(this.PZrecord.EPCSID, v2.FileUpPerson, v2.EPSecFileID, v2.FilePath);
+            p.src = ImgUrl + v2.FilePath.substring(2);
+            p.ePfile.EPSecFileID = v2.EPSecFileID;
+            this.photoes.push(p);
+          });
         }
+        this.choosephoto.InitPhoto(this.photoes);
       });
 
-      this.PZtype = this.PZBelong.PZTypeID;
+    }else if(this.Type==2||this.Type==3){
+      this.isCheckOnly=true;
+      this.PZrecord = this.navParams.get('Pangzhan');
+      this.choosephoto.InitParams(this.PZrecord.EPCSID,this.EmployeeID);
 
-      //如无则新建
-      if(this.Flag){
-        this.PZrecord = new Pangzhan();
-        this.PZrecord.PZBelongId = this.PZBelong.PZBelongId;
-        let pzb = new PZBelong();
-        pzb.PZBelongId = this.PZBelong.PZBelongId;
-        pzb.EProjectID = this.PZBelong.EProjectID;
-        pzb.PZBelongName = this.PZBelong.PZBelongName;
-        pzb.Process = this.PZBelong.Process;
-        pzb.Part = this.PZBelong.Part;
-        pzb.BeginTime = this.PZBelong.BeginTime;
-        pzb.ECUnitID = this.PZBelong.ECUnitID;
-        pzb.PZTypeID = this.PZBelong.PZTypeID;
-
-        this.PZrecord.EPCSParent.EmployeeID = this.EmployeeID;
-        this.PZrecord.EPCSParent.EProjectID = this.EProjectID;
-
-        this.PZrecord.PZBelong = pzb;
-        this.PZBelong.Pangzhans.push(this.PZrecord);
+      if(this.PZrecord.PZCheckRecords.length>0){
+        this.jiancha="查看";
       }
-    }else if(this.Type==2){
-      this.PZBelong = this.navParams.get('Pangzhan');
-      this.PZtype = this.PZBelong.PZTypeID;
+      if(this.PZrecord.FindPromble && this.PZrecord.Suggestion){
+        this.shigong="查看";
+      }
     }
-
+    if((this.isRootPZ && this.Type>0) || !this.isRootPZ){
+      this.PZBelong=this.PZrecord.PZBelong;
+      this.curECUnit=this.PZBelong.ECUnit;
+    }
   }
 
   GetWorkTime(index){
-    if(index==0){
-      var BeginTime = this.PZBelong.BeginTime;
+      var BeginTime = this.Pangzhans[index].BeginTime;
       BeginTime = BeginTime.replace('T',' ');
-      var EndTime = this.PZBelong.Pangzhans[index].EndTime.replace('T',' ');
+      var EndTime = this.Pangzhans[index].EndTime.replace('T',' ');
       return BeginTime+' 至 '+EndTime;
-    }else {
-      var BeginTime = this.PZBelong.Pangzhans[index-1].EndTime;
-      BeginTime = BeginTime.replace('T',' ');
-      var EndTime = this.PZBelong.Pangzhans[index].EndTime.replace('T',' ');
-      return BeginTime+' 至 '+EndTime;
-    }
+  }
+
+  GetEmployees(){
+    //获得与这个项目关联的Employees
+    this.http.get(ApiUrl+'Project/getEmployees?EProjectId='+this.EProjectID).subscribe(res=>{
+      this.employees = res;
+      console.log(this.PZrecord);
+      this.employees.forEach(v=>{
+        if(this.Type!=3){
+          if(this.PZrecord.EmployeeTransferID==v.EmployeeID){
+            this.transEmployee = {RealName:v.RealName, EmployeeID:v.EmployeeID};
+            console.log("RealName"+v.RealName);
+          }
+        }
+      });
+    },error=>{
+      alert(error);
+    });
   }
 
   goItem(i,ii){
@@ -199,13 +215,15 @@ export class NormalPzPage {
           this.PZBelong = data.PZBelong;
           data.Pangzhan.EPCSParent = this.PZBelong.Pangzhans[ii].EPCSParent;
           this.PZBelong.Pangzhans[ii] = data.Pangzhan;
-          console.log(data);
+          //console.log(data);
         }
       };
       if(this.PZtype=='PZConcrete'){
-        this.navCtrl.push(Newpz1Page,data);
+        //去除Newpz页
+        //this.navCtrl.push(Newpz1Page,data);
       }else if(this.PZtype =='PZGeneral'){
-        this.navCtrl.push(PzJiaoBanPage,data);
+        //去除jiaoban页
+        //this.navCtrl.push(PzJiaoBanPage,data);
       }
     }else{
       let data = {
@@ -215,13 +233,12 @@ export class NormalPzPage {
       };
 
       if(this.PZtype=='PZConcrete'){
-        this.navCtrl.push(Newpz1Page,data);
+        //this.navCtrl.push(Newpz1Page,data);
       }else if(this.PZtype =='PZGeneral'){
         this.navCtrl.push(ExitPzRecordPage,data);
       }
     }
   }
-
 
   goBack(){
     this.navCtrl.pop();
@@ -250,7 +267,7 @@ export class NormalPzPage {
       'Type':0,
       callback:data=>{
         this.PZrecord = data;
-        console.log(data);
+        //console.log(data);
         this.shigong = '查看';
       }
     };
@@ -264,7 +281,8 @@ export class NormalPzPage {
       'Type':0,
       callback:data=>{
         this.PZrecord = data.Pangzhan;
-        console.log(data);
+        //console.log("callback data");
+        //console.log(this.PZrecord);
         this.jiancha = '查看';
       }
     };
@@ -274,17 +292,16 @@ export class NormalPzPage {
     var data={
       'employees':this.employees,
       callback:data=>{
-        this.curEmployee = data;
-        console.log(this.curEmployee);
+        this.transEmployee = data;
+        //console.log(this.transEmployee);
       }
     };
     this.navCtrl.push(PzSelectPeoplePage,data);
   }
 
   ionViewWillEnter() {
-    console.log(this.PZBelong);
+    //console.log(this.PZBelong);
   }
-
 
   save(IsSubmit){
     var httphead = new HttpHeaders({"Content-Type":'application/json',"Authorization":'Bearer '+sessionStorage.getItem('accessToken')});
@@ -301,25 +318,32 @@ export class NormalPzPage {
     if(this.curPZState.id==1){
       this.PZrecord.EmployeeTransferID = null;
     }else {
-      if(this.curEmployee.RealName=='请选择'){
+      if(this.transEmployee.RealName=='请选择'){
         this.PZrecord.EmployeeTransferID = null;
       }else {
-        this.PZrecord.EmployeeTransferID = this.curEmployee.EmployeeID;
+        this.PZrecord.EmployeeTransferID = this.transEmployee.EmployeeID;
       }
     }
     this.PZrecord.EPZState = this.curPZState.id;
     this.PZrecord.State = IsSubmit;
 
-
-    this.httpc.post('http://localhost:1857/api/pangzhan/PostPangzhan',this.PZrecord,{headers:httphead}).subscribe((res:any)=>{
+    this.httpc.post(ApiUrl+'Pangzhan/PostPangzhan',this.PZrecord,{headers:httphead}).subscribe((res:any)=>{
       console.log(res);
+      console.log(res.ErrorMs);
       this.presentToast(res.ErrorMs);
 
       if(res.EPCSParentID!=-1){
-        this.PZBelong.PZBelongId= res.ErrorCode;
-        this.PZrecord.PZBelongId = res.ErrorCode;
+        this.PZBelong.PZBelongId= res.PZBelongID;
+        this.PZrecord.PZBelongId = res.PZBelongID;
         this.PZrecord.EPCSID = res.EPCSParentID;
         this.PZrecord.EPCSParent = res.EPCSParentID;
+
+        let i=0;
+        this.PZrecord.PZCheckRecords.forEach(V=>{
+          V.PZCheckRecordID=res.PZCRIDs[i];
+          i++;
+        });
+
         this.choosephoto.InitParams(res.EPCSParentID,this.EmployeeID);
         if(IsSubmit==1){
           this.navCtrl.pop();
@@ -349,12 +373,11 @@ export class NormalPzPage {
     });
 
     toast.onDidDismiss(() => {
-      console.log('Dismissed toast');
+      //console.log('Dismissed toast');
     });
 
     toast.present();
   }
-
 
   changeDate():void{
     /*let startTime=this.PZrecord.BeginTime.toString();
@@ -377,11 +400,16 @@ export class NormalPzPage {
   }
 
   addPhoto() {
-    this.photoes = this.choosephoto.addPhoto();
+    if(this.Type<=1) {
+      console.log("Type:"+this.Type);
+      this.photoes = this.choosephoto.addPhoto();
+    }
   }
 
   deletePhoto(i:number){
-    this.photoes = this.choosephoto.deletePhoto(i);
+    if(this.Type<=1) {
+      this.photoes = this.choosephoto.deletePhoto(i);
+    }
   }
 
 }

@@ -1,0 +1,62 @@
+<!--
+  Generated template for the InspectionPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <div class="header-left" (click)="goBack()">
+    <img src="assets/imgs/common/back.png"/>
+  </div>
+  <div class="header-center">
+    <span>检验批</span>
+  </div>
+  <ion-buttons end>
+    <button ion-button clear color="dark" >
+      保存
+    </button>
+    <button ion-button clear color="royal" >
+      提交
+    </button>
+  </ion-buttons>
+</ion-header>
+
+<ion-content padding>
+  <ion-list *ngIf="!IsSelecting">
+    <ion-item>
+      <ion-label color="dark">施工单位</ion-label>
+      <ion-select interface="popover" text-end>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark">施工负责人</ion-label>
+      <ion-select interface="popover" text-end>
+      </ion-select>
+    </ion-item>
+    <ion-item (click)="SelectSubProj()">
+      <ion-label item-start color="dark">分项工程</ion-label>
+      <ion-label item-end text-end>{{SubProj.Name}}</ion-label>
+    </ion-item>
+    <ion-item (click)="ShowInspections()">
+      <ion-label color="dark">重点</ion-label>
+      <ion-label item-end text-end>{{CurInspection.InspectionName}}</ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="IsSelecting">
+    <ion-item *ngFor="let i of InspectionList" (click)="SelectInspection(i)">
+      {{i.InspectionName}}
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="!IsSelecting && CurInspection.InspectionID!=0">
+    <ion-item>
+      <ion-label>主控项目</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>一般项目</ion-label>
+    </ion-item>
+    <ion-item *ngFor="let a of AccepttanceList">
+      <ion-label>{{a.AcceptanceName}}</ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

@@ -17,6 +17,8 @@ export class Pangzhan{
   public CheckNums;
   public EPZState;//1:已完成 0：已交班
   public State;
+  public PZRoot;
+  public BeginTime;
   public EndTime;
 
   public EPCSParent:EPCSParent;
@@ -32,6 +34,7 @@ export class Pangzhan{
   this.CheckNums = '';
   this.EPZState = 0;
 
+  this.BeginTime = datetime.getFullYear()+'/'+datetime.getMonth()+'/'+datetime.getDay()+' '+datetime.getHours()+':'+datetime.getMinutes();
   this.EndTime = datetime.getFullYear()+'/'+datetime.getMonth()+'/'+datetime.getDay()+' '+datetime.getHours()+':'+datetime.getMinutes();
   this.ConstructionCase = '';
   this.SupervisorCase = '';

@@ -22,7 +22,7 @@ export class MySlidesComponent {
     pager:true
   };
   constructor() {
-    console.log('Hello MySlidesComponent Component');
+    console.log('MySlides');
     this.text = 'Hello World';
     this.name = 'Hello';
     this.Slides_Img=[

@@ -160,7 +160,7 @@ export class EpMateinfoSelectPage {
     this.navCtrl.pop();
   }
   Seleted(i){
-    this.data = i
+    this.data = i;
     this.callback({data:this.data,new:0});
     this.navCtrl.pop();
   }

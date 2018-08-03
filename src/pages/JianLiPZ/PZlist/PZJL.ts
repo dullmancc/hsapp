@@ -3,7 +3,6 @@ import { NavController, NavParams} from 'ionic-angular';
 import {ModalController} from 'ionic-angular';
 import { AlertController } from 'ionic-angular';
 import {HttpService} from "../../Service/HttpService";
-import {Newpz1Page} from "../newpz1/newpz1";
 import {ExitPzRecordPage} from "../exit-pz-record/exit-pz-record";
 import {NormalPzPage} from "../normal-pz/normal-pz";
 import {IonicPage} from "ionic-angular";
@@ -159,8 +158,9 @@ export class PZJLPage {
       handler: data => {
         if(data=='hltPZ')
         {
-          let modal=this.modalCtrl.create(Newpz1Page,{userid:this.userid,pzbl:this.pzbl});
-          modal.present();
+          //去除newpz页
+          //let modal=this.modalCtrl.create(Newpz1Page,{userid:this.userid,pzbl:this.pzbl});
+          //modal.present();
         }
         if(data=='tPZ')
         {

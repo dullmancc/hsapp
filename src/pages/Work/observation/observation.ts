@@ -33,6 +33,7 @@ export class ObservationPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
   showDiv(i){
+    console.log(i);
     this.hideList[i]=!this.hideList[i];
     if(this.hideList[i])
     this.iconName[i]="arrow-dropright";
