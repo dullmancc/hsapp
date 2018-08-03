@@ -21,8 +21,8 @@ export class InspectionPage {
   DivProjID;
   SubDivProjID;
   SubProj:{Name:string,SubDivEngineeringID:number,SubEngineeringID:number};
-  InspectionList:Array<{InspectionName:string,InspectionID:number,SubEngineeringID:number}>;
-  CurInspection:{InspectionName:string,InspectionID:number,SubEngineeringID:number};
+  InspectionList:Array<{InspectionTypeName:string,InspectionTypeID:number,SubEngineeringID:number}>;
+  CurInspection:{InspectionTypeName:string,InspectionTypeID:number,SubEngineeringID:number};
   IsSelecting:boolean;
   AccepttanceList;
 
@@ -30,12 +30,13 @@ export class InspectionPage {
               public navParams: NavParams,
               private http: HttpService) {
     this.SubProj={Name:"请选择", SubDivEngineeringID:0, SubEngineeringID:0};
-    this.CurInspection={InspectionName:"请先选择分项工程", InspectionID:0, SubEngineeringID: 0};
+    this.CurInspection={InspectionTypeName:"请先选择分项工程", InspectionTypeID:0, SubEngineeringID: 0};
     this.IsSelecting=false;
   }
 
   goBack(){
-    this.navCtrl.pop();
+    if(!this.IsSelecting) this.navCtrl.pop();
+    else this.IsSelecting=false;
   }
 
   GetInspections(){
@@ -46,7 +47,7 @@ export class InspectionPage {
   }
 
   GetAcceptances(){
-    this.http.get(ApiUrl+"Inspection/GetAcceptances?InspectionTypeID="+this.CurInspection.InspectionID).subscribe(data=>{
+    this.http.get(ApiUrl+"Inspection/GetAcceptances?InspectionTypeID="+this.CurInspection.InspectionTypeID).subscribe(data=>{
       this.AccepttanceList=[];
       this.AccepttanceList=data;
       console.log(data);

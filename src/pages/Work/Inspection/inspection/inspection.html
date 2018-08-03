@@ -39,15 +39,15 @@
     </ion-item>
     <ion-item (click)="ShowInspections()">
       <ion-label color="dark">重点</ion-label>
-      <ion-label item-end text-end>{{CurInspection.InspectionName}}</ion-label>
+      <ion-label item-end text-end>{{CurInspection.InspectionTypeName}}</ion-label>
     </ion-item>
   </ion-list>
   <ion-list *ngIf="IsSelecting">
     <ion-item *ngFor="let i of InspectionList" (click)="SelectInspection(i)">
-      {{i.InspectionName}}
+      {{i.InspectionTypeName}}
     </ion-item>
   </ion-list>
-  <ion-list *ngIf="!IsSelecting && CurInspection.InspectionID!=0">
+  <ion-list *ngIf="!IsSelecting && CurInspection.InspectionTypeID!=0">
     <ion-item>
       <ion-label>主控项目</ion-label>
     </ion-item>

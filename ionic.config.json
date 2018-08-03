@@ -1,8 +1,7 @@
 {
   "name": "华胜信息平台",
-  "app_id": "",
-  "type": "ionic-angular",
   "integrations": {
     "cordova": {}
-  }
+  },
+  "type": "ionic-angular"
 }
