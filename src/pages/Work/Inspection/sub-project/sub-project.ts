@@ -27,14 +27,16 @@ export class SubProjectPage {
   SubProjs;
   CurDiv;
   CurSubDiv;
-  CurSub;
-
+  temp;
+  State;
   callback;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private http: HttpService) {
+    this.State=this.navParams.get("State");
     this.callback = this.navParams.get('callback');
+    this.temp=this.navParams.get("DivProjID");
     this.Load();
   }
 
@@ -49,12 +51,22 @@ export class SubProjectPage {
   GetDivProj(){
     this.http.get(ApiUrl+"Inspection/GetDivProj").subscribe(data=>{
       this.DivProjs=data;
+      if(this.temp>0){
+        this.CurDiv=this.temp;
+        this.temp=this.navParams.get("SubDivProjID");
+        this.GetSubDivProj(this.CurDiv);
+      }
     });
   }
 
   GetSubDivProj(DivProjID){
     this.http.get(ApiUrl+"Inspection/GetSubDivProj?DivProjID="+DivProjID).subscribe(data=>{
       this.SubDivProjs=data;
+      if(this.temp>0){
+        this.CurSubDiv=this.temp;
+        this.temp=-1;
+        this.GetSubProj(this.CurSubDiv);
+      }
     });
   }
 

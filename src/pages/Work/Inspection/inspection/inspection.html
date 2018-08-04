@@ -12,10 +12,10 @@
     <span>检验批</span>
   </div>
   <ion-buttons end>
-    <button ion-button clear color="dark" >
+    <button ion-button clear color="dark" (click)="save(0)">
       保存
     </button>
-    <button ion-button clear color="royal" >
+    <button ion-button clear color="royal" (click)="save(1)">
       提交
     </button>
   </ion-buttons>
@@ -39,24 +39,39 @@
     </ion-item>
     <ion-item (click)="ShowInspections()">
       <ion-label color="dark">重点</ion-label>
-      <ion-label item-end text-end>{{CurInspection.InspectionTypeName}}</ion-label>
+      <ion-label item-end text-end>{{CurInspectionType.InspectionTypeName}}</ion-label>
     </ion-item>
   </ion-list>
   <ion-list *ngIf="IsSelecting">
-    <ion-item *ngFor="let i of InspectionList" (click)="SelectInspection(i)">
+    <ion-item *ngFor="let i of InspectionTypeList" (click)="SelectInspection(i)">
       {{i.InspectionTypeName}}
     </ion-item>
   </ion-list>
-  <ion-list *ngIf="!IsSelecting && CurInspection.InspectionTypeID!=0">
-    <ion-item>
+  <ion-list *ngIf="!IsSelecting">
+    <ion-item class="AcList-Header" (click)="ShowMAcList()">
       <ion-label>主控项目</ion-label>
+      <ion-icon name="arrow-dropdown" *ngIf="IsShowingMAcList" item-end></ion-icon>
+      <ion-icon name="arrow-dropright" *ngIf="!IsShowingMAcList" item-end></ion-icon>
     </ion-item>
-    <ion-item>
+
+    <ion-list class="AcList" *ngIf="IsShowingMAcList">
+      <ion-item *ngFor="let a of MAcList" (click)="CheckUp(a)">
+        <ion-label>{{a.AcceptanceName}}</ion-label>
+      </ion-item>
+    </ion-list>
+
+    <ion-item class="AcList-Header" (click)="ShowJAcList()">
       <ion-label>一般项目</ion-label>
+      <ion-icon name="arrow-dropdown" *ngIf="IsShowingJAcList" item-end></ion-icon>
+      <ion-icon name="arrow-dropright" *ngIf="!IsShowingJAcList" item-end></ion-icon>
     </ion-item>
-    <ion-item *ngFor="let a of AccepttanceList">
-      <ion-label>{{a.AcceptanceName}}</ion-label>
-    </ion-item>
+
+    <ion-list class="AcList" *ngIf="IsShowingJAcList">
+      <ion-item *ngFor="let a of JAcList" (click)="CheckUp(a)">
+        <ion-label>{{a.AcceptanceName}}</ion-label>
+      </ion-item>
+    </ion-list>
+
   </ion-list>
 
 </ion-content>

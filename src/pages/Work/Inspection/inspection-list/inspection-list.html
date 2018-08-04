@@ -19,7 +19,40 @@
 
 
 <ion-content padding>
+  <div padding color="dark">
+    <ion-segment [(ngModel)]="pet">
+      <ion-segment-button value="unfinished">
+        未完成
+      </ion-segment-button>
+      <ion-segment-button value="finished">
+        已完成
+      </ion-segment-button>
+    </ion-segment>
 
+    <div [ngSwitch]="pet">
+      <ion-list *ngSwitchCase="'unfinished'">
+        <ion-item *ngFor="let i of unSumbitPz;" (click)="GoToInspectionRecord(i,0)">
+          <ion-avatar item-start>
+            <img src="./assets/imgs/workicon/secissues.png">
+          </ion-avatar>
+          <h2><button ion-button color="light" outline>未完成</button></h2>
+          <p [ngStyle]="{'color':'red'}">检验批:{{GetInspectionTypeName(i)}}</p>
+          <!--<ion-note item-end>{{GetTime(i.BeginTime)}}</ion-note>-->
+        </ion-item>
+      </ion-list>
+
+      <ion-list *ngSwitchCase="'finished'">
+        <ion-item *ngFor="let i of unSumbitPz;" (click)="GoToInspectionRecord(i,1)">
+          <ion-avatar item-start>
+            <img src="./assets/imgs/workicon/secissues.png">
+          </ion-avatar>
+          <h2><button ion-button color="light" outline>完成</button></h2>
+          <p [ngStyle]="{'color':'red'}">检验批:{{GetInspectionTypeName(i)}}</p>
+          <!--<ion-note item-end>{{GetTime(i.BeginTime)}}</ion-note>-->
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
 
   <ion-fab right bottom style="bottom: 70px;">
     <button ion-fab color="light" (click)="Load()"><ion-icon name="refresh"></ion-icon></button>

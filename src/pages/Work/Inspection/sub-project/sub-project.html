@@ -18,7 +18,7 @@
 
 <ion-content padding>
   <ion-item>
-    <ion-select item-start interface="popover" [(ngModel)]="CurDiv" placeholder="分部工程">
+    <ion-select item-start interface="popover" [(ngModel)]="CurDiv" placeholder="分部工程" >
       <!--<ion-option value="0">分部工程</ion-option>-->
       <ion-option *ngFor="let div of DivProjs" [value]="div.DivEngineeringID" (ionSelect)="GetSubDivProj(div.DivEngineeringID)">{{div.Name}}</ion-option>
     </ion-select>
