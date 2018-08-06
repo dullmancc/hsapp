@@ -154,7 +154,7 @@ export class MyworkComponent {
                 {'name':'质量验收',
                   'src':'assets/imgs/workicon/zhiliangyanshou.png',
                   'alt': InspectionListPage,
-                  'NavParm':{}
+                  'NavParm':{'EProject':this.MyProject,'userId':TabsPage.UserInfo.employees.EmployeeID}
                 },
                 //原材料进场审核
                 {'name':'监理巡视',
@@ -222,7 +222,7 @@ export class MyworkComponent {
                 {'name':'质量验收',
                   'src':'assets/imgs/workicon/zhiliangyanshou.png',
                   'alt': InspectionListPage,
-                  'NavParm':{}
+                  'NavParm':{'EProject':this.MyProject,'userId':TabsPage.UserInfo.employees.EmployeeID}
                 },
                 //原材料进场审核
                 {'name':'监理巡视',

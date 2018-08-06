@@ -25,6 +25,9 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 export class InspectionPage {
   EProjectID;
   EmployeeID;
+  EPCheckParent;
+  ECUnitName;
+  PersonReportName;
   SubProj:{Name:string,SubDivEngineeringID:number,SubEngineeringID:number};
   InspectionTypeList:Array<{InspectionTypeName:string,InspectionTypeID:number,SubEngineeringID:number}>;
   CurInspectionType:{InspectionTypeName:string,InspectionTypeID:number,SubEngineeringID:number};
@@ -51,7 +54,10 @@ export class InspectionPage {
     this.EProjectID=this.navParams.get("EProjectID");
     this.EmployeeID=this.navParams.get("EmployeeID");
     this.State=this.navParams.get("State");
+    this.EPCheckParent=this.navParams.get("EPCheckParent");
 
+    this.GetECUnitName();
+    this.GetPersonReprotName();
     this.InitInspection();
   }
 
@@ -65,29 +71,41 @@ export class InspectionPage {
       //不是新建
       this.CurInspection=this.navParams.get("InspectionRecord");
 
-      if(this.State==1){
-        this.isReadOnly=true;
-      }
+      if(this.State==1) this.isReadOnly=true;
+      else  this.isReadOnly=false;
     }
     else{
       //新建
       this.CurInspection=new Inspection();
       this.CurInspection.InspectionID="";
-      this.CurInspection.ECUnitReportInspectionID="";
+      this.CurInspection.ECUnitReportInspectionID=this.EPCheckParent.EPCheckID;
       this.CurInspection.InspectionTypeID=this.CurInspectionType.InspectionTypeID;
       this.CurInspection.DivEngineeringID=0;
-      this.CurInspection.SubDiveEngineeringID=0;
+      this.CurInspection.SubDivEngineeringID=0;
       this.CurInspection.SubEngineeringID=0;
-      this.CurInspection.EProject=this.EProjectID;
+      this.CurInspection.EProjectID=this.EProjectID;
       this.CurInspection.RecorderID=this.EmployeeID;
-      this.CurInspection.ECUnitEmployeeID=0;
+      this.CurInspection.ECUnitEmployeeID=this.EPCheckParent.EmployeeID;
       this.CurInspection.State=-1;
       this.CurInspection.AcceptanceRecords=[];
       console.log(this.CurInspection);
     }
   }
 
+  GetECUnitName(){
+    this.http.get(ApiUrl+"UserInfo/GetECUnitName?ECUnitID="+this.EPCheckParent.ECUnitID).subscribe(data=>{
+      this.ECUnitName=data;
+    });
+  }
+
+  GetPersonReprotName(){
+    this.http.get(ApiUrl+"UserInfo/GetEmployeeName?EmployeeID="+this.EPCheckParent.EmployeeID).subscribe(data=>{
+      this.PersonReportName=data;
+    });
+  }
+
   GetInspections(){
+    //根据分项工程获取检验批类型列表
     this.http.get(ApiUrl+"Inspection/GetInspectionTypes?SubProjID="+this.SubProj.SubEngineeringID).subscribe(data=>{
       this.InspectionTypeList=[];
       this.InspectionTypeList=data;
@@ -95,11 +113,24 @@ export class InspectionPage {
   }
 
   GetAcceptances(){
-    this.http.get(ApiUrl+"Inspection/GetAcceptances?InspectionTypeID="+this.CurInspectionType.InspectionTypeID).subscribe(data=>{
-      this.MAcList=data.Major;
-      this.JAcList=data.Junior;
-      console.log(data);
-    });
+    //根据检验批类型获取相关验收项目
+    if(this.State==-1){
+      //新建检验批
+
+      this.http.get(ApiUrl+"Inspection/GetAcceptances?InspectionTypeID="+this.CurInspectionType.InspectionTypeID).subscribe(data=>{
+        this.MAcList=data.Major;
+        this.JAcList=data.Junior;
+        console.log(data);
+      });
+    }
+    else {
+      //已有检验批
+      this.http.get(ApiUrl+"Inspection/GetAcceptancesByInspection?InspectionID="+this.CurInspection.InspectionID).subscribe(data=>{
+        this.MAcList=data.Major;
+        this.JAcList=data.Junior;
+      });
+    }
+
   }
 
   ShowInspections(){
@@ -115,12 +146,12 @@ export class InspectionPage {
   SelectSubProj(){
     var data={
       'DivProjID':this.CurInspection.DivEngineeringID,
-      'SubDivProjID':this.CurInspection.SubDiveEngineeringID,
+      'SubDivProjID':this.CurInspection.SubDivEngineeringID,
       'SubProjID':this.CurInspection.SubEngineeringID,
       'State':this.State,
       callback:data=>{
         this.CurInspection.DivEngineeringID = data.DivProjID;
-        this.CurInspection.SubDiveEngineeringID = data.SubDivProjID;
+        this.CurInspection.SubDivEngineeringID = data.SubDivProjID;
         this.SubProj=data.SubProj;
         this.CurInspection.SubEngineeringID=this.SubProj.SubEngineeringID;
         this.GetInspections();
@@ -135,13 +166,15 @@ export class InspectionPage {
     this.GetAcceptances();
   }
 
-  CheckUp(acceptance){
+  CheckUp(acceptanceGroup){
+    console.log(acceptanceGroup);
     var data={
-      'Acceptance':acceptance,
+      'AcceptanceGroup':acceptanceGroup,
       'InpectionID':this.CurInspection.InspectionID,
       'State':this.CurInspection.State,
       callback:data=>{
         console.log(this.CurInspection);
+        acceptanceGroup.AcceptanceRecord=data;
         this.CurInspection.AcceptanceRecords.push(data);
       }
     };

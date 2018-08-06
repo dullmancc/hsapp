@@ -9,7 +9,8 @@
     <img src="assets/imgs/common/back.png"/>
   </div>
   <div class="header-center">
-    <span>质量验收</span>
+    <span *ngIf="!hasEntered">施工单位报送检验批</span>
+    <span *ngIf="hasEntered">质量验收</span>
   </div>
   <ion-buttons end>
     <button ion-button clear end style="width: 0px;" >
@@ -19,7 +20,7 @@
 
 
 <ion-content padding>
-  <div padding color="dark">
+  <div padding color="dark" *ngIf="hasEntered">
     <ion-segment [(ngModel)]="pet">
       <ion-segment-button value="unfinished">
         未完成
@@ -55,9 +56,18 @@
   </div>
 
   <ion-fab right bottom style="bottom: 70px;">
-    <button ion-fab color="light" (click)="Load()"><ion-icon name="refresh"></ion-icon></button>
+    <button ion-fab color="light" (click)="Load()" *ngIf="hasEntered"><ion-icon name="refresh"></ion-icon></button>
   </ion-fab>
   <ion-fab right bottom>
-    <button ion-fab color="light" (click)="newInspection()"><ion-icon name="add"></ion-icon></button>
+    <button ion-fab color="light" (click)="newInspection()" *ngIf="hasEntered"><ion-icon name="add"></ion-icon></button>
   </ion-fab>
+
+  <ion-list *ngIf="!hasEntered">
+    <ion-item *ngFor="let i of reportItems" (click)="EnterReportInspection(i)">
+      <ion-avatar item-start>
+        <img src="./assets/imgs/workicon/epmatelist.png">
+      </ion-avatar>
+      <ion-label>{{i.EPCheckParent.EPCheckName}}</ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

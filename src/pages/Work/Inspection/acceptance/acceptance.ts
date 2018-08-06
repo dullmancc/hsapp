@@ -17,7 +17,7 @@ import {ApiUrl} from "../../../../providers/Constants";
   templateUrl: 'acceptance.html',
 })
 export class AcceptancePage {
-  Acceptance;
+  AcceptanceGroup;
   AcceptanceRecord:AcceptanceRecord;
   IsQualified:boolean;
   InspectionID;
@@ -28,7 +28,8 @@ export class AcceptancePage {
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               public http: HttpService) {
-    this.Acceptance=this.navParams.get("Acceptance");
+    this.AcceptanceGroup=this.navParams.get("AcceptanceGroup");
+    console.log(this.AcceptanceGroup);
     this.InspectionID=this.navParams.get("InspectionID");
     this.State=this.navParams.get("State");
     this.callback=this.navParams.get("callback");
@@ -40,7 +41,8 @@ export class AcceptancePage {
 
   InitRecord(){
     console.log(this.InspectionID);
-    if(this.InspectionID && this.InspectionID!=""){
+    if(this.AcceptanceGroup.AcceptanceRecord){
+      //已有验收记录
       console.log("old rac")
       if(this.State==0){
         this.isRedOnly=false;
@@ -49,24 +51,25 @@ export class AcceptancePage {
         this.isRedOnly=true;
       }
 
-      this.http.get(ApiUrl+"Inspection/GetAcceptanceRecord?InspectionID="+this.InspectionID+"&AcceptanceID="+this.Acceptance.AcceptanceID).subscribe(data=>{
-        if(data!=null){
-          this.AcceptanceRecord=data;
-        }
-
-      });
+      this.AcceptanceRecord=this.AcceptanceGroup.AcceptanceRecord;
+      if(this.AcceptanceRecord.CheckResult==1){
+        this.IsQualified=true;
+      }
+      else {
+        this.IsQualified=false;
+      }
     }
     else {
+      //新建验收记录
       console.log("new acr");
       this.isRedOnly=false;
       this.AcceptanceRecord=new AcceptanceRecord();
-      this.AcceptanceRecord.AcceptanceID = this.Acceptance.AcceptanceID;
+      this.AcceptanceRecord.AcceptanceID = this.AcceptanceGroup.Acceptance.AcceptanceID;
       this.AcceptanceRecord.InspectionID = "";
       this.AcceptanceRecord.MinSampleNum = 0;
       this.AcceptanceRecord.RealSampleNum = 0;
       this.AcceptanceRecord.CheckRecord = "";
       this.AcceptanceRecord.CheckResult = 1;
-
     }
   }
 

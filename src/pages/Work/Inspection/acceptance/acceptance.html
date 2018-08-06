@@ -5,11 +5,11 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <div class="header-left" (click)="goBack()">
+  <div class="header-left" (click)="goback()">
     <img src="assets/imgs/common/back.png"/>
   </div>
   <div class="header-center"  style="height: 48.18px">
-    <span *ngIf="Acceptance">{{Acceptance.AcceptanceName}}</span>
+    <span *ngIf="AcceptanceGroup.Acceptance">{{AcceptanceGroup.Acceptance.AcceptanceName}}</span>
   </div>
   <ion-buttons end>
     <button ion-button clear item-end end style="width: 0px;padding: 0;"></button>
@@ -20,7 +20,7 @@
 <ion-content padding>
   <ion-item>
     <ion-label>要求</ion-label>
-    <ion-label end>{{Acceptance.DR_NP}}</ion-label>
+    <ion-label end>{{AcceptanceGroup.Acceptance.DR_NP}}</ion-label>
   </ion-item>
   <!--<ion-item>-->
     <!--<ion-label color="dark">最小取样数</ion-label>-->

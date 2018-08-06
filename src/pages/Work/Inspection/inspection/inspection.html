@@ -25,13 +25,11 @@
   <ion-list *ngIf="!IsSelecting">
     <ion-item>
       <ion-label color="dark">施工单位</ion-label>
-      <ion-select interface="popover" text-end>
-      </ion-select>
+      <ion-label text-end>{{ECUnitName}}</ion-label>
     </ion-item>
     <ion-item>
       <ion-label color="dark">施工负责人</ion-label>
-      <ion-select interface="popover" text-end>
-      </ion-select>
+      <ion-label text-end>{{PersonReportName}}</ion-label>
     </ion-item>
     <ion-item (click)="SelectSubProj()">
       <ion-label item-start color="dark">分项工程</ion-label>
@@ -56,7 +54,7 @@
 
     <ion-list class="AcList" *ngIf="IsShowingMAcList">
       <ion-item *ngFor="let a of MAcList" (click)="CheckUp(a)">
-        <ion-label>{{a.AcceptanceName}}</ion-label>
+        <ion-label>{{a.Acceptance.AcceptanceName}}</ion-label>
       </ion-item>
     </ion-list>
 
@@ -68,7 +66,7 @@
 
     <ion-list class="AcList" *ngIf="IsShowingJAcList">
       <ion-item *ngFor="let a of JAcList" (click)="CheckUp(a)">
-        <ion-label>{{a.AcceptanceName}}</ion-label>
+        <ion-label>{{a.Acceptance.AcceptanceName}}</ion-label>
       </ion-item>
     </ion-list>
 

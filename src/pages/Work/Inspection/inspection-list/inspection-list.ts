@@ -23,9 +23,17 @@ export class InspectionListPage {
   InspectionTypes;
   unfinished;
   finished;
+  hasEntered;
+  reportItems;
+  CurReportInspection;
+
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private http: HttpService) {
+    this.hasEntered=false;
+    this.EProjectID=this.navParams.get('EProject').EProjectID;
+    this.EmployeeID=this.navParams.get('userId')
+    this.GetECUnitReportInspections();
   }
 
   public load(){
@@ -33,11 +41,12 @@ export class InspectionListPage {
   }
 
   public newInspection(){
-    this.navCtrl.push(InspectionPage,{'EmployeeID':this.EmployeeID,'EProjectID':this.EProjectID,'State':-1});
+    this.navCtrl.push(InspectionPage,{'EmployeeID':this.EmployeeID,'EProjectID':this.EProjectID,'EPCheckParent':this.CurReportInspection.EPCheckParent,'State':-1});
   }
 
   goBack(){
-    this.navCtrl.pop();
+    if(!this.hasEntered)  this.navCtrl.pop();
+    else this.hasEntered=false;
   }
 
   GetInspectionType(){
@@ -61,7 +70,19 @@ export class InspectionListPage {
     });
   }
 
+  GetECUnitReportInspections(){
+    this.http.get(ApiUrl+"Inspection/GetECUnitReportInspections?EprojectID="+this.EProjectID).subscribe(data=>{
+      this.reportItems=data;
+    });
+  }
+
   GoToInspectionRecord(i,State){
     this.navCtrl.push(InspectionPage,{'EmployeeID':this.EmployeeID,'EProjectID':this.EProjectID,'InspectionRecord':i,'State':State});
+  }
+
+  EnterReportInspection(i){
+    this.hasEntered=true;
+    this.CurReportInspection=i;
+    this.GetInspectionRecords();
   }
 }

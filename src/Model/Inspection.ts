@@ -28,9 +28,9 @@ export class Inspection{
   ECUnitReportInspectionID:string;
   InspectionTypeID;
   DivEngineeringID;
-  SubDiveEngineeringID;
+  SubDivEngineeringID;
   SubEngineeringID;
-  EProject;
+  EProjectID;
   RecorderID;
   ECUnitEmployeeID;
   State;
@@ -41,10 +41,10 @@ export class Inspection{
     this.ECUnitReportInspectionID="";
     this.InspectionTypeID=0;
     this.DivEngineeringID=0;
-    this.SubDiveEngineeringID=0;
+    this.SubDivEngineeringID=0;
     this.SubEngineeringID=0;
-    this.EProject=0;
-    this.RecorderID=0;
+    this.EProjectID='';
+    this.RecorderID='';
     this.ECUnitEmployeeID=0;
     this.State=-1;
     this.AcceptanceRecords=[];
