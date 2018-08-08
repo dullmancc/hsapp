@@ -12,12 +12,13 @@
     <span>检验批</span>
   </div>
   <ion-buttons end>
-    <button ion-button clear color="dark" (click)="save(0)">
+    <button ion-button clear color="dark" (click)="save(0)" *ngIf="!IsSelecting">
       保存
     </button>
-    <button ion-button clear color="royal" (click)="save(1)">
+    <button ion-button clear color="royal" (click)="save(1)" *ngIf="!IsSelecting">
       提交
     </button>
+    <button ion-button clear item-end end style="width: 0px;padding: 0;" *ngIf="IsSelecting"></button>
   </ion-buttons>
 </ion-header>
 
@@ -55,6 +56,8 @@
     <ion-list class="AcList" *ngIf="IsShowingMAcList">
       <ion-item *ngFor="let a of MAcList" (click)="CheckUp(a)">
         <ion-label>{{a.Acceptance.AcceptanceName}}</ion-label>
+        <ion-icon name="ios-help-circle-outline" *ngIf="!a.AcceptanceRecord.IsConfirmed" item-end></ion-icon>
+        <ion-icon name="ios-checkmark-circle-outline" *ngIf="a.AcceptanceRecord.IsConfirmed" item-end></ion-icon>
       </ion-item>
     </ion-list>
 
@@ -67,6 +70,8 @@
     <ion-list class="AcList" *ngIf="IsShowingJAcList">
       <ion-item *ngFor="let a of JAcList" (click)="CheckUp(a)">
         <ion-label>{{a.Acceptance.AcceptanceName}}</ion-label>
+        <ion-icon name="ios-help-circle-outline" *ngIf="!a.AcceptanceRecord.IsConfirmed" item-end></ion-icon>
+        <ion-icon name="ios-checkmark-circle-outline" *ngIf="a.AcceptanceRecord.IsConfirmed" item-end></ion-icon>
       </ion-item>
     </ion-list>
 

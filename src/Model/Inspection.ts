@@ -6,12 +6,13 @@ export class AcceptanceMisc{
 }
 
 export class AcceptanceRecord{
-  AcceptanceID:number;
-  InspectionID:string;
-  MinSampleNum:number;
-  RealSampleNum:number;
-  CheckRecord:string;
-  CheckResult;
+  public AcceptanceID;
+  public InspectionID;
+  public MinSampleNum;
+  public RealSampleNum;
+  public CheckRecord;
+  public CheckResult;
+  public IsConfirmed;
 
   public AcceptanceRecord(){
     this.AcceptanceID = -1;
@@ -20,21 +21,23 @@ export class AcceptanceRecord{
     this.RealSampleNum = 0;
     this.CheckRecord = "";
     this.CheckResult = 1;
+    this.IsConfirmed=false;
   }
 }
 
+@Injectable()
 export class Inspection{
-  InspectionID:string;
-  ECUnitReportInspectionID:string;
-  InspectionTypeID;
-  DivEngineeringID;
-  SubDivEngineeringID;
-  SubEngineeringID;
-  EProjectID;
-  RecorderID;
-  ECUnitEmployeeID;
-  State;
-  AcceptanceRecords:AcceptanceRecord[];
+  public InspectionID:string;
+  public ECUnitReportInspectionID:string;
+  public InspectionTypeID;
+  public DivEngineeringID;
+  public SubDivEngineeringID;
+  public SubEngineeringID;
+  public EProjectID;
+  public RecorderID;
+  public ECUnitEmployeeID;
+  public State;
+  public AcceptanceRecords:AcceptanceRecord[]=[];
 
   public Inspection(){
     this.InspectionID="";
@@ -47,6 +50,5 @@ export class Inspection{
     this.RecorderID='';
     this.ECUnitEmployeeID=0;
     this.State=-1;
-    this.AcceptanceRecords=[];
   }
 }

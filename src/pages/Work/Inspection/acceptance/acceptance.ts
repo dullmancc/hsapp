@@ -20,17 +20,19 @@ export class AcceptancePage {
   AcceptanceGroup;
   AcceptanceRecord:AcceptanceRecord;
   IsQualified:boolean;
+  Inspection;
   InspectionID;
   State;
   callback;
-  isRedOnly;
+  isReadOnly;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               public http: HttpService) {
     this.AcceptanceGroup=this.navParams.get("AcceptanceGroup");
     console.log(this.AcceptanceGroup);
-    this.InspectionID=this.navParams.get("InspectionID");
+    this.Inspection=this.navParams.get("Inspection");
+    this.InspectionID=this.Inspection.InspectionID;
     this.State=this.navParams.get("State");
     this.callback=this.navParams.get("callback");
     this.IsQualified=true;
@@ -45,10 +47,10 @@ export class AcceptancePage {
       //已有验收记录
       console.log("old rac")
       if(this.State==0){
-        this.isRedOnly=false;
+        this.isReadOnly=false;
       }
       else {
-        this.isRedOnly=true;
+        this.isReadOnly=true;
       }
 
       this.AcceptanceRecord=this.AcceptanceGroup.AcceptanceRecord;
@@ -62,13 +64,15 @@ export class AcceptancePage {
     else {
       //新建验收记录
       console.log("new acr");
-      this.isRedOnly=false;
+      this.isReadOnly=false;
       this.AcceptanceRecord=new AcceptanceRecord();
       this.AcceptanceRecord.AcceptanceID = this.AcceptanceGroup.Acceptance.AcceptanceID;
       this.AcceptanceRecord.InspectionID = "";
+      if(this.InspectionID!="") this.AcceptanceRecord.InspectionID =this.InspectionID;
       this.AcceptanceRecord.MinSampleNum = 0;
       this.AcceptanceRecord.RealSampleNum = 0;
       this.AcceptanceRecord.CheckRecord = "";
+      this.AcceptanceRecord.IsConfirmed = false;
       this.AcceptanceRecord.CheckResult = 1;
     }
   }
@@ -77,9 +81,20 @@ export class AcceptancePage {
     this.navCtrl.pop();
   }
 
+  save(){
+    if(this.IsQualified)  this.AcceptanceRecord.CheckResult=1;
+    else this.AcceptanceRecord.CheckResult=0;
+
+    this.AcceptanceRecord.IsConfirmed = false;
+    this.callback(this.AcceptanceRecord);
+    this.navCtrl.pop();
+  }
+
   confirm(){
     if(this.IsQualified)  this.AcceptanceRecord.CheckResult=1;
     else this.AcceptanceRecord.CheckResult=0;
+
+    this.AcceptanceRecord.IsConfirmed = true;
     this.callback(this.AcceptanceRecord);
     this.navCtrl.pop();
   }

@@ -49,7 +49,7 @@ export class SubProjectPage {
   }
 
   GetDivProj(){
-    this.http.get(ApiUrl+"Inspection/GetDivProj").subscribe(data=>{
+    this.http.get(ApiUrl+"Inspection/GetDivProjs").subscribe(data=>{
       this.DivProjs=data;
       if(this.temp>0){
         this.CurDiv=this.temp;
@@ -60,7 +60,7 @@ export class SubProjectPage {
   }
 
   GetSubDivProj(DivProjID){
-    this.http.get(ApiUrl+"Inspection/GetSubDivProj?DivProjID="+DivProjID).subscribe(data=>{
+    this.http.get(ApiUrl+"Inspection/GetSubDivProjs?DivProjID="+DivProjID).subscribe(data=>{
       this.SubDivProjs=data;
       if(this.temp>0){
         this.CurSubDiv=this.temp;
@@ -71,7 +71,7 @@ export class SubProjectPage {
   }
 
   GetSubProj(SubDivProjID){
-    this.http.get(ApiUrl+"Inspection/GetSubProj?SubDivProjID="+SubDivProjID).subscribe(data=>{
+    this.http.get(ApiUrl+"Inspection/GetSubProjs?SubDivProjID="+SubDivProjID).subscribe(data=>{
       this.SubProjs=data;
     });
   }
