@@ -25,7 +25,7 @@ export class FriendPage {
   constructor(public navCtrl: NavController,private http: HttpService) {
     // If we navigated to this page, we will have an item available as a nav param
     this.pro = [];
-    //this.url = "http://193.112.12.241/HSWebApi/api/";
+    //this.actionUrl = "http://193.112.12.241/HSWebApi/api/";
     //http://localhost:1857/
     if(typeof (TabsPage.UserInfo)!=='undefined'){
       this.userId = TabsPage.UserInfo.employees.EmployeeID;

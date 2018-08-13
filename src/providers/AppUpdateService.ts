@@ -113,7 +113,7 @@ export class AppUpdateService{
 
     var uri = encodeURI(this.UploadUrl);
     console.log(uri);
-    //const url = 'http://www.example.com/file.pdf';
+    //const actionUrl = 'http://www.example.com/file.pdf';
     TransFile.download(uri, this.downloadPath+'/'+'android.apk',false, {}).then((entry) => {
       if(this.timer1) clearInterval(this.timer1);
       this.load.dismiss();

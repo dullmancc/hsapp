@@ -22,7 +22,7 @@ import {PzSelectPeoplePage} from "../pz-select-people/pz-select-people";
  * Ionic pages and navigation.
  */
 
-//const url = "http://193.112.12.241/HSWebApi/api/";
+//const actionUrl = "http://193.112.12.241/HSWebApi/api/";
 @IonicPage()
 @Component({
   selector: 'page-exit-pz-record',

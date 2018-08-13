@@ -41,6 +41,9 @@ import {FileOpener} from "@ionic-native/file-opener";
 import {QualityGJService} from "../providers/GangJinQualityService";
 import {SecRiskRecordPageModule} from "../pages/Work/sec-issues/sec-risk-record/sec-risk-record.module";
 import {EpMateCheckListPageModule} from "../pages/Work/ep-mate-check-list/ep-mate-check-list.module";
+import {InspectionPage} from "../pages/Work/Inspection/inspection/inspection";
+import {PhotoService} from "../providers/PhotoService";
+import {InspectionPageModule} from "../pages/Work/Inspection/inspection/inspection.module";
 
 @NgModule({
   declarations: [
@@ -73,6 +76,7 @@ import {EpMateCheckListPageModule} from "../pages/Work/ep-mate-check-list/ep-mat
     TabsPageModule,
     SecIssuesPageModule,
     SecRiskRecordPageModule,
+    InspectionPageModule,
     HttpModule,
   ],
   bootstrap: [IonicApp],
@@ -96,6 +100,7 @@ import {EpMateCheckListPageModule} from "../pages/Work/ep-mate-check-list/ep-mat
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     GoodsService,
     ChoosePhotoService,
+    PhotoService,
     AppUpdateService,
     QualityGJService,
   ]

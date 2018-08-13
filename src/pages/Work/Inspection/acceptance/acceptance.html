@@ -9,7 +9,7 @@
     <img src="assets/imgs/common/back.png"/>
   </div>
   <div class="header-center"  style="height: 48.18px">
-    <span *ngIf="AcceptanceGroup.Acceptance">{{AcceptanceGroup.Acceptance.AcceptanceName}}</span>
+    <span *ngIf="AcceptanceRecord.Acceptance">{{AcceptanceRecord.Acceptance.AcceptanceName}}</span>
   </div>
   <ion-buttons end>
     <button ion-button clear item-end end style="width: 0px;padding: 0;"></button>
@@ -20,7 +20,7 @@
 <ion-content padding>
   <ion-item>
     <ion-label>要求</ion-label>
-    <ion-label text-end>{{AcceptanceGroup.Acceptance.DR_NP}}</ion-label>
+    <ion-label text-end>{{AcceptanceRecord.Acceptance.DR_NP}}</ion-label>
   </ion-item>
   <!--<ion-item>-->
     <!--<ion-label color="dark">最小取样数</ion-label>-->
@@ -41,7 +41,9 @@
 
 
   <ion-buttons>
-    <button ion-button block color="light" (click)="save()">返回</button>
-    <button ion-button block (click)="confirm()">确认并返回</button>
+    <button ion-button block color="light" (click)="save()">待确认</button>
+    <ion-list></ion-list>
+    <button ion-button block (click)="confirm()">确认</button>
   </ion-buttons>
+  <div>若不想保存更改请点击左上角</div>
 </ion-content>

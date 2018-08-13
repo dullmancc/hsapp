@@ -14,6 +14,7 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
 body{
   user-select: unset;
 }
@@ -45,7 +46,7 @@ body{
   position: absolute;
 }
 .header-left img {
-  //src:url('../');
+  //src:actionUrl('../');
   width: 100%;
   height: 100%;
   padding: 10px;
@@ -77,3 +78,108 @@ body{
 
 }
 
+//xyw
+/*
+*{
+  margin: 0px !important;
+  padding: 0px !important;
+}
+ion-content,ion-header {
+  position: relative !important;
+  font-family: "Microsoft YaHei", 微软雅黑, "Microsoft JhengHei", 华文细黑;
+  color: black;
+  background-color: #F3F5F7 !important;
+}
+//.item-inner {
+//  border:none !important;
+//}
+//theme
+.day-header{
+  color: black;
+}
+.day-headline{
+  background-color: #F3F5F7;
+  border: none;
+}
+.day-Interactive{
+  color: black;
+  background-color: #F2F1EF;
+  border: #DADFE3 1px solid;
+  border-left: none;
+  border-right: none;
+}
+.day-button-normal{
+
+}
+.day-button-danger{
+
+}
+.day-text-title{
+  color: black;
+}
+.day-text-headline{
+  color: black;
+}
+.day-text-normal{
+
+}
+.day-text-danger{
+
+}
+//frame
+.header{
+  height: 7.03%;
+  position: relative;
+}
+.header-left{
+  position: absolute;
+  left:0px;
+}
+.header-center{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.header-right{
+  position: absolute;
+  right:0px;
+}
+.headline-box{
+  height: 7.81%;
+  position: relative;
+}
+.headline-box > div {
+  border: none !important;
+}
+.message-box{
+  height: 7.03%;
+  position: relative;
+}
+.item-box{
+  height: 7.81%;
+  position: relative;
+}
+.text-center-vertical{
+  //position: absolute;
+  //top: 50%;
+  //transform: translateY(-50%);
+}
+.text-center-horizontal{
+  text-align: center;
+}
+.text-title{
+  font-size: 2.5vh;
+  font-weight: bold;
+  line-height: 7.02vh;
+}
+.text-headline{
+  font-size: 3.75vh;
+}
+.text-normal{
+  font-size: 2.19vh;
+}
+.text-danger{
+
+}
+
+*/

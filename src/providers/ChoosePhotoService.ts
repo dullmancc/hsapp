@@ -9,9 +9,16 @@ import {HttpService} from "../pages/Service/HttpService";
 import {Utils} from "./Utils";
 import {ApiUrl} from "./Constants";
 import {FileTransfer, FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer";
+import {HttpHeaders} from "@angular/common/http";
 
 export class Photo
 {
+  public src:any;
+  public isupload:boolean = false;
+  public ePfile:EPCSFile;
+  public isPhoto:boolean;
+}
+export class ScenePhoto{
   public src:any;
   public isupload:boolean = false;
   public ePfile:EPCSFile;
@@ -23,6 +30,7 @@ export class ChoosePhotoService{
   private loader;
   public EPCSID:string;
   public EmployeeID:string;
+  public paramsValue;
   public url='Pangzhan';
   public params = 'EPCSID';
   now :number = 0;
@@ -35,7 +43,8 @@ export class ChoosePhotoService{
               private transfer: FileTransfer,
               private loadingCtrl: LoadingController,
               private toastCtrl: ToastController,
-              private http:HttpService){
+              private http:HttpService,
+              ){
     this.EmployeeID = '';
     this.EPCSID = '';
   }
@@ -174,7 +183,7 @@ export class ChoosePhotoService{
   //添加图片
   addPhoto():Photo[]{
     //先保存再选择
-    if(this.EPCSID == ''){
+    if(this.paramsValue == '' && this.EPCSID == ''){
       this.presentAlert();
       return [];
     }
@@ -234,6 +243,85 @@ export class ChoosePhotoService{
               this.photoes.push(p);
               this.uploadFile();
               }, (err) => {
+              console.log(err+'is error');
+            });
+          }
+        },
+        {
+          text: '取消',
+          role: 'cancel', // will always sort to be on the bottom
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    actionSheet.present();
+
+    return this.photoes || [];
+  }
+
+  addPhotoIM():Photo[]{
+    //先保存再选择
+    if(this.paramsValue == '' && this.EPCSID == ''){
+      this.presentAlert();
+      return [];
+    }
+    //相机配置
+    const options0: CameraOptions = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE,
+      sourceType: this.camera.PictureSourceType.CAMERA,
+      correctOrientation : true,
+      saveToPhotoAlbum:true
+    };
+    // 设置选项
+    const options1: ImagePickerOptions = {
+      maximumImagesCount:9,
+      quality: 100
+    };
+
+    let actionSheet = this.actionsheetCtrl.create({
+      title: '选择图片的方式',
+      cssClass: 'action-sheets-basic-page',
+      buttons: [
+        {
+          text: '相册',
+          handler: () => {
+            this.imagePicker.getPictures(options1).then((results) => {
+              //每一张图片创建Photo类
+              for (var i = 0; i < results.length; i++) {
+                let p=new Photo();
+                console.log(results[i]);
+                p.src=results[i];
+                p.isupload = false;
+                this.photoes.push(p);
+              }
+              this.UploadIM();
+              //选择完毕即上传
+              //this.uploadFile();
+            }, (err) => {
+              console.log(err);
+              console.log('获取图片失败');
+            });
+          }
+        },
+        {
+          text: '拍照',
+          handler: () => {
+            this.camera.getPicture(options0).then((imageData) => {
+              let i = this.photoes.length;
+              let base64Image = 'data:image/jpeg;base64,' + imageData;
+              console.log(base64Image);
+              let p=new Photo();
+              p.ePfile = new EPCSFile(this.EPCSID,this.EmployeeID);
+              p.src=base64Image;
+              p.isupload = false;
+              this.photoes.push(p);
+              this.uploadFile();
+            }, (err) => {
               console.log(err+'is error');
             });
           }

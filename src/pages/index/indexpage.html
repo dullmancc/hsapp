@@ -5,6 +5,7 @@
   Ionic pages and navigation.
 -->
 
+
 <ion-header id="header">
     <div class="header-left">
       <ion-buttons start>
@@ -149,67 +150,72 @@
   </ion-list>
 </ion-content>
 
+
 <!--
-<ion-header>
+<ion-header class="header">
   <div class="header-left">
+
+  </div>
+  <div class="header-center">
+    <ion-title class="text-title day-text-titlel center-vertical">华胜信息化平台</ion-title>
+  </div>
+  <div class="header-right">
     <ion-buttons start>
       <button ion-button clear (click)="denglu()" *ngIf="!IsLogin">
-        <span class="mydenglu">
+        <span>
           <ion-icon name="person"></ion-icon>
           <p>登录</p>
         </span>
       </button>
     </ion-buttons>
   </div>
-  <div class="header-center">
-    <ion-title [ngStyle]="{'text-align':'center'}">华胜信息化平台</ion-title>
-  </div>
 </ion-header>
 
 <ion-content>
-  <div class="container">
-    <div class="flipster">
-      <ul>
-        <li>
-          <div class="pricing">
-            <img src="assets/imgs/hospital.png" alt="">
-          </div>
-        </li>
-        <li>
-          <div class="pricing">
-            <img src="assets/imgs/office.jpg" alt="">
-          </div>
-        </li>
-        <li>
-          <div class="pricing">
-            <img src="assets/imgs/gallery.jpg" alt="">
-          </div>
-        </li>
-        <li>
-          <div class="pricing">
-            <img src="assets/imgs/museum.jpg" alt="">
-          </div>
-        </li>
-        <li>
-          <div class="pricing">
-            <img src="assets/imgs/wc.jpg" alt="">
-          </div>
-        </li>
-        <li>
-          <div class="pricing">
-            <img src="assets/imgs/museum.jpg" alt="">
-          </div>
-        </li>
-        <li>
-          <div class="pricing">
-            <img src="assets/imgs/wc.jpg" alt="">
-          </div>
-        </li>
-      </ul>
-    </div>
-    <script>
-      $(function(){  });
-    </script>
-  </div>
-</ion-content>
--->
+  <ion-item class="headline-box day-headline" >
+    <span class="text-headline day-text-headline" item-start>动态</span>
+    <span style="font-size: 3.12vh; font-weight: bold;" item-end>···</span>
+  </ion-item>
+  <!--<div class="container">-->
+    <!--<div class="flipster">-->
+      <!--<ul>-->
+        <!--<li>-->
+          <!--<div class="pricing">-->
+            <!--<img src="assets/imgs/hospital.png" alt="">-->
+          <!--</div>-->
+        <!--</li>-->
+        <!--<li>-->
+          <!--<div class="pricing">-->
+            <!--<img src="assets/imgs/office.jpg" alt="">-->
+          <!--</div>-->
+        <!--</li>-->
+        <!--<li>-->
+          <!--<div class="pricing">-->
+            <!--<img src="assets/imgs/gallery.jpg" alt="">-->
+          <!--</div>-->
+        <!--</li>-->
+        <!--<li>-->
+          <!--<div class="pricing">-->
+            <!--<img src="assets/imgs/museum.jpg" alt="">-->
+          <!--</div>-->
+        <!--</li>-->
+        <!--<li>-->
+          <!--<div class="pricing">-->
+            <!--<img src="assets/imgs/wc.jpg" alt="">-->
+          <!--</div>-->
+        <!--</li>-->
+        <!--<li>-->
+          <!--<div class="pricing">-->
+            <!--<img src="assets/imgs/museum.jpg" alt="">-->
+          <!--</div>-->
+        <!--</li>-->
+        <!--<li>-->
+          <!--<div class="pricing">-->
+            <!--<img src="assets/imgs/wc.jpg" alt="">-->
+          <!--</div>-->
+        <!--</li>-->
+      <!--</ul>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</ion-content>-->
+

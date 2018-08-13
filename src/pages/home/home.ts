@@ -221,6 +221,12 @@ export class HomePage {
   compareFn(e1: Project, e2: Project): boolean {
     return e1 && e2 ? e1.EProjectID === e2.EProjectID : e1 === e2;
   }
+
+  Test(){
+    this.http.get(ApiUrl+"File/Test").subscribe(msg=>{
+      console.log(msg);
+    });
+  }
 }
 
 class WeatherCode{

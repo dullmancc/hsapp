@@ -88,5 +88,11 @@
     "platforms": [
       "android"
     ]
+  },
+  "config": {
+    "ionic_src_dir": "src",
+    "ionic_www_dir": "www",
+    "ionic_build_dir": "www/build",
+    "ionic_copy": "config/copy.config.js"
   }
 }

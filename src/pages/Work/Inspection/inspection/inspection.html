@@ -23,6 +23,7 @@
 </ion-header>
 
 <ion-content padding>
+
   <ion-list *ngIf="!IsSelecting">
     <ion-item>
       <ion-label color="dark">施工单位</ion-label>
@@ -41,11 +42,13 @@
       <ion-label item-end text-end>{{CurInspectionType.InspectionTypeName}}</ion-label>
     </ion-item>
   </ion-list>
+
   <ion-list *ngIf="IsSelecting">
     <ion-item *ngFor="let i of InspectionTypeList" (click)="SelectInspection(i)">
       {{i.InspectionTypeName}}
     </ion-item>
   </ion-list>
+
   <ion-list *ngIf="!IsSelecting">
     <ion-item class="AcList-Header" (click)="ShowMAcList()">
       <ion-label>主控项目</ion-label>
@@ -56,8 +59,8 @@
     <ion-list class="AcList" *ngIf="IsShowingMAcList">
       <ion-item *ngFor="let a of MAcList" (click)="CheckUp(a)">
         <ion-label>{{a.Acceptance.AcceptanceName}}</ion-label>
-        <ion-icon name="ios-help-circle-outline" *ngIf="!a.AcceptanceRecord.IsConfirmed" item-end></ion-icon>
-        <ion-icon name="ios-checkmark-circle-outline" *ngIf="a.AcceptanceRecord.IsConfirmed" item-end></ion-icon>
+        <ion-icon name="ios-help-circle-outline" *ngIf="!a.IsConfirmed" item-end></ion-icon>
+        <ion-icon name="ios-checkmark-circle-outline" *ngIf="a.IsConfirmed" item-end></ion-icon>
       </ion-item>
     </ion-list>
 
@@ -70,11 +73,30 @@
     <ion-list class="AcList" *ngIf="IsShowingJAcList">
       <ion-item *ngFor="let a of JAcList" (click)="CheckUp(a)">
         <ion-label>{{a.Acceptance.AcceptanceName}}</ion-label>
-        <ion-icon name="ios-help-circle-outline" *ngIf="!a.AcceptanceRecord.IsConfirmed" item-end></ion-icon>
-        <ion-icon name="ios-checkmark-circle-outline" *ngIf="a.AcceptanceRecord.IsConfirmed" item-end></ion-icon>
+        <ion-icon name="ios-help-circle-outline" *ngIf="!a.IsConfirmed" item-end></ion-icon>
+        <ion-icon name="ios-checkmark-circle-outline" *ngIf="a.IsConfirmed" item-end></ion-icon>
       </ion-item>
     </ion-list>
 
   </ion-list>
+
+  <ion-list *ngIf="!IsSelecting">
+    <ion-item (click)="addPhoto()">
+      <ion-icon name="ios-camera-outline" item-start></ion-icon>
+      <ion-label id="fileLabel">记录上传文件数量</ion-label>
+    </ion-item>
+    <ul style="list-style: none;margin:0;padding:0">
+      <li *ngFor="let photo of photoes;let i=index" style="display: inline-block;margin-right: 5px;position: relative">
+        <img style="width:120px;height:120px;" [src]="photo.src">
+        <ion-icon name="close" small style="position: absolute;right:0;top:0;" (click)="deletePhoto(i)"></ion-icon>
+      </li>
+    </ul>
+  </ion-list>
+
+  <!--<div>-->
+    <!--&lt;!&ndash;<img src="../../../../assets/imgs/test.png" id="img">&ndash;&gt;-->
+    <!--<input type="file" id="img" (change)="showlist()">-->
+    <!--<button (click)="pcAddPhoto()">提交</button>-->
+  <!--</div>-->
 
 </ion-content>

@@ -8,6 +8,11 @@ import {AcceptancePage} from "../acceptance/acceptance";
 import {AcceptanceRecord, Inspection} from "../../../../Model/Inspection";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {PZCheckRecord} from "../../../../Model/PZConcreteSlumpRecord";
+// import {ChoosePhotoService, Photo} from "../../../../providers/ChoosePhotoService";
+import {Photo, PhotoService} from "../../../../providers/PhotoService";
+import {Utils} from "../../../../providers/Utils";
+import {_document} from "@angular/platform-browser/src/browser";
+import {JQueryStyleEventEmitter} from "rxjs/observable/FromEventObservable";
 
 /**
  * Generated class for the InspectionPage page.
@@ -15,7 +20,6 @@ import {PZCheckRecord} from "../../../../Model/PZConcreteSlumpRecord";
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
-
 
 
 @IonicPage()
@@ -39,14 +43,18 @@ export class InspectionPage {
   MAcList;
   JAcList;
   State;
+  photoes:Photo[]=[];
+
   isReadOnly;
+
+  ImgSrc;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private http: HttpService,
-              public httpc:HttpClient,
               private alertCtrl: AlertController,
-              public toastCtrl: ToastController) {
+              public toastCtrl: ToastController,
+              private choosephoto:PhotoService) {
 
     this.SubProj={Name:"请选择", SubDivEngineeringID:0, SubEngineeringID:0};
     this.CurInspectionType={InspectionTypeName:"请先选择分项工程", InspectionTypeID:0, SubEngineeringID: 0, SubEngineering:null};
@@ -57,6 +65,7 @@ export class InspectionPage {
     this.EmployeeID=this.navParams.get("EmployeeID");
     this.State=this.navParams.get("State");
     this.EPCheckParent=this.navParams.get("EPCheckParent");
+    //this.ImgSrc='../../../../assets/imgs/test.png';
 
     this.GetECUnitName();
     this.GetPersonReprotName();
@@ -126,28 +135,31 @@ export class InspectionPage {
       this.http.get(ApiUrl+"Inspection/GetAcceptances?InspectionTypeID="+this.CurInspectionType.InspectionTypeID).subscribe(data=>{
         this.MAcList=data.Major;
         this.JAcList=data.Junior;
-        this.MAcList.forEach(ag=>{
-          this.CurInspection.AcceptanceRecords.push(ag.AcceptanceRecord);
+        this.MAcList.forEach(a=>{
+          this.CurInspection.AcceptanceRecords.push(a);
         });
-        this.JAcList.forEach(ag=>{
-          this.CurInspection.AcceptanceRecords.push(ag.AcceptanceRecord);
+        this.JAcList.forEach(a=>{
+          this.CurInspection.AcceptanceRecords.push(a);
         });
       });
     }
     else {
       //已有检验批
-      this.http.get(ApiUrl+"Inspection/GetAcceptancesByInspection?InspectionID="+this.CurInspection.InspectionID).subscribe(data=>{
-        this.MAcList=data.Major;
-        this.JAcList=data.Junior;
-        this.MAcList.forEach(ag=>{
-          this.CurInspection.AcceptanceRecords.push(ag.AcceptanceRecord);
-        });
-        this.JAcList.forEach(ag=>{
-          this.CurInspection.AcceptanceRecords.push(ag.AcceptanceRecord);
-        });
-      });
+      this.SortMJ();
     }
 
+  }
+
+  GetPhotoes(){
+    this.http.get(ApiUrl+"File/GetFiles?ID="+this.CurInspection.InspectionID).subscribe(res=>{
+      res.forEach(file=>{
+        var p=new Photo();
+        p.FileID=res.PhotoID;
+        p.type=res.PhotoType;
+        p.src=Photo;
+        p.hasUploaded=true;
+      })
+    });
   }
 
   ShowInspections(){
@@ -183,15 +195,15 @@ export class InspectionPage {
     this.GetAcceptances();
   }
 
-  CheckUp(acceptanceGroup){
+  CheckUp(acceptanceRecord){
     let data={
-      'AcceptanceGroup':acceptanceGroup,
-      'Inspection':this.CurInspection,
+      'AcceptanceRecord':acceptanceRecord,
+      'InspectionID':this.CurInspection.InspectionID,
       'State':this.CurInspection.State,
       callback:data=>{
-        acceptanceGroup.AcceptanceRecord=data;
-        console.log(data);
-        this.ReplaceAcceptance(data);
+        // acceptanceRecord=data;
+        // console.log(data);
+        // this.ReplaceAcceptance(data);
       }
     };
     this.navCtrl.push(AcceptancePage,data);
@@ -200,7 +212,7 @@ export class InspectionPage {
   save(submit){
     if(submit==1 && !this.Review()){
       let alert = this.alertCtrl.create({
-        title: '存在未确认的验收项目',
+        title: '存在待确认的验收项目',
         message: '是否继续提交，提交后将无法修改',
         buttons: [
           {
@@ -213,10 +225,11 @@ export class InspectionPage {
           {
             text: '确定',
             handler: data => {
-              var httphead = new HttpHeaders({"Content-Type":'application/json',"Authorization":'Bearer '+sessionStorage.getItem('accessToken')});
               this.CurInspection.State=submit;
-              this.httpc.post(ApiUrl+"Inspection/PostInspectionRecord",this.CurInspection,{headers:httphead}).subscribe((res:any)=>{
+              let ins=Utils.ParamsToString(this.CurInspection);
+              this.http.post(ApiUrl+"Inspection/PostInspectionRecord",ins).subscribe((res:any)=>{
                 this.CurInspection.InspectionID=res.InspectionID;
+                this.choosephoto.paramValue=res.InspectionID;
 
                 this.presentToast(res.ErrorMs);
               },error=>{
@@ -229,10 +242,10 @@ export class InspectionPage {
       alert.present();
     }
     else{
-      var httphead = new HttpHeaders({"Content-Type":'application/json',"Authorization":'Bearer '+sessionStorage.getItem('accessToken')});
       this.CurInspection.State=submit;
-      this.httpc.post(ApiUrl+"Inspection/PostInspectionRecord",this.CurInspection,{headers:httphead}).subscribe((res:any)=>{
-        this.CurInspection.InspectionID=res.InspectionID;
+      let ins=Utils.ParamsToString(this.CurInspection);
+      this.http.post(ApiUrl+"Inspection/PostInspectionRecord",ins).subscribe((res:any)=>{
+        this.choosephoto.SetParams(this.CurInspection.InspectionID,'PostInspectionFile')
 
         this.presentToast(res.ErrorMs);
       },error=>{
@@ -262,26 +275,75 @@ export class InspectionPage {
     }
   }
 
+  //全部确认返回true，存在未确认返回false
   Review(){
     let fulfilment=true;
 
-    this.MAcList.some(a=>{
-      if(!a.AcceptanceRecord.IsConfirmed){
+    this.CurInspection.AcceptanceRecords.some(ar=>{
+      if(!ar.IsConfirmed){
         fulfilment=false;
         return true;
       }
     });
 
-    if(fulfilment){
-      this.JAcList.some(a=>{
-        if(!a.AcceptanceRecord.IsConfirmed){
-          fulfilment=false;
-          return true;
-        }
-      });
-    }
-
     return fulfilment;
   }
+
+  SortMJ(){
+    this.MAcList=[];
+    this.JAcList=[];
+    this.CurInspection.AcceptanceRecords.forEach(ar=>{
+      if(ar.Acceptance.AcceptanceType==0){
+        this.MAcList.push(ar);
+      }
+      else if(ar.Acceptance.AcceptanceType==1){
+        this.JAcList.push(ar);
+      }
+    });
+  }
+
+  addPhoto() {
+    if (this.State < 1) {
+      this.choosephoto.SetParams(this.CurInspection.InspectionID,'PostInspectionFile');
+      console.log(this.choosephoto);
+      this.photoes = this.choosephoto.AddPhotoes();
+    }
+  }
+
+  deletePhoto(i:number) {
+    if (this.State < 1) {
+      this.choosephoto.SetParams(this.CurInspection.InspectionID,'DeleteInspectionFile')
+      this.choosephoto.deletePhoto(i);
+    }
+  }
+
+  // pcAddPhoto(){
+  //   //var i= document.getElementById("img");
+  //   var image=$("#img")[0].files[0];
+  //   var reader=new FileReader();
+  //   var imgFile;
+  //   // reader.onload=function(e) {
+  //   //   alert('文件读取完成');
+  //   //   imgFile = e.target.result;//Base64
+  //   //   console.log(imgFile);
+  //   //
+  //   // };
+  //   //
+  //   //
+  //   // var base=reader.readAsDataURL(image);
+  //   let data=Utils.ParamsToString(image);
+  //   //let data=image;
+  //   console.log(image);
+  //   //console.log(base);
+  //   console.log(data);
+  //   //
+  //   if(data){
+  //     this.http.post(ApiUrl+"File/PostInspectionFile?ID="+this.CurInspection.InspectionID,data).subscribe(response=>{
+  //       console.log(response);
+  //     })
+  //   }
+  //
+  // }
+
 
 }

@@ -30,8 +30,8 @@ export class HttpUtils {
     }
     return params;
   }
-  // getGoods(url: string): Observable<string[]> {
-  //   return this.http.get(url)
+  // getGoods(actionUrl: string): Observable<string[]> {
+  //   return this.http.get(actionUrl)
   //     .map(this.extractData)
   //     .catch(this.handleError);
   // }

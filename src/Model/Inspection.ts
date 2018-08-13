@@ -13,6 +13,7 @@ export class AcceptanceRecord{
   public CheckRecord;
   public CheckResult;
   public IsConfirmed;
+  public Acceptance;
 
   public AcceptanceRecord(){
     this.AcceptanceID = -1;
