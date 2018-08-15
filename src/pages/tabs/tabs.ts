@@ -19,8 +19,8 @@ import {LoginPage} from "../login/login";
 export class TabsPage {
   @ViewChild('myTabs') tabRef:Tabs;
   tab1Root = IndexPage;
-  tab2Root = AboutPage;
-  tab3Root = FriendPage;
+  tab2Root = HomePage;
+  tab3Root = AboutPage;
   tab4Root:any;
   public static UserInfo;
   constructor(public navParams:NavParams,private platform:Platform,private backBt:BackButtonService) {

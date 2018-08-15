@@ -228,8 +228,6 @@ export class PhotoService{
           if(this.timer) clearInterval(this.timer);
           //标记已上传
           this.photoes[index].hasUploaded = true;
-          console.log("success");
-          console.log(data);
           this.photoes[index].FileID=JSON.parse(data.response).EPCSFileID;
           //递归 上传下一张图片
           this.Upload(++index);

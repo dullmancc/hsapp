@@ -1,11 +1,24 @@
-<ion-header id="header">
+<ion-header class="header day-header">
+  <div class="header-left">
+
+  </div>
   <div class="header-center">
-    <ion-title [ngStyle]="{'text-align':'center'}">消息</ion-title>
+    <span class="text-title day-text-title">消息</span>
+  </div>
+  <div class="header-right">
+    <ion-buttons>
+      <button class="header-icon" ion-button clear (click)="denglu()" *ngIf="!hasLogin">
+        <ion-icon name="ios-contact-outline" class="icon-big" style="color: black;"></ion-icon>
+      </button>
+      <button class="header-icon" ion-button clear *ngIf="hasLogin">
+        <ion-icon name="ios-contact-outline" class="icon-big" style="color: black;"></ion-icon>
+      </button>
+    </ion-buttons>
   </div>
 </ion-header>
 
 
-<ion-content padding>
+<ion-content class="day-background" padding>
   <ion-list>
     <ion-item navPush="Chat"
                              [navParams]="toUser">

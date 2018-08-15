@@ -29,7 +29,8 @@ export class AcceptancePage {
               public navParams: NavParams,
               public http: HttpService) {
     this.AcceptanceRecord=this.navParams.get("AcceptanceRecord");
-    this.Origin=this.AcceptanceRecord;
+    this.backup(this.AcceptanceRecord);
+    console.log("enter")
     console.log(this.AcceptanceRecord);
     this.InspectionID=this.navParams.get("InspectionID");
     this.State=this.navParams.get("State");
@@ -55,6 +56,18 @@ export class AcceptancePage {
       this.IsQualified=false;
     }
 
+  }
+
+  backup(acr:AcceptanceRecord){
+    this.Origin=new AcceptanceRecord();
+    this.Origin.Acceptance=acr.Acceptance;
+    this.Origin.AcceptanceID=acr.AcceptanceID;
+    this.Origin.InspectionID=acr.InspectionID;
+    this.Origin.MinSampleNum=acr.MinSampleNum;
+    this.Origin.RealSampleNum=acr.RealSampleNum;
+    this.Origin.CheckRecord=acr.CheckRecord;
+    this.Origin.CheckResult=acr.CheckResult;
+    this.Origin.IsConfirmed=acr.IsConfirmed;
   }
 
   goback(){

@@ -52,6 +52,7 @@ export class InspectionPage {
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private http: HttpService,
+              private httpc:HttpClient,
               private alertCtrl: AlertController,
               public toastCtrl: ToastController,
               private choosephoto:PhotoService) {
@@ -87,7 +88,7 @@ export class InspectionPage {
       this.SubProj=this.CurInspectionType.SubEngineering;
 
       this.GetAcceptances();
-
+      this.GetPhotoes();
       if(this.State==1) this.isReadOnly=true;
       else  this.isReadOnly=false;
     }
@@ -152,13 +153,16 @@ export class InspectionPage {
 
   GetPhotoes(){
     this.http.get(ApiUrl+"File/GetFiles?ID="+this.CurInspection.InspectionID).subscribe(res=>{
+      let base64="data:image/jpeg;base64,";
       res.forEach(file=>{
         var p=new Photo();
-        p.FileID=res.PhotoID;
-        p.type=res.PhotoType;
-        p.src=Photo;
+        p.FileID=file.PhotoID;
+        p.type=file.PhotoType;
+        p.src=base64+file.Photo;
         p.hasUploaded=true;
-      })
+        this.photoes.push(p);
+      });
+      this.choosephoto.InitPhoto(this.photoes);
     });
   }
 
@@ -202,15 +206,17 @@ export class InspectionPage {
       'State':this.CurInspection.State,
       callback:data=>{
         // acceptanceRecord=data;
-        // console.log(data);
-        // this.ReplaceAcceptance(data);
+        console.log(data);
+        this.ReplaceAcceptance(data);
       }
     };
     this.navCtrl.push(AcceptancePage,data);
   }
 
-  save(submit){
-    if(submit==1 && !this.Review()){
+  save(state){
+    var httphead = new HttpHeaders({"Content-Type":'application/json',"Authorization":'Bearer '+sessionStorage.getItem('accessToken')});
+    this.CurInspection.State=state;
+    if(state==1 && !this.Review()){
       let alert = this.alertCtrl.create({
         title: '存在待确认的验收项目',
         message: '是否继续提交，提交后将无法修改',
@@ -225,9 +231,7 @@ export class InspectionPage {
           {
             text: '确定',
             handler: data => {
-              this.CurInspection.State=submit;
-              let ins=Utils.ParamsToString(this.CurInspection);
-              this.http.post(ApiUrl+"Inspection/PostInspectionRecord",ins).subscribe((res:any)=>{
+              this.httpc.post(ApiUrl+"Inspection/PostInspectionRecord", this.CurInspection, {headers:httphead}).subscribe((res:any)=>{
                 this.CurInspection.InspectionID=res.InspectionID;
                 this.choosephoto.paramValue=res.InspectionID;
 
@@ -242,9 +246,7 @@ export class InspectionPage {
       alert.present();
     }
     else{
-      this.CurInspection.State=submit;
-      let ins=Utils.ParamsToString(this.CurInspection);
-      this.http.post(ApiUrl+"Inspection/PostInspectionRecord",ins).subscribe((res:any)=>{
+      this.httpc.post(ApiUrl+"Inspection/PostInspectionRecord", this.CurInspection, {headers:httphead}).subscribe((res:any)=>{
         this.choosephoto.SetParams(this.CurInspection.InspectionID,'PostInspectionFile')
 
         this.presentToast(res.ErrorMs);
@@ -261,6 +263,7 @@ export class InspectionPage {
       duration: 3000,
       position: 'bottom'
     });
+    toast.present();
   }
 
   ReplaceAcceptance(new_acc:AcceptanceRecord){
@@ -312,7 +315,7 @@ export class InspectionPage {
 
   deletePhoto(i:number) {
     if (this.State < 1) {
-      this.choosephoto.SetParams(this.CurInspection.InspectionID,'DeleteInspectionFile')
+      this.choosephoto.SetParams(this.CurInspection.InspectionID,'DeleteFile')
       this.choosephoto.deletePhoto(i);
     }
   }

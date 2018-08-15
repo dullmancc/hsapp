@@ -1,4 +1,4 @@
-///<reference path="../Service/jquery.d.ts"/>
+///<reference path="../../js/jquery/jquery.d.ts"/>
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {IonicPage, LoadingController, NavController, NavParams, Platform} from 'ionic-angular';
 import * as Swiper from 'swiper';
@@ -23,6 +23,11 @@ export class IndexPage {
   now :number=0;
   loader;
   timer1;
+  //xyw
+  messages:Array<{MessageType:string,EProject:string,Time:any}>;
+  items:Array<{SRC:any,WorkType:string,EProject:any}>;
+
+
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private loadingCtrl: LoadingController,
@@ -49,7 +54,17 @@ export class IndexPage {
       );
       this.androidPermissions.requestPermissions(list);
     }
-    $(".flipster").flipster({ style: 'carousel', start: 0 });
+
+    //xyw
+
+    //$(".flipster").flipster({ style: 'carousel', start: 0 });
+    $(".flipster").
+    this.messages=[{MessageType:"旁站结束",EProject:"协和医院",Time:"2018-7-18 14:41"},
+                            {MessageType:"旁站交班",EProject:"协和医院",Time:"2018-7-18 8:56"},
+                            {MessageType:"质量验收",EProject:"协和医院",Time:"2018-7-16 15:24"}];
+    this.items=[{SRC:"../../assets/imgs/xiehe.jpeg",WorkType:"旁站",EProject:"协和医院"},
+                      {SRC:"../../assets/imgs/xiehe.jpeg",WorkType:"材料进场",EProject:"协和医院"},
+                      {SRC:"../../assets/imgs/xiehe.jpeg",WorkType:"质量验收",EProject:"协和医院"}];
   }
 
   ionViewDidLoad() {

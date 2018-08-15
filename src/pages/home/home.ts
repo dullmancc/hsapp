@@ -13,6 +13,10 @@ import {ProjectPage} from "../Project/project";
 import {JLProjectPage} from "../JianLiPZ/JLProject";
 import {ApiUrl} from "../../providers/Constants";
 import {MyworkComponent} from "../../components/mywork/mywork";
+import {LoginPage} from "../login/login";
+import {InspectionListPage} from "../Work/Inspection/inspection-list/inspection-list";
+import {EpMateCheckListPage} from "../Work/ep-mate-check-list/ep-mate-check-list";
+import {SecIssuesPage} from "../Work/sec-issues/sec-issues";
 @IonicPage()
 @Component({
   selector: 'page-home',
@@ -40,6 +44,9 @@ export class HomePage {
   @ViewChild('work1')
   public mywork:MyworkComponent;
 
+  //xyw
+  public hasLogged;
+
   constructor(public navCtrl: NavController,
               public navParams:NavParams,
               private http:HttpService,
@@ -48,9 +55,9 @@ export class HomePage {
               public loadingCtrl: LoadingController,
               private androidPermissions: AndroidPermissions,
               private platform:Platform) {
-
+    this.hasLogged=LoginPage.Login?true:false;
     this.currentProject = new Project();
-    this.Load();
+    if(this.hasLogged)  this.Load();
     //默认天气
     this.imageURI='./assets/weather/999.png';
     this.nowweather =  new WeatherCode();
@@ -73,15 +80,6 @@ export class HomePage {
   ionViewDidLoad() {
   }
 
-  //跳转至监理巡视页面
-  TomyOb(){
-    this.navCtrl.push(ObservationPage);
-  }
-  //提示待更新开放
-  ToAlert(){
-    alert("该功能未开放！");
-  }
-
   goBack(){
     this.navCtrl.pop();
   }
@@ -89,8 +87,8 @@ export class HomePage {
   LoadRole(){
     this.http.get(ApiUrl+"UserInfo/GetRole?UserID="+TabsPage.UserInfo.employees.EmployeeID+"&EProjectID="+this.currentProject.EProjectID).subscribe(res=>{
       TabsPage.UserInfo.userroles.Role=res;
-      this.mywork.LoadPosition();
-      console.log(this.mywork.position);
+      //this.mywork.LoadPosition();
+      //console.log(this.mywork.position);
       //loader.dismiss();
     }, error => {
       //错误信息
@@ -140,7 +138,6 @@ export class HomePage {
       });
 
   }
-
 
   //加载定位和天气
   LoadLocation(){
@@ -222,10 +219,34 @@ export class HomePage {
     return e1 && e2 ? e1.EProjectID === e2.EProjectID : e1 === e2;
   }
 
-  Test(){
-    this.http.get(ApiUrl+"File/Test").subscribe(msg=>{
-      console.log(msg);
-    });
+  loggin(){
+    this.navCtrl.push(LoginPage)
+  }
+
+  //界面跳转
+  //提示待更新开放
+  ToAlert(){
+    alert("该功能未开放！");
+  }
+  //工程信息
+  GoProjectInfo(){
+    this.navCtrl.push(ProjectPage,{'charNum':this.currentProject});
+  }
+  //旁站监理
+  GoPZ(){
+    this.navCtrl.push(JLProjectPage,{'charNum':this.currentProject,'userId':TabsPage.UserInfo.employees.EmployeeID});
+  }
+  //质量验收
+  GoInspection(){
+    this.navCtrl.push(InspectionListPage,{'EProject':this.currentProject,'userId':TabsPage.UserInfo.employees.EmployeeID});
+  }
+  //材料进场
+  GoMateEntry(){
+    this.navCtrl.push(EpMateCheckListPage,{'EProjectID':this.currentProject.EProjectID,'userId':TabsPage.UserInfo.employees.EmployeeID});
+  }
+  //安全履职
+  GoSecIssue(){
+    this.navCtrl.push(SecIssuesPage,{'EProject':this.currentProject,'userId':TabsPage.UserInfo.employees.EmployeeID});
   }
 }
 

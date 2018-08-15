@@ -4,22 +4,24 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header>
-  <div class="header-left" (click)="goBack()">
+<ion-header class="header day-header">
+  <div class="header-left back" (click)="goBack()">
     <img src="assets/imgs/common/back.png"/>
   </div>
-  <div class="header-center">
+  <div class="header-center text-title day-text-title">
     <span *ngIf="!hasEntered">施工单位报送检验批</span>
     <span *ngIf="hasEntered">质量验收</span>
   </div>
-  <ion-buttons end>
-    <button ion-button clear end style="width: 0px;" >
-    </button>
-  </ion-buttons>
+  <div class="header-right">
+    <ion-buttons end>
+      <button ion-button clear end style="width: 0px;" >
+      </button>
+    </ion-buttons>
+  </div>
 </ion-header>
 
 
-<ion-content padding>
+<ion-content class="day-background">
   <div padding color="dark" *ngIf="hasEntered">
     <ion-segment [(ngModel)]="pet">
       <ion-segment-button value="unfinished">
@@ -32,18 +34,18 @@
 
     <div [ngSwitch]="pet">
       <ion-list *ngSwitchCase="'unfinished'">
-        <ion-item *ngFor="let i of unfinished;" (click)="GoToInspectionRecord(i,0)">
+        <ion-item class="item-box day-Interactive" *ngFor="let i of unfinished;" (click)="GoToInspectionRecord(i,0)">
           <ion-avatar item-start>
             <img src="./assets/imgs/workicon/secissues.png">
           </ion-avatar>
-          <h2>{{i.InspectionType.SubEngineering.Name}}<button ion-button color="light" outline>未完成</button></h2>
+          <h2>{{i.InspectionType.SubEngineering.Name}}<button ion-button color="light" style="background-color: #ffffff" outline>未完成</button></h2>
           <p [ngStyle]="{'color':'red'}">重点:{{i.InspectionType.InspectionTypeName}}</p>
           <!--<ion-note item-end>{{GetTime(i.BeginTime)}}</ion-note>-->
         </ion-item>
       </ion-list>
 
       <ion-list *ngSwitchCase="'finished'">
-        <ion-item *ngFor="let i of finished;" (click)="GoToInspectionRecord(i,1)">
+        <ion-item class="item-box day-Interactive" *ngFor="let i of finished;" (click)="GoToInspectionRecord(i,1)">
           <ion-avatar item-start>
             <img src="./assets/imgs/workicon/secissues.png">
           </ion-avatar>
@@ -55,15 +57,15 @@
     </div>
   </div>
 
-  <ion-fab right bottom style="bottom: 70px;">
+  <ion-fab class="fab-rb2">
     <button ion-fab color="light" (click)="load()" *ngIf="hasEntered"><ion-icon name="refresh"></ion-icon></button>
   </ion-fab>
-  <ion-fab right bottom>
+  <ion-fab class="fab-rb1">
     <button ion-fab color="light" (click)="newInspection()" *ngIf="hasEntered"><ion-icon name="add"></ion-icon></button>
   </ion-fab>
 
   <ion-list *ngIf="!hasEntered">
-    <ion-item *ngFor="let i of reportItems" (click)="EnterReportInspection(i)">
+    <ion-item class="item-box day-Interactive" *ngFor="let i of reportItems" (click)="EnterReportInspection(i)">
       <ion-avatar item-start>
         <img src="./assets/imgs/workicon/epmatelist.png">
       </ion-avatar>

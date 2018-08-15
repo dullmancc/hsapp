@@ -50,11 +50,12 @@ export class LoginPage {
       this.backbtService.registerBackButtonAction(null);
     });
 
-    if(this.navCtrl.canGoBack()){
-      this.CanGoBack = true;
-    }else {
-      this.CanGoBack = false;
-    }
+    // if(this.navCtrl.canGoBack()){
+    //   this.CanGoBack = true;
+    // }else {
+    //   this.CanGoBack = false;
+    // }
+    this.CanGoBack=true;
 
     this.length = window.localStorage.length;
     this.myUser = new User();

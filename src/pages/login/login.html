@@ -1,26 +1,26 @@
-<ion-header  id="header">
-  <div class="header-left" (click)="goBack()" *ngIf="CanGoBack">
+<ion-header id="header" class="header day-header">
+  <div class="header-left back" (click)="goBack()" *ngIf="CanGoBack">
     <img src="assets/imgs/common/back.png"/>
   </div>
   <div class="header-center">
-    <span>登录</span>
+    <span class="text-title day-text-title">登录</span>
   </div>
   <div class="header-right">
     <span></span>
   </div>
 </ion-header>
 
-<ion-content class="content">
+<ion-content class="content day-background">
   <ion-input id="user_name" placeholder="请输入账号"style="padding-left: 15px" [(ngModel)]="username">{{username}}</ion-input>
   <div class="div_password_conetnt">
     <ion-input id="user_password" placeholder="请输入密码" clearInput type="password"style="padding-left: 15px"  [(ngModel)]="password">{{password}}</ion-input>
     <ion-toggle [(ngModel)]="mushrooms"style="margin-top: 2px;margin-right: 5px"  [checked]="mushrooms"></ion-toggle>
   </div>
-  <div id="btn_login"  (click)="logIn()">
-    <div style="color:gray">登录</div>
+  <div id="btn_login" class="day-btn-normal" (click)="logIn()">
+    <div>登录</div>
   </div>
-  <div id="onetep_btn_login">
-    <div style="color: red">注册</div>
+  <div id="onetep_btn_login" class="day-btn-notice">
+    <div>注册</div>
   </div>
   <div class="div_login_check">
     <ion-checkbox id="checkbox_login" [(ngModel)]="mushrooms" color="red"></ion-checkbox>
@@ -39,9 +39,9 @@
   </div>
   <div style="display: flex;align-items:center; margin-left: 5%;
     margin-right: 5%; width: 90%" >
-    <p style="width:30%;height:1px;background-color: #5d5d5d;margin-right: 5% " ></p>
-    <p style="color: #5d5d5d " >其他登录方式</p>
-    <p style="width:30%;height:1px;background-color: #5d5d5d;margin-left: 5% " ></p>
+    <p style="width:40%;height:1px;background-color: #5d5d5d;margin-right: 5% " ></p>
+    <p class="text-center-horizontal" style=" width:20%; color: #5d5d5d " >其他登录方式</p>
+    <p style="width:40%;height:1px;background-color: #5d5d5d;margin-left: 5% " ></p>
   </div>
   <div style="display: flex;flex-direction: column;align-items: center">
     <img src="assets/imgs/common/qq.png"  width="24px" height="24px"/>

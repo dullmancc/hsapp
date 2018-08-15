@@ -1,35 +1,85 @@
-<ion-header  id="header">
-  <div class="header-left" (click)="goBack()">
-    <img src="assets/imgs/common/back.png"/>
-  </div>
+<ion-header id="header" class="header day-header">
+  <!--<div class="header-left back center-virtical" (click)="goBack()">-->
+    <!--<img src="assets/imgs/common/back.png"/>-->
+  <!--</div>-->
   <div class="header-center">
-    <span>我的工作</span>
+    <span class="text-title day-text-title">我的工作</span>
   </div>
   <div class="header-right">
-    <span></span>
+    <ion-buttons>
+      <button class="header-icon" ion-button clear (click)="loggin()" *ngIf="!hasLogged">
+        <ion-icon class="header-icon" name="ios-contact-outline" class="icon-big" style="color: black;"></ion-icon>
+      </button>
+      <button class="header-icon" ion-button clear *ngIf="hasLogged">
+        <ion-icon class="header-icon" name="ios-contact-outline" class="icon-big" style="color: black;"></ion-icon>
+      </button>
+    </ion-buttons>
   </div>
 </ion-header>
 
-<ion-content padding>
-  <ion-item *ngIf="currentProject">
-    <ion-icon name="ios-briefcase-outline" item-start></ion-icon>
-    <ion-label>项目:{{currentProject.Name}}</ion-label>
-    <ion-select [(ngModel)]="currentProject" interface="popover" [compareWith]="compareFn" item-end>
+<ion-content class="day-background" padding *ngIf="hasLogged">
+  <ion-item class="item-box day-Interactive" *ngIf="currentProject">
+    <ion-icon name="ios-briefcase-outline" class="ml" style="line-height: 7.81vh;" item-start></ion-icon>
+    <ion-label class="text-normal day-text-normal" style="margin-left: 2% !important;;">项目:</ion-label>
+    <ion-select class="mr" interface="popover" [(ngModel)]="currentProject" [compareWith]="compareFn" item-end  text-end>
       <ion-option *ngFor="let i of pro;" [value]="i" (ionSelect)="LoadRole()">{{i.Name}}</ion-option>
     </ion-select>
   </ion-item>
   <div>
-    <ion-item *ngIf="ISready">
-      <p>{{nowtime}}</p>
-      <p>{{localplace}}</p>
+    <ion-item  class="day-background" *ngIf="ISready">
       <ion-avatar item-left>
         <img [src]='this.imageURI'>
       </ion-avatar>
+      <p>{{nowtime}}</p>
+      <p>{{localplace}}</p>
       <p>{{_weather+'|'+_tempture+'℃'}}</p>
     </ion-item>
   </div>
-  <mywork [MyProject]="currentProject" #work1></mywork>
-  <ion-buttons>
-    <button ion-button (click)="Test()">测试</button>
-  </ion-buttons>
+  <!--<mywork [MyProject]="currentProject" #work1></mywork>-->
+
+  <div class="work-grid center-horizontal" style="margin-top: 2% !important;;">
+    <div class="row-1">
+      <div class="col-1 work-box" (click)="GoProjectInfo()">
+        <img class="box-center" src="../../assets/imgs/workicon/project.png"><br>
+        <span class="text-normal day-text-normal">工程信息</span>
+      </div>
+      <div class="col-2 work-box" (click)="GoPZ()">
+        <img class="box-center" src="../../assets/imgs/workicon/pangzhan.png"><br>
+        <span class="text-normal day-text-normal">旁站监理</span>
+      </div>
+      <div class="col-3 work-box" (click)="GoInspection()">
+        <img class="box-center" src="../../assets/imgs/workicon/zhiliangyanshou.png"><br>
+        <span class="text-normal day-text-normal">质量验收</span>
+      </div>
+      <div class="col-4 work-box" (click)="GoMateEntry()">
+        <img class="box-center" src="../../assets/imgs/workicon/mateentry.png"><br>
+        <span class="text-normal day-text-normal">材料进场</span>
+      </div>
+    </div>
+    <div class="row-2">
+      <div class="col-1 work-box" (click)="GoSecIssue()">
+        <img class="box-center" src="../../assets/imgs/workicon/security.png"><br>
+        <span class="text-normal day-text-normal">安全巡视</span>
+      </div>
+      <div class="col-2 work-box">
+        <img><br>
+        <span></span>
+      </div>
+      <div class="col-3 work-box">
+        <img><br>
+        <span></span>
+      </div>
+      <div class="col-4 work-box">
+        <img class="box-center" src="../../assets/imgs/workicon/workrecord.png"><br>
+        <span class="text-normal day-text-normal">工作记录</span>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-content class="day-background" *ngIf="!hasLogged">
+  <div class="center">
+      <span style="color: #007aff;  font-size: 2vh;" (click)="loggin()">请先登录</span>
+  </div>
+
 </ion-content>
