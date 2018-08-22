@@ -10,6 +10,12 @@ import {EPSecIssue, EPSecProblem, EPSecRisk} from "../../../../Model/EPSecIssue"
 import {ChoosePhotoService, Photo} from "../../../../providers/ChoosePhotoService";
 import {SecRiskRecordPage} from "../sec-risk-record/sec-risk-record";
 import {TabsPage} from "../../../tabs/tabs";
+import {ECUnit} from "../../../../Model/ECUnit";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {IssueSheet} from "../../../../Model/IssueSheet";
+import {Pangzhan} from "../../../../Model/EPPangzhan";
+import {SecIssuesPage} from "../sec-issues";
+import {PzSelectPeoplePage} from "../../../JianLiPZ/pz-select-people/pz-select-people";
 
 /**
  * Generated class for the SecIssRecordPage page.
@@ -22,6 +28,16 @@ import {TabsPage} from "../../../tabs/tabs";
   templateUrl: 'sec-iss-record.html',
 })
 export class SecIssRecordPage {
+  result;
+  isstype;
+  ppap;
+  ppapa;
+  Iss:IssueSheet;
+  issname;
+  issuetype;
+  issuepart;
+  curECUnit:ECUnit;
+  ECUnit;
   employees;
   photoes:Photo[]=[];
   ePSecProblems:EPSecProblem[]= [];
@@ -30,6 +46,7 @@ export class SecIssRecordPage {
   EMPloyeeID;
   //当前跟踪人
   curEmployee;
+  EmployeeID;
   //安全隐患类
   ePSecIssue:EPSecIssue;
   //页面类型 新建 or 保存
@@ -41,8 +58,15 @@ export class SecIssRecordPage {
   //是否为危大工程
   isRiskProject=false;
   isClear=false;
+  Descs;
+  ReqTimes;
+  RealTimes;
+  RecordTimes;
+  ReviewTimes;
+  transEmployee:{RealName:String,EmployeeID:String};
+  TransEmployee:{RealName:String,EmployeeID:String};
 
-  checkType=[{'option':'目测','value':0},{'option':'尺量','value':1},{'option':'检测','value':2}];
+
 
   init(){
     alert("this work!");
@@ -52,6 +76,7 @@ export class SecIssRecordPage {
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               public http:HttpService,
+              public httpc:HttpClient,
               private choosephoto:ChoosePhotoService,
               public toastCtrl: ToastController,
               public platform:Platform) {
@@ -71,30 +96,35 @@ export class SecIssRecordPage {
       document.addEventListener('resume',mywork,false);
       });
       */
-    //
+    //;
+    this.transEmployee = {RealName:"请选择", EmployeeID:""};
+    this.TransEmployee = {RealName:"请选择", EmployeeID:""};
     this.EProject = this.navParams.get("EProject");
     this.EMPloyeeID = this.navParams.get("EMPloyeeID");
+    this.http.get(ApiUrl+'Project/GetECUnit').subscribe(res=>{
+      this.ECUnit = res;
+    });
     this.type = this.navParams.get("Type");
-    if(this.type==1){
+    if (this.type == 1) {
       this.ePSecIssue = this.navParams.get('EPSecIssue');
       this.initPhoto();
-      this.choosephoto.InitParams(this.ePSecIssue.EPCSID,this.EMPloyeeID);
-    }else if(this.type==0){
-      this.ePSecIssue = new EPSecIssue(this.EMPloyeeID,this.EProject);
+      this.choosephoto.InitParams(this.ePSecIssue.EPCSID, this.EMPloyeeID);
+    } else if (this.type == 0) {
+      this.ePSecIssue = new EPSecIssue(this.EMPloyeeID, this.EProject);
     }
     console.log('ionViewDidLoad SecIssRecordPage');
 
     //获得与这个项目关联的Employees
-    this.http.get(ApiUrl+'Project/getEmployees?EProjectId='+this.EProject).subscribe(res=>{
+    this.http.get(ApiUrl + 'Project/getEmployees?EProjectId=' + this.EProject).subscribe(res => {
       this.employees = res;
-      this.employees.forEach(v=>{
-        if(this.ePSecIssue.TrackEmployeeID==v.EmployeeID){
+      this.employees.forEach(v => {
+        if (this.ePSecIssue.TrackEmployeeID == v.EmployeeID) {
           this.curEmployee = v;
         }
       });
-    },error=>{
+    }, error => {
       alert(error);
-    });
+    })
 
     //获得拉下列表
     this.http.get(ApiUrl+'EPSecIssues/GetKeyType').subscribe(res=>{
@@ -122,6 +152,192 @@ export class SecIssRecordPage {
     },error=>{
       alert("请求参数列表出错！");
     });
+    this.Iss=new IssueSheet();
+  }
+  addPeople(){
+    var data={
+      'employees':this.employees,
+      callback:data=>{
+        this.transEmployee = data;
+      }
+    };
+    this.navCtrl.push(PzSelectPeoplePage,data);
+  }
+  AddPeople(){
+    var data={
+      'employees':this.employees,
+      callback:data=>{
+        this.TransEmployee = data;
+      }
+    };
+    this.navCtrl.push(PzSelectPeoplePage,data);
+  }
+  save(IsSubmit){
+    var httphead = new HttpHeaders({"Content-Type":'application/json',"Authorization":'Bearer '+sessionStorage.getItem('accessToken')});
+    console.log(this.Iss.IssueTypeID);
+    this.Iss.State = IsSubmit;
+    if (IsSubmit == 0) {
+      this.Iss = new IssueSheet()
+      if(this.isstype=="0"){
+        this.Iss.IssueTypeID=0;
+      }
+      else {
+        if (this.isstype == "1") {
+          this.Iss.IssueTypeID = 1;
+        }
+        else {
+          this.Iss.IssueTypeID = 2;
+        }
+      };
+      this.Iss.Position = this.issuepart;
+      this.Iss.IssueName = this.issname;
+      if(this.isstype=="0"){
+        this.Iss.IssueTypeID=8;
+      }
+      else {
+        if (this.isstype == "1") {
+          this.Iss.IssueTypeID = 9;
+        }
+        else {
+          if(this.isstype == "2") {
+            this.Iss.IssueTypeID = 12;
+          }
+          else {
+            this.Iss.IssueTypeID = 13;
+          }
+        }
+      };
+      if(this.ePSecIssue.UnitPart=="0"){
+        this.Iss.Stage=0;
+      }
+      else {
+        if (this.ePSecIssue.UnitPart == "1") {
+          this.Iss.Stage = 1;
+        }
+        else {
+          this.Iss.Stage = 2;
+        }
+      };
+      if(this.ppapa=="0"){
+        this.Iss.Level=0;
+      }
+      else {
+        if (this.ppapa == "1") {
+          this.Iss.Level = 1;
+        }
+        else {
+          this.Iss.Level = 2;
+        }
+      };
+      this.Iss.Desc = this.Descs;
+      if (typeof this.curECUnit === 'undefined') {
+        this.Iss.RIUnitID = 0;
+      }
+      else {
+        this.Iss.RIUnitID = this.curECUnit.ECUnitID;
+      }
+      if(this.transEmployee.RealName=='请选择'){
+        this.Iss.RIPersonID = null;
+      }else {
+        this.Iss.RIPersonID = this.transEmployee.EmployeeID;
+      }
+      if(typeof this.ReqTimes=='undefined'){
+        this.Iss.ReqTime='2000-01-01T00:00:00Z';
+      }
+      else {
+        this.Iss.ReqTime = this.ReqTimes;
+      }
+      this.Iss.RealTime = this.RealTimes;
+      if (this.isClear = true) {
+        this.Iss.RIResult = "通过"
+      }
+      else {
+        this.Iss.RIResult = "不通过"
+      }
+      this.Iss.RecorderID = this.EMPloyeeID;
+      this.Iss.RecordTime = this.RecordTimes;
+      this.Iss.ReviewTime = this.ReviewTimes;
+      this.Iss.Command = this.ppap;
+      this.Iss.State = 0;
+      this.Iss.EProjectID = this.EProject;
+      if(this.TransEmployee.RealName=='请选择'){
+        this.Iss.TracerID = null;
+      }else {
+        this.Iss.TracerID = this.TransEmployee.EmployeeID;
+      }
+      this.httpc.post(ApiUrl + 'IssueSheets/Pppp', this.Iss, {headers: httphead}).subscribe((res: any) =>
+      {
+        console.log(res);
+        this.result = res.ErrorCode;
+        if (this.result == 0 )
+        {
+          alert("保存成功！");
+          this.navCtrl.pop();
+        }
+        else {
+          alert("请填写清单名称及施工单位信息！");
+        }
+
+      });
+
+    }
+
+    if(IsSubmit == 1) {
+      this.Iss = new IssueSheet()
+      if(typeof this.issuetype == 'undefined'||typeof this.curECUnit == 'undefined'||this.issuepart==""||this.issname==""||typeof this.ePSecIssue.UnitPart == 'undefined'||this.ppapa==""||this.Descs==""||this.transEmployee.RealName=='请选择'||typeof this.ReqTimes=='undefined'||typeof this.RealTimes=='undefined'||typeof this.ReviewTimes=='undefined'||typeof this.RecordTimes=='undefined'){
+        alert("缺少信息无法提交!")
+      }
+      else {
+        if(this.isstype=="0"){
+          this.Iss.IssueTypeID=0;
+        }
+        else {
+          if (this.isstype == "1") {
+            this.Iss.IssueTypeID = 1;
+          }
+          else {
+            this.Iss.IssueTypeID = 3;
+          }
+        };
+        this.Iss.Position = this.issuepart;
+        this.Iss.IssueName = this.issname;
+        this.Iss.Stage = this.ePSecIssue.UnitPart;
+        this.Iss.Level = this.ppapa;
+        this.Iss.Desc = this.Descs;
+        this.Iss.RIUnitID = this.curECUnit.ECUnitID;
+        this.Iss.RIPersonID = this.transEmployee.EmployeeID;
+        this.Iss.ReqTime = this.ReqTimes;
+        this.Iss.RealTime = this.RealTimes;
+        if (this.isClear = true) {
+          this.Iss.RIResult = "通过"
+        }
+        else {
+          this.Iss.RIResult = "不通过"
+        }
+        this.Iss.RecorderID = this.EMPloyeeID;
+        this.Iss.RecordTime = this.RecordTimes;
+        this.Iss.ReviewTime = this.ReviewTimes;
+        this.Iss.Command = this.ppap;
+        this.Iss.State = 1;
+        this.Iss.TracerID = this.TransEmployee.EmployeeID;
+        this.Iss.EProjectID = this.EProject
+        this.httpc.post(ApiUrl + 'IssueSheets/Pppp', this.Iss, {headers: httphead}).subscribe((res: any) =>
+        {
+          console.log(res);
+          console.log(res);
+          this.result = res.ErrorCode;
+          if (this.result == 0)
+          {
+            alert("提交成功！");
+            this.navCtrl.pop();
+          }
+          else {
+            alert("提交失败！");
+          }
+
+        });
+      }
+    }
   }
 
   //初始化图片
@@ -143,7 +359,7 @@ export class SecIssRecordPage {
   }
 
   riskRecord(){
-    this.navCtrl.push(SecRiskRecordPage,{'EProject':this.EProject,'EmployeeID':this.EMPloyeeID});
+    this.navCtrl.push(SecRiskRecordPage,{'EProjectID':this.EProject,'EmployeeID':this.EMPloyeeID});
   }
 
   newSecIssues(IsSubmit){
@@ -179,7 +395,7 @@ export class SecIssRecordPage {
   }
 
   initPhoto(){
-    let ePfiles = this.ePSecIssue.EPCSParent.EPCSFiles;
+    let ePfiles = this.Iss.EPCSParent.EPCSFiles;
     this.photoes = [];
     for(var i = 0;i<ePfiles.length;i++){
       var p = new  Photo();
@@ -260,5 +476,7 @@ export class SecIssRecordPage {
   deletePhoto(i:number){
     this.photoes = this.choosephoto.deletePhoto(i);
   }
+
+
 
 }

@@ -26,14 +26,14 @@
     </ion-segment>
   </div>
   <div [ngSwitch]="pet">
-    <ion-list *ngSwitchCase="'all'">
+    <ion-list *ngSwitchCase="'all'" >
       <ion-item *ngFor="let i of unfinished;" (click)="GoToExitRecord(i,0)">
         <ion-avatar item-start>
           <img src="./assets/imgs/workicon/secissues.png">
         </ion-avatar>
-        <h2>{{i.EPCSID}}<button ion-button color="light" outline>{{getState(i.State)}}</button></h2>
-        <p [ngStyle]="{'color':'gray'}">追踪人:{{i.Employee.RealName}}</p>
-        <ion-note item-end>{{GetTime(i.EPSecIssueTime)}}</ion-note>
+        <h2 class="qxsz">{{i.IssueName}}<button ion-button color="light" outline>{{getState(i.State)}}</button></h2>
+        <!--<p [ngStyle]="{'color':'gray'}">记录人:{{i.Employee.RealName}}</p>-->
+        <ion-note item-end>截止日期 {{GetTime(i.ReqTime)}}</ion-note>
       </ion-item>
     </ion-list>
 
@@ -42,9 +42,9 @@
         <ion-avatar item-start>
           <img src="./assets/imgs/workicon/secissues.png">
         </ion-avatar>
-        <h2>{{i.EPCSID}}<button ion-button color="danger" outline>{{getState(i.State)}}</button></h2>
-        <p [ngStyle]="{'color':'gray'}">追踪人:{{i.Employee.RealName}}</p>
-        <ion-note item-end>{{GetTime(i.EPSecIssueTime)}}</ion-note>
+        <h2>{{i.IssueName}}<button ion-button color="danger" outline>{{getState(i.State)}}</button></h2>
+        <!--<p [ngStyle]="{'color':'gray'}">记录人:{{i.Employee.RealName}}</p>-->
+        <ion-note item-end>实际整改日期{{GetTime(i.RealTime)}}</ion-note>
       </ion-item>
     </ion-list>
   </div>

@@ -238,7 +238,7 @@ export class HomePage {
   }
   //质量验收
   GoInspection(){
-    this.navCtrl.push(InspectionListPage,{'EProject':this.currentProject,'userId':TabsPage.UserInfo.employees.EmployeeID});
+    this.navCtrl.push(InspectionListPage,{'EProjectID':this.currentProject.EProjectID,'userId':TabsPage.UserInfo.employees.EmployeeID});
   }
   //材料进场
   GoMateEntry(){

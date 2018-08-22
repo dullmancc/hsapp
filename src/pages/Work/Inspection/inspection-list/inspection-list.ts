@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {IonicPage, LoadingController, NavController, NavParams} from 'ionic-angular';
 import {NormalPzPage} from "../../../JianLiPZ/normal-pz/normal-pz";
 import {InspectionPage} from "../inspection/inspection";
 import {HttpService} from "../../../Service/HttpService";
@@ -27,18 +27,24 @@ export class InspectionListPage {
   reportItems;
   CurReportInspection;
   pet='unfinished';
+  loader;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
+              public loadingCtrl: LoadingController,
               private http: HttpService) {
     this.hasEntered=false;
-    this.EProjectID=this.navParams.get('EProject').EProjectID;
-    this.EmployeeID=this.navParams.get('userId')
+    this.EProjectID=this.navParams.get('EProjectID');
+    this.EmployeeID=this.navParams.get('userId');
     this.load();
+    console.log("complete")
   }
 
   load(){
-    this.GetECUnitReportInspections();
+    this.loader=this.loadingCtrl.create();
+    this.loader.present();
+    if(!this.hasEntered)  this.GetECUnitReportInspections();
+    else this.GetInspectionRecords();
   }
 
   newInspection(){
@@ -60,6 +66,12 @@ export class InspectionListPage {
     this.http.get(ApiUrl+"Inspection/GetInspectionRecords?EmployeeID="+this.EmployeeID+"&EProjectID="+this.EProjectID).subscribe(data=>{
       this.unfinished=data.unfinished;
       this.finished=data.finished;
+
+      this.loader.dismiss();
+    }, error => {
+      this.loader.dismiss();
+      //错误信息
+      alert(error);
     });
   }
 
@@ -74,6 +86,12 @@ export class InspectionListPage {
   GetECUnitReportInspections(){
     this.http.get(ApiUrl+"Inspection/GetECUnitReportInspections?EprojectID="+this.EProjectID).subscribe(data=>{
       this.reportItems=data;
+
+      this.loader.dismiss();
+    }, error => {
+      this.loader.dismiss();
+      //错误信息
+      alert(error);
     });
   }
 

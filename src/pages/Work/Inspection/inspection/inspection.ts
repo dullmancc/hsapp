@@ -13,6 +13,7 @@ import {Photo, PhotoService} from "../../../../providers/PhotoService";
 import {Utils} from "../../../../providers/Utils";
 import {_document} from "@angular/platform-browser/src/browser";
 import {JQueryStyleEventEmitter} from "rxjs/observable/FromEventObservable";
+import {InspectionListPage} from "../inspection-list/inspection-list";
 
 /**
  * Generated class for the InspectionPage page.
@@ -71,6 +72,7 @@ export class InspectionPage {
     this.GetECUnitName();
     this.GetPersonReprotName();
     this.InitInspection();
+    if(this.State==1) this.isReadOnly=true;
   }
 
   goBack(){
@@ -79,6 +81,7 @@ export class InspectionPage {
   }
 
   InitInspection(){
+    console.log(this.State)
     if(this.State>-1){
       //不是新建
       var ig=this.navParams.get("InspectionGroup");
@@ -167,8 +170,11 @@ export class InspectionPage {
   }
 
   ShowInspections(){
-    this.GetInspections();
-    this.IsSelecting=true;
+    if(!this.isReadOnly){
+      this.GetInspections();
+      this.IsSelecting=true;
+    }
+
   }
   ShowMAcList(){
     this.IsShowingMAcList=!this.IsShowingMAcList;
@@ -178,18 +184,20 @@ export class InspectionPage {
   }
 
   SelectSubProj(){
-    var data={
-      'DivProjID':this.CurInspection.DivEngineeringID,
-      'SubDivProjID':this.CurInspection.SubDivEngineeringID,
-      'State':this.State,
-      callback:data=>{
-        this.CurInspection.DivEngineeringID = data.DivProjID;
-        this.CurInspection.SubDivEngineeringID = data.SubDivProjID;
-        this.SubProj=data.SubProj;
-        this.CurInspection.SubEngineeringID=this.SubProj.SubEngineeringID;
-      }
-    };
-    this.navCtrl.push(SubProjectPage,data);
+      var data={
+        'DivProjID':this.CurInspection.DivEngineeringID,
+        'SubDivProjID':this.CurInspection.SubDivEngineeringID,
+        'SubProjID':this.CurInspection.SubEngineeringID,
+        'State':this.State,
+        callback:data=>{
+          this.CurInspection.DivEngineeringID = data.DivProjID;
+          this.CurInspection.SubDivEngineeringID = data.SubDivProjID;
+          this.SubProj=data.SubProj;
+          this.CurInspection.SubEngineeringID=this.SubProj.SubEngineeringID;
+        }
+      };
+      this.navCtrl.push(SubProjectPage,data);
+
   }
 
   SelectInspection(inspection){
@@ -236,6 +244,8 @@ export class InspectionPage {
                 this.choosephoto.paramValue=res.InspectionID;
 
                 this.presentToast(res.ErrorMs);
+
+                if (state==1) this.navCtrl.pop();
               },error=>{
                 this.presentToast(error.toString());
               });
@@ -250,6 +260,7 @@ export class InspectionPage {
         this.choosephoto.SetParams(this.CurInspection.InspectionID,'PostInspectionFile')
 
         this.presentToast(res.ErrorMs);
+        if (state==1) this.navCtrl.pop();
       },error=>{
         this.presentToast(error.toString());
       });
@@ -268,13 +279,16 @@ export class InspectionPage {
 
   ReplaceAcceptance(new_acc:AcceptanceRecord){
     if(this.CurInspection.AcceptanceRecords){
-      this.CurInspection.AcceptanceRecords.some(ar=>{
-        if(ar.AcceptanceID==new_acc.AcceptanceID){
-          new_acc.InspectionID=ar.InspectionID;
-          ar=new_acc;
-          return true;
+      for(var i=0;i<this.CurInspection.AcceptanceRecords.length;i++){
+        if(this.CurInspection.AcceptanceRecords[i].AcceptanceID==new_acc.AcceptanceID){
+          this.CurInspection.AcceptanceRecords[i].MinSampleNum=new_acc.MinSampleNum;
+          this.CurInspection.AcceptanceRecords[i].RealSampleNum=new_acc.RealSampleNum;
+          this.CurInspection.AcceptanceRecords[i].CheckRecord=new_acc.CheckRecord;
+          this.CurInspection.AcceptanceRecords[i].CheckResult=new_acc.CheckResult;
+          this.CurInspection.AcceptanceRecords[i].IsConfirmed=new_acc.IsConfirmed;
+          break;
         }
-      });
+      }
     }
   }
 

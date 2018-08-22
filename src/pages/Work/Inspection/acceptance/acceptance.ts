@@ -30,8 +30,6 @@ export class AcceptancePage {
               public http: HttpService) {
     this.AcceptanceRecord=this.navParams.get("AcceptanceRecord");
     this.backup(this.AcceptanceRecord);
-    console.log("enter")
-    console.log(this.AcceptanceRecord);
     this.InspectionID=this.navParams.get("InspectionID");
     this.State=this.navParams.get("State");
     this.callback=this.navParams.get("callback");
@@ -71,7 +69,7 @@ export class AcceptancePage {
   }
 
   goback(){
-    this.AcceptanceRecord=this.Origin;
+    this.callback(this.Origin);
     this.navCtrl.pop();
   }
 

@@ -5,13 +5,11 @@
   Ionic pages and navigation.
 -->
 <ion-header class="header day-header">
-  <div class="header-left back" (click)="goBack()">
-    <img src="assets/imgs/common/back.png"/>
-  </div>
+  <img class="header-left back" src="assets/imgs/common/back.png" (click)="goBack()"/>
   <div class="header-center">
     <span class="text-title day-text-title">检验批</span>
   </div>
-  <div class="header-right">
+  <div class="header-right" *ngIf="!isReadOnly">
     <ion-buttons end>
       <button ion-button clear color="dark" (click)="save(0)" *ngIf="!IsSelecting">
         保存
@@ -27,26 +25,26 @@
 <ion-content class="day-background">
 
   <ion-list *ngIf="!IsSelecting">
-    <ion-item class="item-box day-Interactive">
+    <ion-item class="operation-box day-Interactive">
       <ion-label color="dark">施工单位</ion-label>
-      <ion-label text-end>{{ECUnitName}}</ion-label>
+      <ion-label style="color: darkgray;" text-end>{{ECUnitName}}</ion-label>
     </ion-item>
-    <ion-item class="item-box day-Interactive">
+    <ion-item class="operation-box day-Interactive">
       <ion-label color="dark">施工负责人</ion-label>
-      <ion-label text-end>{{PersonReportName}}</ion-label>
+      <ion-label style="color: darkgray;" text-end>{{PersonReportName}}</ion-label>
     </ion-item>
-    <ion-item class="item-box day-Interactive" (click)="SelectSubProj()">
+    <ion-item class="operation-box day-Interactive" (click)="SelectSubProj()">
       <ion-label item-start color="dark">分项工程</ion-label>
-      <ion-label item-end text-end>{{SubProj.Name}}</ion-label>
+      <ion-label item-end text-end [ngStyle]="{'color':isReadOnly?'darkgray':'dark'}">{{SubProj.Name}}</ion-label>
     </ion-item>
-    <ion-item class="item-box day-Interactive" (click)="ShowInspections()">
+    <ion-item class="operation-box day-Interactive" (click)="ShowInspections()">
       <ion-label color="dark">重点</ion-label>
-      <ion-label item-end text-end>{{CurInspectionType.InspectionTypeName}}</ion-label>
+      <ion-label item-end text-end [ngStyle]="{'color':isReadOnly?'darkgray':'dark'}">{{CurInspectionType.InspectionTypeName}}</ion-label>
     </ion-item>
   </ion-list>
 
   <ion-list *ngIf="IsSelecting">
-    <ion-item class="item-box day-Interactive" *ngFor="let i of InspectionTypeList" (click)="SelectInspection(i)">
+    <ion-item class="operation-box day-Interactive" *ngFor="let i of InspectionTypeList" (click)="SelectInspection(i)">
       {{i.InspectionTypeName}}
     </ion-item>
   </ion-list>
@@ -59,7 +57,7 @@
     </ion-item>
 
     <ion-list class="AcList" *ngIf="IsShowingMAcList">
-      <ion-item class="item-box day-Interactive" *ngFor="let a of MAcList" (click)="CheckUp(a)">
+      <ion-item class="operation-box day-Interactive" *ngFor="let a of MAcList" (click)="CheckUp(a)">
         <ion-label>{{a.Acceptance.AcceptanceName}}</ion-label>
         <ion-icon name="ios-help-circle-outline" *ngIf="!a.IsConfirmed" item-end></ion-icon>
         <ion-icon name="ios-checkmark-circle-outline" *ngIf="a.IsConfirmed" item-end></ion-icon>
@@ -73,7 +71,7 @@
     </ion-item>
 
     <ion-list class="AcList" *ngIf="IsShowingJAcList">
-      <ion-item class="item-box day-Interactive" *ngFor="let a of JAcList" (click)="CheckUp(a)">
+      <ion-item class="operation-box day-Interactive" *ngFor="let a of JAcList" (click)="CheckUp(a)">
         <ion-label>{{a.Acceptance.AcceptanceName}}</ion-label>
         <ion-icon name="ios-help-circle-outline" *ngIf="!a.IsConfirmed" item-end></ion-icon>
         <ion-icon name="ios-checkmark-circle-outline" *ngIf="a.IsConfirmed" item-end></ion-icon>
@@ -83,7 +81,7 @@
   </ion-list>
 
   <ion-list *ngIf="!IsSelecting">
-    <ion-item class="item-box day-Interactive" (click)="addPhoto()">
+    <ion-item class="operation-box day-Interactive" (click)="addPhoto()">
       <ion-icon name="ios-camera-outline" item-start></ion-icon>
       <ion-label id="fileLabel">记录上传文件数量</ion-label>
     </ion-item>
@@ -95,10 +93,5 @@
     </ul>
   </ion-list>
 
-  <!--<div>-->
-    <!--&lt;!&ndash;<img src="../../../../assets/imgs/test.png" id="img">&ndash;&gt;-->
-    <!--<input type="file" id="img" (change)="showlist()">-->
-    <!--<button (click)="pcAddPhoto()">提交</button>-->
-  <!--</div>-->
-
+  <div class="footer"></div>
 </ion-content>

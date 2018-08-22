@@ -3,5 +3,18 @@ my-slides {
     padding: 0;
     margin: 0px;
   }
-
+  .swiper-pagination-bullet{
+    opacity: .6;
+    background: white;
+    margin-left: 1% !important;
+    margin-right: 1% !important;
+  }
+  .swiper-pagination-bullet-active{
+    opacity: 1;
+    background: #007aff;
+  }
+  .slide_img{
+    height: 15rem;
+    transition: all .4s;
+  }
 }

@@ -43,7 +43,7 @@ export class ContactPage {
           text: '确定',
           handler: () => {
             LoginPage.Login = false;
-            this.app.getRootNav().setRoot(TabsPage);       //3.调用this.app.getRootNav() 从根页面跳转就可以了
+            this.app.getRootNav().setRoot(LoginPage);       //3.调用this.app.getRootNav() 从根页面跳转就可以了
             setTimeout(() => {
               //this.navCtrl.popToRoot();
             },1000);

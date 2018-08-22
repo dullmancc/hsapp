@@ -5,7 +5,7 @@ import {FriendPage} from "../../friend/friend";
 import {AboutPage} from "../../about/about";
 import {ErrorPage} from "../../error/error";
 import {SecIssueslistPage} from "./sec-issueslist/sec-issueslist";
-import {SecIssRecordPage} from "./sec-iss-record/sec-iss-record";
+import {SecIssRecordPage} from "../../../../../新建文件夹 (2)/sec-iss-record/sec-iss-record";
 import {HttpService} from "../../Service/HttpService";
 import {ApiUrl} from "../../../providers/Constants";
 import {TabsPage} from "../../tabs/tabs";
@@ -46,6 +46,7 @@ export class SecIssuesPage {
 
     var data = Utils.ParamsToString(navP);
     this.http.get(ApiUrl+"EPSecIssues/GetEPSecIssueForEM?"+data).subscribe(res=>{
+      console.log(res);
       this.unfinished = res.unfinished;
       this.finished = res.finished;
     },error=>{
@@ -88,11 +89,11 @@ export class SecIssuesPage {
   }
 
 
-  GoToExitRecord(EPSecIssue,num){
+  GoToExitRecord(IssueSheet,num){
     if(num==0){
-      this.navCtrl.push(SecIssRecordPage,{'EProject':this.EProject.EProjectID,'EMPloyeeID':this.EMPloyeeID,'Type':1,'EPSecIssue':EPSecIssue});
+      this.navCtrl.push(SecIssRecordPage,{'EProject':this.EProject.EProjectID,'EMPloyeeID':this.EMPloyeeID,'Type':1,'IssueSheet':IssueSheet});
     }else if(num==1){
-      this.navCtrl.push(SecIssueslistPage,{'EProject':this.EProject.EProjectID,'EMPloyeeID':this.EMPloyeeID,'Type':1,'EPSecIssue':EPSecIssue});
+      this.navCtrl.push(SecIssueslistPage,{'EProject':this.EProject.EProjectID,'EMPloyeeID':this.EMPloyeeID,'Type':1,'IssueSheet':IssueSheet});
     }
 
 }

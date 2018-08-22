@@ -30,6 +30,7 @@ export class SubProjectPage {
   temp;
   State;
   callback;
+  isReadOnly=false;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -38,6 +39,7 @@ export class SubProjectPage {
     this.callback = this.navParams.get('callback');
     this.temp=this.navParams.get("DivProjID");
     this.Load();
+    if(this.State==1)  this.isReadOnly=true;
   }
 
   Load(){
@@ -71,17 +73,30 @@ export class SubProjectPage {
   }
 
   GetSubProj(SubDivProjID){
-    this.http.get(ApiUrl+"Inspection/GetSubProjs?SubDivProjID="+SubDivProjID).subscribe(data=>{
-      this.SubProjs=data;
-    });
+    if(this.State<1){
+      this.http.get(ApiUrl+"Inspection/GetSubProjs?SubDivProjID="+SubDivProjID).subscribe(data=>{
+        this.SubProjs=data;
+        console.log(data);
+      });
+    }
+    else{
+      var subid=this.navParams.get("SubProjID");
+      this.http.get(ApiUrl+"Inspection/GetSubProjByID?SubProjID="+subid).subscribe(data=>{
+        this.SubProjs=data;
+        console.log(data);
+      });
+    }
   }
 
   SetSubProj(SubProj){
-    let projMisc=new ProjMisc();
-    projMisc.DivProjID=this.CurDiv;
-    projMisc.SubDivProjID=this.CurSubDiv;
-    projMisc.SubProj=SubProj;
-    this.callback(projMisc);
-    this.navCtrl.pop();
+    if(!this.isReadOnly){
+      let projMisc=new ProjMisc();
+      projMisc.DivProjID=this.CurDiv;
+      projMisc.SubDivProjID=this.CurSubDiv;
+      projMisc.SubProj=SubProj;
+      this.callback(projMisc);
+      this.navCtrl.pop();
+    }
+
   }
 }

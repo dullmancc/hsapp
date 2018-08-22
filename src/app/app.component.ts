@@ -10,11 +10,13 @@ import {SecIssRecordPage} from "../pages/Work/sec-issues/sec-iss-record/sec-iss-
 import {EpAddMatePage} from "../pages/Work/ep-mate-entry/ep-add-mate/ep-add-mate";
 import {HttpService} from "../pages/Service/HttpService";
 import {AppUpdateService} from "../providers/AppUpdateService";
+import {LoginPage} from "../pages/login/login";
+
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any = TabsPage;
+  rootPage:any = LoginPage;
   //rootPage:any = EpAddMatePage;
   platform: any = Platform;
   toast: any = ToastController;

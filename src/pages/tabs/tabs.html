@@ -1,8 +1,9 @@
-<ion-tabs #myTabs>
-  <ion-tab [root]="tab1Root" tabTitle="首页" tabIcon="home"></ion-tab>
-  <ion-tab [root]="tab2Root" tabTitle="工作" tabIcon="md-clipboard"></ion-tab>
-  <ion-tab [root]="tab3Root" tabTitle="消息" tabIcon="information-circle"></ion-tab>
-  <ion-tab [root]="tab4Root" tabTitle="我的" tabIcon="contact"></ion-tab>
+<ion-tabs [selectedIndex]="2" #myTabs>
+  <ion-tab [root]="tab1Root" tabTitle="消息" tabIcon="md-text"></ion-tab>
+  <ion-tab [root]="tab2Root" tabTitle="发现" tabIcon="md-search"></ion-tab>
+  <ion-tab [root]="tab3Root" tabTitle="首页" tabIcon="md-home"></ion-tab>
+  <ion-tab [root]="tab4Root" tabTitle="资料" tabIcon="information-circle"></ion-tab>
+  <ion-tab [root]="tab5Root" tabTitle="我的" tabIcon="contact"></ion-tab>
 </ion-tabs>
 
 <!--md-document

@@ -1,0 +1,64 @@
+stack-panel {
+  .box-center{
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .col{
+    left: 5.6vw;
+  }
+  .col-1{
+    //left: 9.36%;//5.6%;//23.6
+  }
+  .col-2{
+    //left: 29.2vw;
+    //left: 18.72%;
+  }
+  .col-3{
+    //left: 52.8vw;
+    //left: 28.08%;
+  }
+  .col-4{
+    //left: 76.4vw;
+    //left: 37.44%;
+  }
+  .row-1{
+    height: 22vw;
+    max-height: 200px;
+    position: relative;
+  }
+  .row-2{
+    height: 22vw;
+    max-height: 200px;
+    position: relative;
+  }
+  .work-grid {
+    position: relative;
+  }
+  .work-box {
+    position: relative;
+    width: 20.83vw;
+    height: 16.8vw;
+    max-height: 102px;
+    display: inline-block;
+  }
+  .work-box > img{
+    display: block;
+    position: absolute;
+    width: 13.3vw;
+    height: 13.3vw;
+    max-width: 90px;
+    max-height: 90px;
+    top:0%;
+    left:50%;
+    transform: translateX(-50%);
+  }
+  .work-box > span{
+    display: block;
+    position: absolute;
+    width: 100%;
+    font-size: 1rem !important;
+    text-align: center;
+    bottom:0px;
+
+  }
+}

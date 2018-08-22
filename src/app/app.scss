@@ -14,73 +14,23 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
-
 /*
-body{
-  user-select: unset;
-}
-
 #header {
   display: block;
-  background-color: #f9f9f9;
-  background-size: 100% 44px;
+  //background-color: #f9f9f9;
+  //background-size: 100% 44px;
   width: 100%;
-  height: 44px;
-  overflow: hidden;
-}
-
-.tabs-md .tab-button {
-  min-height: 4rem;
-}
-
-.tab-button-icon {
-  color: rgba(103, 103, 103, 0.7) !important;
-}
-
-.tab-button[aria-selected=true] .tab-button-icon {
-  color: #387ef5 !important;
-}
-
-.header-left {
-  width: 40px;
-  height: 44px;
-  position: absolute;
-}
-.header-left img {
-  //src:actionUrl('../');
-  width: 100%;
-  height: 100%;
-  padding: 10px;
-}
-.header-center {
-  display: flex;
-  height: 44px;
-  position: absolute;
-  left: 40px;
-  right: 40px;
-  align-items: center;
-  justify-content: center;
-}
-.header-center span {
-  font-size: 17px;
-  color: #616161;
-}
-.header-right {
-  width: auto;
-  height: 44px;
-  position: absolute;
-  right: 0;
+  //height: 44px;
+  //overflow: hidden;
 }
 .content {
   display: flex;
   flex-direction: column;
   flex-flow: wrap;
-  background-color: #F3F5F7;
-
+  //overflow: scroll;
 }
 */
 //xyw
-
 
 ion-content,ion-header {
   position: relative !important;
@@ -99,10 +49,13 @@ label, input, select, textarea {
 .fixed-content, .scroll-content{
   margin-top: 0px!important;
 }
+.item-block, .item > ion-icon, .item-inner > ion-icon{
+  min-height: 0px;
+}
 
 //theme
 .tabbar{
-  height: 7.5%;
+  height: 4.5rem;
   background-color: #F2F1EF !important;
 }
 .day-background{
@@ -113,11 +66,13 @@ label, input, select, textarea {
 .day-header{
   color: black;
   //background-color: #F3F5F7;
-  background-color: #f5f6f8;
+  //background-color: #f5f6f8;
+  //background: linear-gradient(to right, #23a7f2, #1ab6ff, #23a7f2);
 }
 .day-headline{
   //background-color: #F3F5F7;
-  background-color: #fafcfe !important;
+  //background-color: #fafcfe !important;
+  background-color: #F3F5F7 !important;
   border: none;
 }
 .day-Interactive{
@@ -125,7 +80,7 @@ label, input, select, textarea {
   //background-color: #F2F1EF;
   //background-color: #f4f4f4;
   //background-color: #f3f8fd70;
-  background-color: #F3F5F7;
+  background-color: #fff;
   border-left: none;
   border-right: none;
 }
@@ -178,8 +133,8 @@ label, input, select, textarea {
   margin-right: 2.78% !important;
 }
 .header{
-  height: 7.03%;
-  line-height: 7.03%;
+  height: 3.46rem;
+  line-height: 3.46rem;
   position: relative;
 }
 .header-left{
@@ -187,8 +142,8 @@ label, input, select, textarea {
   left:0px;
 }
 .back{
-  height: 4vh;
-  width: 4vh;
+  height: 1.97rem;
+  width: 1.97rem;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -197,6 +152,10 @@ label, input, select, textarea {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  max-width: 61.8%;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .header-right{
   position: absolute;
@@ -205,16 +164,17 @@ label, input, select, textarea {
   transform: translateY(-50%);
 }
 .header-icon{
-  height: 6vh;
-  width: 6vh;
+  height: 2.95rem;
+  width: 2.95rem;
 }
 .icon-big{
-  font-size: 4.5vh;
+  font-size: 2.22rem;
 }
 .headline-box{
-  height: 7.81%;
+  //height: 7.81%;
+  height: 4.08rem;
   position: relative;
-  line-height: 7.81%;
+  //line-height: 7.81%;
 }
 .headline-box > div {
   border: none !important;
@@ -227,14 +187,30 @@ label, input, select, textarea {
 ion-list > .message-box:first-of-type {
   border-top: #DADFE3 1px solid;
 }
-.item-box{
-  height: 7.81%;
+.list-box{
   position: relative;
+  height: 3.78rem;
+  border-bottom: #DADFE3 1px solid;
+}
+.item-box{
+  position: relative;
+  height: 6rem;
+  border-bottom: #DADFE3 1px solid;
+}
+.operation-box{
+  position: relative;
+  height: 4rem;
   border-bottom: #DADFE3 1px solid;
 }
 .select-text{
 }
+ion-list > .list-box:first-of-type {
+  border-top: #DADFE3 1px solid;
+}
 ion-list > .item-box:first-of-type {
+  border-top: #DADFE3 1px solid;
+}
+ion-list > .operation-box:first-of-type {
   border-top: #DADFE3 1px solid;
 }
 .fab-rb1{
@@ -247,21 +223,29 @@ ion-list > .item-box:first-of-type {
   bottom: 140px;
   right: 0px;
 }
+.footer{
+  height: 10rem;
+}
 //text
 
 .text-center-horizontal{
   text-align: center;
 }
 .text-title{
-  font-size: 2.5vh;
+  font-size: 1.5rem;
   font-weight: bold;
-  line-height: 7.02vh;
+  line-height: 3.46rem;
 }
 .text-headline{
-  font-size: 3.75vh;
+  max-width: 61.8%;
+  font-size: 1.6rem;
+  line-height: 4.08rem;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .text-normal{
-  font-size: 2.19vh;
+  font-size: 1.08rem;
 }
 .text-danger{
 

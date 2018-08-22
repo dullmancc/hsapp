@@ -41,14 +41,17 @@ import {FileOpener} from "@ionic-native/file-opener";
 import {QualityGJService} from "../providers/GangJinQualityService";
 import {SecRiskRecordPageModule} from "../pages/Work/sec-issues/sec-risk-record/sec-risk-record.module";
 import {EpMateCheckListPageModule} from "../pages/Work/ep-mate-check-list/ep-mate-check-list.module";
-import {InspectionPage} from "../pages/Work/Inspection/inspection/inspection";
 import {PhotoService} from "../providers/PhotoService";
 import {InspectionPageModule} from "../pages/Work/Inspection/inspection/inspection.module";
+import {AcceptancePageModule} from "../pages/Work/Inspection/acceptance/acceptance.module";
+import {InspectionListPageModule} from "../pages/Work/Inspection/inspection-list/inspection-list.module";
+import {SubProjectPageModule} from "../pages/Work/Inspection/sub-project/sub-project.module";
 
 @NgModule({
   declarations: [
     MyApp,
     BeautyDirective,
+
   ],
   imports: [
     BrowserModule,
@@ -76,7 +79,10 @@ import {InspectionPageModule} from "../pages/Work/Inspection/inspection/inspecti
     TabsPageModule,
     SecIssuesPageModule,
     SecRiskRecordPageModule,
+    InspectionListPageModule,
     InspectionPageModule,
+    SubProjectPageModule,
+    AcceptancePageModule,
     HttpModule,
   ],
   bootstrap: [IonicApp],

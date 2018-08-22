@@ -4,91 +4,151 @@ page-index {
     margin: 0px !important;
     padding: 0px !important;
   }
+  //ion-header{
+  //  z-index: 1 !important;
+  //}
  ion-content{
    font-family: 'Microsoft YaHei';
  }
   ion-icon,span{
     color: #5d5d5d;
-    font-size: 15px;
+    font-size: 1.15rem;
   }
-  /*
-    #my-slides{
-    height: 100px;
-    width: auto;
-  }
-    .mydenglu{
-     margin-top: 25px;
-    }
-    .bar_div{
-      width: auto;
-      height: 3px;
-      margin-top: 3px;
-      background-color: #bfbfbf;
-    }
-    .col-list{
-      height: 30px;
-    }
-    ion-col{
-      height: 60px;
-      font-size: 10px;
-    }
-    img{
-    }
-    p{
-      width: 40px;
-      position: relative;
-      top:-15px;
-      text-align: center;
-    }
-  */
+.header-index{
+  position: relative;
+  height: fit-content !important;
+}
+  .header-right{
 
-  //xyw
-  .flipster{
-    position: relative;
-    transform-style: preserve-3d;
-    perspective:100vw;
   }
-  .flipster-item{
+  //Rotation
+  .search{
     position: absolute;
-    max-width: 50vw;
-  }
-  .flipster-item:first-of-type {
-    opacity: 0.5;
-    z-index: 1;
-    left: 0%;
-    transform: rotateY(50deg) translateZ(-50px) translateX(-50%);
-  }
-  .flipster-item:nth-of-type(2) {
-    z-index: 2;
+    //height: 4.2vh;
+    width: 61.8%;
     left: 50%;
+    top: 0.38rem;
+    //bottom: 0.1vh;
     transform: translateX(-50%);
+    z-index: 2;
   }
-  .flipster-item:last-of-type {
-    opacity: 0.5;
+  .search{
+    height: 2.5rem;
+    line-height: 2.5rem;
+    width: 61.8vw;
+    background-repeat: no-repeat;
+    background-size: 1.47rem;
+    background-position: 5px center;
+    padding: 0 0 0 1.72rem !important;
+    box-sizing: border-box;
+    //box-shadow: none;
+    //border: black 1px solid;
+    border-radius: 2rem;
+  }
+  .fill{
+    position: relative;
+    top: 0;
+    height: 3.26rem;
+  }
+  .more{
+    position: absolute;
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 3.02rem;
+    top: 0;
+    right: 2.78%;
+  }
+  .rotation{
+    position: relative;
     z-index: 1;
-    right: 0%;
-    transform: rotateY(-50deg)  translateZ(-50px) translateX(50%);
+    height: 0rem;
+    margin-top: 0;
+    transition: all .4s;
   }
-  .flipster-img {
-    width: 31.25vh;
-    height: 31.25vh;
-    max-width: 50vw;
-    max-height: 50vw;
+  .rotation > my-slides > div >ion-slides{
+    height: 0px !important;
+    transition: all .4s;
+  }
+  .img-container > .slide-zoom{
+    height: 0px;
+    transition: height .4s;
+  }
+  .search:focus ~ .rotation{
     display: block;
+    height: 15rem;
   }
-  .flipster-desc {
-    width: 31.25vh;
-    height: 10vh;
-    max-width: 50vw;
-    display: block;
-    border: #DADFE3 1px solid;
-    border-top: none;
-    border-radius:0 0 16% 16%;
+  .search:focus ~ .rotation > my-slides > div >ion-slides{
+    height: 15rem !important;
   }
-  .flipster-item:first-of-type >.flipster-desc {
+  .search:focus ~ .rotation > my-slides > div >ion-slides > div >div > ion-slide > .slide-zoom{
+    height: 15rem !important;
+  }
+  .search:focus ~ .fill{
+    height: 0;
+  }
+  .search:focus ~ .more{
     display: none;
   }
-  .flipster-item:last-of-type >.flipster-desc {
-    display: none;
+  .dev-box{
+    position: relative;
+    height: 8.08rem;
+    border-bottom: #DADFE3 1px solid;
+  }
+  .dev-box:first-of-type{
+    border-top: #DADFE3 1px solid;
+  }
+  .preview-img{
+    position: absolute;
+    top: 14.28%;
+    left: 4.16%;
+    height: 13.88vw;
+    width: 13.88vw;
+  }
+  .preview-title{
+    position: absolute;
+    top: 14.28%;
+    left: 25%;
+    width: 75%;
+  }
+  .preview-title > span{
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+  .preview-title > ion-icon{
+    font-size: 1.4rem;
+  }
+  .preview-right{
+    position: absolute;
+    right: 2.78%;
+    font-weight: inherit !important;
+  }
+  .preview-msg{
+    position: absolute;
+    top: 38.09%;
+    left: 25%;
+    width: 61.8%;
+    text-overflow:ellipsis;
+    overflow: hidden;
+  }
+  .preview-msg > label{
+    font-size: 1rem;
+    line-height: 1.54rem;
+    white-space: nowrap;
+  }
+  .preview-time{
+    position: absolute;
+    top: 75%;
+    right: 2.78%;
+    font-size: 1rem;
+    font-weight: inherit;
+  }
+  .ion-md-checkmark-circle{
+    color: #00CC00;
+  }
+  .ion-md-warning{
+    color: #FFCC33;
+  }
+  .ion-md-remove-circle{
+    color: #CC0000;
   }
 }

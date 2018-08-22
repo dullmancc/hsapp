@@ -1,7 +1,7 @@
 <ion-header id="header" class="header day-header">
-  <div class="header-left back" (click)="goBack()" *ngIf="CanGoBack">
-    <img src="assets/imgs/common/back.png"/>
-  </div>
+  <!--<div class="header-left back" (click)="goBack()" *ngIf="CanGoBack">-->
+    <!--<img src="assets/imgs/common/back.png"/>-->
+  <!--</div>-->
   <div class="header-center">
     <span class="text-title day-text-title">登录</span>
   </div>
@@ -11,6 +11,7 @@
 </ion-header>
 
 <ion-content class="content day-background">
+  <div style="margin-top: 10vh;"></div>
   <ion-input id="user_name" placeholder="请输入账号"style="padding-left: 15px" [(ngModel)]="username">{{username}}</ion-input>
   <div class="div_password_conetnt">
     <ion-input id="user_password" placeholder="请输入密码" clearInput type="password"style="padding-left: 15px"  [(ngModel)]="password">{{password}}</ion-input>
@@ -19,9 +20,9 @@
   <div id="btn_login" class="day-btn-normal" (click)="logIn()">
     <div>登录</div>
   </div>
-  <div id="onetep_btn_login" class="day-btn-notice">
-    <div>注册</div>
-  </div>
+  <!--<div id="onetep_btn_login" class="day-btn-notice">-->
+    <!--<div>注册</div>-->
+  <!--</div>-->
   <div class="div_login_check">
     <ion-checkbox id="checkbox_login" [(ngModel)]="mushrooms" color="red"></ion-checkbox>
     <div style=" margin-left:5px;color: black "> 一个月内免登陆</div>

@@ -26,18 +26,18 @@ export class MySlidesComponent {
     this.text = 'Hello World';
     this.name = 'Hello';
     this.Slides_Img=[
-                        './assets/imgs/example-slide-1.jpg',
-                        './assets/imgs/example-slide-2.jpg',
-                        './assets/imgs/example-slide-3.jpg',
-                        './assets/imgs/example-slide-4.jpg',
-                        './assets/imgs/example-slide-1.jpg'
+                        'assets/imgs/example-slide-1.jpg',
+                        'assets/imgs/example-slide-2.jpg',
+                        'assets/imgs/example-slide-3.jpg',
+                        'assets/imgs/example-slide-4.jpg',
+                        'assets/imgs/example-slide-1.jpg'
                       ];
     this.bar_selected=[
-                          './assets/imgs/bar_red.png',
-                          './assets/imgs/bar_gray.png',
-                          './assets/imgs/bar_gray.png',
-                          './assets/imgs/bar_gray.png',
-                          './assets/imgs/bar_gray.png'
+                          'assets/imgs/bar_red.png',
+                          'assets/imgs/bar_gray.png',
+                          'assets/imgs/bar_gray.png',
+                          'assets/imgs/bar_gray.png',
+                          'assets/imgs/bar_gray.png'
                         ];
     // this.GetMyPos();
   }

@@ -1,11 +1,19 @@
-///<reference path="../../js/jquery/jquery.d.ts"/>
-import {Component, ElementRef, ViewChild} from '@angular/core';
-import {IonicPage, LoadingController, NavController, NavParams, Platform} from 'ionic-angular';
+
+import {Component, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import {IonicPage, LoadingController, NavController, NavParams, Platform, ToastController} from 'ionic-angular';
 import * as Swiper from 'swiper';
 import {ObservationPage} from "../Work/observation/observation";
 import {LoginPage} from "../login/login";
 import {HomePage} from "../home/home";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
+import * as $ from 'jquery';
+import {TabsPage} from "../tabs/tabs";
+import {JLProjectPage} from "../JianLiPZ/JLProject";
+import {InspectionListPage} from "../Work/Inspection/inspection-list/inspection-list";
+import {StackPanelComponent} from "../../components/stack-panel/stack-panel";
+import {Project} from "../Work/ep-mate-entry/list/list";
+import {HttpService} from "../Service/HttpService";
+import {ApiUrl} from "../../providers/Constants";
 /**
  * Generated class for the IndexPage page.
  *
@@ -24,16 +32,23 @@ export class IndexPage {
   loader;
   timer1;
   //xyw
-  messages:Array<{MessageType:string,EProject:string,Time:any}>;
-  items:Array<{SRC:any,WorkType:string,EProject:any}>;
+  messages:Array<{MessageType:string,EProject:string,Time:any,EmployeeName:string,SRC:any,State:any,DESC:string}>;
+  SelectingProj:boolean;
 
+  EProjects:Project[];
+  CurProject:Project;
+  @ViewChild("stack")
+  stackpanel:StackPanelComponent;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private loadingCtrl: LoadingController,
               private androidPermissions: AndroidPermissions,
-              private platform:Platform) {
+              private platform:Platform,
+              public toastCtrl: ToastController,
+              private http: HttpService) {
     this.IsLogin = LoginPage.Login;
+    this.SelectingProj=false;
     //权限询问
     var list = [
       androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION,
@@ -56,35 +71,40 @@ export class IndexPage {
     }
 
     //xyw
+    //项目初始化
+    this.CurProject={EProjectID:'',Name:'',EPState:-1,EPTypeId:-1,EPType:''};
+    this.GetEProject();
 
-    //$(".flipster").flipster({ style: 'carousel', start: 0 });
-    $(".flipster").
-    this.messages=[{MessageType:"旁站结束",EProject:"协和医院",Time:"2018-7-18 14:41"},
-                            {MessageType:"旁站交班",EProject:"协和医院",Time:"2018-7-18 8:56"},
-                            {MessageType:"质量验收",EProject:"协和医院",Time:"2018-7-16 15:24"}];
-    this.items=[{SRC:"../../assets/imgs/xiehe.jpeg",WorkType:"旁站",EProject:"协和医院"},
-                      {SRC:"../../assets/imgs/xiehe.jpeg",WorkType:"材料进场",EProject:"协和医院"},
-                      {SRC:"../../assets/imgs/xiehe.jpeg",WorkType:"质量验收",EProject:"协和医院"}];
+    //动态初始化
+    if(true){
+      this.messages=[{MessageType:"材料进场",EProject:"协和医院综合住院楼项目",Time:"8/1/10:25",EmployeeName:"严俊",SRC:"assets/imgs/shuini.jpg",State:"md-checkmark-circle",DESC:"------------通过------------------------------"},
+                                {MessageType:"材料进场",EProject:"协和医院综合住院楼项目",Time:"8/1/10:25",EmployeeName:"严俊",SRC:"assets/imgs/shuini.jpg",State:"md-warning",DESC:"------------不达标但通过-----------"},
+                                {MessageType:"材料进场",EProject:"协和医院综合住院楼项目",Time:"8/1/10:25",EmployeeName:"严俊",SRC:"assets/imgs/shuini.jpg",State:"md-remove-circle",DESC:"------------未通过-----------"},
+                                {MessageType:"材料进场",EProject:"协和医院综合住院楼项目",Time:"8/1/10:25",EmployeeName:"严俊",SRC:"assets/imgs/shuini.jpg",State:"md-remove-circle",DESC:"------------未通过-----------"},
+                                {MessageType:"材料进场",EProject:"协和医院综合住院楼项目",Time:"8/1/10:25",EmployeeName:"严俊",SRC:"assets/imgs/shuini.jpg",State:"md-checkmark-circle",DESC:"------------通过------------------------------"},
+                                {MessageType:"材料进场",EProject:"协和医院综合住院楼项目",Time:"8/1/10:25",EmployeeName:"严俊",SRC:"assets/imgs/shuini.jpg",State:"md-warning",DESC:"------------不达标但通过-----------"},
+                                {MessageType:"材料进场",EProject:"协和医院综合住院楼项目",Time:"8/1/10:25",EmployeeName:"严俊",SRC:"assets/imgs/shuini.jpg",State:"md-remove-circle",DESC:"------------未通过-----------"},
+                                {MessageType:"材料进场",EProject:"协和医院综合住院楼项目",Time:"8/1/10:25",EmployeeName:"严俊",SRC:"assets/imgs/shuini.jpg",State:"md-remove-circle",DESC:"------------未通过-----------"},
+                                {MessageType:"材料进场",EProject:"协和医院综合住院楼项目",Time:"8/1/10:25",EmployeeName:"严俊",SRC:"assets/imgs/shuini.jpg",State:"md-checkmark-circle",DESC:"------------通过------------------------------"},
+                                {MessageType:"材料进场",EProject:"湖北公安厅",Time:"8/1/10:25",EmployeeName:"严俊",SRC:"assets/imgs/shuini.jpg",State:"md-warning",DESC:"------------不达标但通过-----------"},
+                                {MessageType:"材料进场",EProject:"武汉美术馆",Time:"8/1/10:25",EmployeeName:"严俊",SRC:"assets/imgs/shuini.jpg",State:"md-remove-circle",DESC:"------------未通过-----------"}];
+    }
   }
 
   ionViewDidLoad() {
-
     console.log('ionViewDidLoad IndexPage');
   }
+  ionViewDidEnter(){
+  }
+
   ngOnInit(){
 
   }
 
-  toMyWork(){
-    if(LoginPage.Login){
-      this.navCtrl.push(HomePage);
-    }else{
-      this.navCtrl.push(LoginPage);
-    }
-  }
   denglu(){
     this.navCtrl.push(LoginPage);
   }
+
   fileChanged(event){
     if (event.target.files && event.target.files[0]) {
       if (event.target.files[0].size > 512000) {
@@ -95,5 +115,38 @@ export class IndexPage {
         console.log('the file size less than 500kb');
       }
     }
+  }
+
+  //xyw
+  goSelectProj(){
+    this.SelectingProj=true;
+  }
+
+  selectProj(item){
+    this.CurProject=item;
+    this.SelectingProj=false;
+  }
+
+  cancle(){
+    this.SelectingProj=false;
+  }
+
+  presentToast(msg) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 3000,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
+  GetEProject(){
+    console.log(TabsPage.UserInfo.employees.EmployeeID);
+    this.http.get(ApiUrl+"Project/GetMyEProjects?EmployeeId="+TabsPage.UserInfo.employees.EmployeeID).subscribe(res=>{
+      this.EProjects=res;
+      this.CurProject=this.EProjects[0];
+    },error=>{
+      this.presentToast("请求出错，请稍后再试");
+    })
   }
 }

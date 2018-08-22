@@ -128,40 +128,40 @@ export class NormalPzPage {
 
       this.GetEmployees();
     }
-    else if(this.Type==1) {
+    else if(this.Type==1)
+    {
       //如果不是新建
-      this.isCheckOnly=false;
-      this.PZrecord = this.navParams.get('Pangzhan');
-      this.choosephoto.InitParams(this.PZrecord.EPCSID,this.EmployeeID);
+        this.isCheckOnly = false;
+        this.PZrecord = this.navParams.get('Pangzhan');
+        this.choosephoto.InitParams(this.PZrecord.EPCSID, this.EmployeeID);
 
-      if(this.PZrecord.PZRoot==0){
-        this.isRootPZ=true;
-      }
-      else{
-        this.isRootPZ=false;
-      }
-
-      if(this.PZrecord.PZCheckRecords.length>0){
-        this.jiancha="查看";
-      }
-      if(this.PZrecord.FindPromble && this.PZrecord.Suggestion){
-        this.shigong="查看";
-      }
-      this.GetEmployees();
-
-      this.http.get(ApiUrl+"Pangzhan/GetEPCSFile?EPCSID="+this.PZrecord.EPCSID).subscribe(data=>{
-        if(data.length>0) {
-          data.forEach(v2 => {
-            let p: Photo = new Photo();
-            p.ePfile = new EPCSFile(this.PZrecord.EPCSID, v2.FileUpPerson, v2.EPSecFileID, v2.FilePath);
-            p.src = ImgUrl + v2.FilePath.substring(2);
-            p.ePfile.EPSecFileID = v2.EPSecFileID;
-            this.photoes.push(p);
-          });
+        if (this.PZrecord.PZRoot == 0) {
+          this.isRootPZ = true;
         }
-        this.choosephoto.InitPhoto(this.photoes);
-      });
+        else {
+          this.isRootPZ = false;
+        }
 
+        if (this.PZrecord.PZCheckRecords.length > 0) {
+          this.jiancha = "查看";
+        }
+        if (this.PZrecord.FindPromble && this.PZrecord.Suggestion) {
+          this.shigong = "查看";
+        }
+        this.GetEmployees();
+
+        this.http.get(ApiUrl + "Pangzhan/GetEPCSFile?EPCSID=" + this.PZrecord.EPCSID).subscribe(data => {
+          if (data.length > 0) {
+            data.forEach(v2 => {
+              let p: Photo = new Photo();
+              p.ePfile = new EPCSFile(this.PZrecord.EPCSID, v2.FileUpPerson, v2.EPSecFileID, v2.FilePath);
+              p.src = ImgUrl + v2.FilePath.substring(2);
+              p.ePfile.EPSecFileID = v2.EPSecFileID;
+              this.photoes.push(p);
+            });
+          }
+          this.choosephoto.InitPhoto(this.photoes);
+        });
     }else if(this.Type==2||this.Type==3){
       this.isCheckOnly=true;
       this.PZrecord = this.navParams.get('Pangzhan');
@@ -326,32 +326,38 @@ export class NormalPzPage {
     }
     this.PZrecord.EPZState = this.curPZState.id;
     this.PZrecord.State = IsSubmit;
+    if(this.transEmployee.RealName=='请选择' || this.curECUnit.ECUnitID=="")
+    {
+      alert("信息不完整");
+    }
+    else {
+      this.httpc.post(ApiUrl + 'Pangzhan/PostPangzhan', this.PZrecord, {headers: httphead}).subscribe((res: any) => {
+        console.log(res);
+        console.log(res.ErrorMs);
+        this.presentToast(res.ErrorMs);
 
-    this.httpc.post(ApiUrl+'Pangzhan/PostPangzhan',this.PZrecord,{headers:httphead}).subscribe((res:any)=>{
-      console.log(res);
-      console.log(res.ErrorMs);
-      this.presentToast(res.ErrorMs);
+        if (res.EPCSParentID != -1) {
+          this.PZBelong.PZBelongId = res.PZBelongID;
+          this.PZrecord.PZBelongId = res.PZBelongID;
+          this.PZrecord.EPCSID = res.EPCSParentID;
+          this.PZrecord.EPCSParent = res.EPCSParentID;
 
-      if(res.EPCSParentID!=-1){
-        this.PZBelong.PZBelongId= res.PZBelongID;
-        this.PZrecord.PZBelongId = res.PZBelongID;
-        this.PZrecord.EPCSID = res.EPCSParentID;
-        this.PZrecord.EPCSParent = res.EPCSParentID;
+          let i = 0;
+          this.PZrecord.PZCheckRecords.forEach(V => {
+            V.PZCheckRecordID = res.PZCRIDs[i];
+            i++;
+          });
 
-        let i=0;
-        this.PZrecord.PZCheckRecords.forEach(V=>{
-          V.PZCheckRecordID=res.PZCRIDs[i];
-          i++;
-        });
+          this.choosephoto.InitParams(res.EPCSParentID, this.EmployeeID);
+          if (IsSubmit == 1) {
 
-        this.choosephoto.InitParams(res.EPCSParentID,this.EmployeeID);
-        if(IsSubmit==1){
-          this.navCtrl.pop();
+            this.navCtrl.pop();
+          }
         }
-      }
-    },error=>{
-      this.presentToast(error.toString());
-    });
+      }, error => {
+        this.presentToast(error.toString());
+      });
+    }
   }
 
   //提示框
@@ -363,6 +369,7 @@ export class NormalPzPage {
     });
 
     alert.present();
+
   }
 
   presentToast(msg) {

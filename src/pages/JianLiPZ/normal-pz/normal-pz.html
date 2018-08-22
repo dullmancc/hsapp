@@ -11,8 +11,7 @@
   <div class="header-center">
     <span>普通旁站监理</span>
   </div>
-  <div *ngIf="Type==0||Type==1">
-    <ion-buttons end>
+    <ion-buttons end *ngIf="Type==0||Type==1">
       <button ion-button clear color="dark" (click)="save(0)">
         保存
       </button>
@@ -20,7 +19,6 @@
         提交
       </button>
     </ion-buttons>
-  </div>
 </ion-header>
 
 <ion-content>

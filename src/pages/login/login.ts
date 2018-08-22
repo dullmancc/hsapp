@@ -117,6 +117,8 @@ export class LoginPage {
       this.power = res;
       loader.dismiss();
       LoginPage.Login = true;
+      TabsPage.UserInfo=this.power;
+
       this.app.getRootNav().setRoot(TabsPage,{UserInfo:this.power});
       //this.navCtrl.setRoot(TabsPage,{UserInfo:this.power})
 
